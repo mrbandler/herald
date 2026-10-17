@@ -1,6 +1,8 @@
 class_name FloatValue
 extends Value
 
+## A float atom, e.g. dish angles, signal strength or pass time.
+
 ## The value a freshly loaded atom holds, and what `reset()` returns to.
 @export var default: float:
 	set(v):
