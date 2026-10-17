@@ -22,7 +22,7 @@ for f in files:
         rx = kenney if f.startswith("assets/kenney/") else name
         if not all(rx.match(p) for p in parts):
             bad.append(f"godot/{f}: every path segment must be lowercase snake_case")
-    if top == "scripts" and f.endswith(".gd") and len(parts) > 2 and parts[1] not in ("components", "autoloads"):
+    if top == "scripts" and f.endswith(".gd") and len(parts) > 2 and parts[1] not in ("components", "autoloads", "core"):
         game_dir = "game/" + "/".join(parts[1:-1])
         if game_dir not in dirs:
             bad.append(f"godot/{f}: needs a matching feature folder godot/{game_dir}/")

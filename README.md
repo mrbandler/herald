@@ -122,7 +122,8 @@ Tooling, native sources and raw assets stay at the repo root, outside `res://`.
 | `godot/ggg.toml`, `godot/ggg.lock` | Godot version, export templates, addons (run `ggg` in `godot/`) |
 | `godot/addons/` | Installed by `ggg sync`. Never edit. Three vendored addons are in git (see Addons) |
 | `godot/game/` | Features: scenes plus the feature's own assets (e.g. `game/main/main.tscn`) |
-| `godot/scripts/` | All GDScript, at the same relative path as its feature in `game/` (`game/characters/player/player.tscn` uses `scripts/characters/player/player.gd`). Scene-less reusable code goes in `scripts/components/` (sample: class `Health`), singletons in `scripts/autoloads/` |
+| `godot/game/data/` | Shared data instances sorted by type: `atoms/`, `models/`, `passes/`, `commands/`, `input/` |
+| `godot/scripts/` | All GDScript, at the same relative path as its feature in `game/` (`game/characters/player/player.tscn` uses `scripts/characters/player/player.gd`). Scene-less reusable code goes in `scripts/components/` (sample: class `Health`), singletons in `scripts/autoloads/`, gameplay-neutral building blocks (atoms, interaction) in `scripts/core/<subdir>/` |
 | `godot/test/` | GdUnit4 tests, mirroring `scripts/` (`scripts/components/health.gd` is tested by `test/components/health_test.gd`); `test/rust/`, `test/cpp/` hold engine tests for the extensions |
 | `godot/assets/` | Only content shared across features (Kenney packs); a feature's own assets live next to its scene in `game/` |
 | `godot/extensions/<lang>/` | One `<name>.gdextension` per extension; built libraries in `bin/` (gitignored) |
@@ -135,7 +136,7 @@ Tooling, native sources and raw assets stay at the repo root, outside `res://`.
 
 The `project-layout` hook (`tools/check_layout.py`, tracked files only) enforces, inside `godot/`: `.gd` files
 live under `scripts/` or `test/`, `.tscn` files under `game/`, every `scripts/<p>/` with scripts (except
-`components/`, `autoloads/`) has a `game/<p>/` folder, and paths are lowercase snake_case (`assets/kenney/`
+`components/`, `autoloads/`, `core/`) has a `game/<p>/` folder, and paths are lowercase snake_case (`assets/kenney/`
 keeps its third-party names as shipped, `addons/` is not checked). `.gd` and `.tscn` files outside `godot/` fail.
 
 `docs/` is local-only.
