@@ -31,6 +31,10 @@ const MARK_NAMES: PackedStringArray = ["AOS", "TURN", "SPEAK", "LOS", "BELL"]
 ## Picks the direction of the card error.
 @export var card_seed := 0
 
+@export_group("Terminal")
+## The commands this window offers. Every window needs one: Terminal and HELP read it.
+@export var command_set: CommandSet
+
 
 ## The five mark times in `MARK_NAMES` order, in seconds.
 func mark_times() -> PackedFloat64Array:

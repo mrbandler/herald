@@ -14,3 +14,9 @@ extends Node
 func _ready() -> void:
 	var index := clampi(window_number.value - 1, 0, passes.size() - 1)
 	current_pass.value = passes[index]
+
+
+func _exit_tree() -> void:
+	# HelpCommand holds current_pass, which points back at the pass holding HelpCommand.
+	# Clearing the pointer breaks that runtime cycle, so nothing leaks at exit.
+	current_pass.value = null
