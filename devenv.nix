@@ -62,6 +62,9 @@ in
 
   enterShell = ''
     git submodule update --init --recursive --quiet || echo "warning: submodule init failed (offline?)"
+    # vcpkg.cmake only looks here; without it, it bootstraps a generic binary that needs zip and does not run on NixOS.
+    # cpp/vcpkg must stay on a commit whose scripts/vcpkg-tool-metadata.txt matches the nixpkgs vcpkg-tool version.
+    ln -sf "$(command -v vcpkg)" cpp/vcpkg/vcpkg
     # git-lfs first: prek then keeps its pre-push hook as pre-push.legacy and runs it on every push.
     if [ ! -f .git/hooks/pre-push.legacy ]; then
       rm -f .git/hooks/pre-push
