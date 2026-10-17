@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="GUIDEMappingContext" format=3]
+
+[ext_resource type="Script" path="res://addons/guide/guide_action_mapping.gd" id="1_o4v5w"]
+[ext_resource type="Resource" path="res://game/data/input/leave_terminal.tres" id="2_bkxs7"]
+[ext_resource type="Script" path="res://addons/guide/guide_input_mapping.gd" id="3_0357c"]
+[ext_resource type="Script" path="res://addons/guide/inputs/guide_input_key.gd" id="4_ltu11"]
+[ext_resource type="Script" path="res://addons/guide/modifiers/guide_modifier.gd" id="5_7vep8"]
+[ext_resource type="Script" path="res://addons/guide/triggers/guide_trigger.gd" id="6_p18kf"]
+[ext_resource type="Script" path="res://addons/guide/guide_mapping_context.gd" id="7_kri5m"]
+
+[sub_resource type="Resource" id="Resource_w78vh"]
+script = ExtResource("4_ltu11")
+key = 4194305
+
+[sub_resource type="Resource" id="Resource_22f2a"]
+script = ExtResource("3_0357c")
+input = SubResource("Resource_w78vh")
+
+[sub_resource type="Resource" id="Resource_uv2ny"]
+script = ExtResource("1_o4v5w")
+action = ExtResource("2_bkxs7")
+input_mappings = Array[ExtResource("3_0357c")]([SubResource("Resource_22f2a")])
+
+[resource]
+script = ExtResource("7_kri5m")
+display_name = "terminal"
+mappings = Array[ExtResource("1_o4v5w")]([SubResource("Resource_uv2ny")])
