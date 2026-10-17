@@ -118,7 +118,8 @@ func _on_out(line: String) -> void:
 
 func _on_focused(_previous: bool, current: bool) -> void:
 	if current:
-		GUIDE.enable_mapping_context(terminal_context, false, 1)
+		# GUIDE gives lower numbers precedence, so -1 puts the terminal context above the room's 0.
+		GUIDE.enable_mapping_context(terminal_context, false, -1)
 		if not _greeted:
 			_greeted = true
 			out.raise(GREETING)
