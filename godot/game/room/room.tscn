@@ -1,3 +1,143 @@
 [gd_scene format=3]
 
+[ext_resource type="Script" path="res://scripts/core/atoms/nodes/resetter.gd" id="1_resetter"]
+[ext_resource type="Script" path="res://scripts/core/atoms/values/value.gd" id="2_value"]
+[ext_resource type="Script" path="res://scripts/pass/pass_loader.gd" id="3_loader"]
+[ext_resource type="Script" path="res://scripts/pass/pass_window.gd" id="4_window"]
+[ext_resource type="Script" path="res://scripts/room/shift_end.gd" id="5_shift_end"]
+[ext_resource type="Script" path="res://scripts/room/debug_commands.gd" id="6_debug"]
+[ext_resource type="PackedScene" path="res://game/pass/pass.tscn" id="10_pass"]
+[ext_resource type="PackedScene" path="res://game/player/player.tscn" id="11_player"]
+[ext_resource type="PackedScene" path="res://game/antenna/antenna.tscn" id="12_antenna"]
+[ext_resource type="PackedScene" path="res://game/terminal/terminal.tscn" id="13_terminal"]
+[ext_resource type="Resource" path="res://game/data/passes/pass_01.tres" id="20_pass_01"]
+[ext_resource type="Resource" path="res://game/data/tunables.tres" id="21_tunables"]
+[ext_resource type="Resource" path="res://game/data/atoms/campaign/window_number.tres" id="22_window_number"]
+[ext_resource type="Resource" path="res://game/data/atoms/pass/current_pass.tres" id="23_current"]
+[ext_resource type="Resource" path="res://game/data/atoms/pass/pass_time.tres" id="30_time"]
+[ext_resource type="Resource" path="res://game/data/atoms/pass/morning_bell.tres" id="31_bell"]
+[ext_resource type="Resource" path="res://game/data/atoms/pass/shift_ended.tres" id="32_shift_ended"]
+[ext_resource type="Resource" path="res://game/data/atoms/antenna/dish_azimuth.tres" id="40_az"]
+[ext_resource type="Resource" path="res://game/data/atoms/antenna/dish_elevation.tres" id="41_el"]
+[ext_resource type="Resource" path="res://game/data/atoms/antenna/tuning.tres" id="42_tune"]
+[ext_resource type="Resource" path="res://game/data/atoms/antenna/signal_strength.tres" id="43_strength"]
+[ext_resource type="Resource" path="res://game/data/atoms/antenna/lock_quality.tres" id="44_quality"]
+[ext_resource type="Resource" path="res://game/data/atoms/antenna/carrier_present.tres" id="45_carrier"]
+[ext_resource type="Resource" path="res://game/data/atoms/antenna/locked.tres" id="46_locked"]
+[ext_resource type="Resource" path="res://game/data/atoms/antenna/turn_active.tres" id="47_turn_active"]
+[ext_resource type="Resource" path="res://game/data/atoms/antenna/force_lock.tres" id="48_force"]
+[ext_resource type="Resource" path="res://game/data/atoms/player/hovering.tres" id="50_hovering"]
+[ext_resource type="Resource" path="res://game/data/atoms/player/grabbing.tres" id="51_grabbing"]
+[ext_resource type="Resource" path="res://game/data/atoms/player/terminal_focused.tres" id="52_focused"]
+[ext_resource type="Resource" path="res://game/data/atoms/terminal/viewing.tres" id="60_viewing"]
+[ext_resource type="Resource" path="res://game/data/atoms/terminal/stdout.tres" id="61_stdout"]
+[ext_resource type="Resource" path="res://game/data/atoms/uplink/sequence.tres" id="62_sequence"]
+[ext_resource type="Resource" path="res://game/data/atoms/uplink/speak_open.tres" id="63_speak_open"]
+[ext_resource type="Resource" path="res://game/data/atoms/uplink/acked.tres" id="64_acked"]
+[ext_resource type="Resource" path="res://game/data/atoms/uplink/transmitting.tres" id="65_transmitting"]
+
+[sub_resource type="Environment" id="Environment_room"]
+background_mode = 1
+background_color = Color(0.03, 0.03, 0.035, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.35, 0.33, 0.3, 1)
+ambient_light_energy = 0.4
+
 [node name="Room" type="Node3D"]
+
+[node name="Resetter" type="Node" parent="."]
+script = ExtResource("1_resetter")
+atoms = Array[ExtResource("2_value")]([ExtResource("30_time"), ExtResource("40_az"), ExtResource("41_el"), ExtResource("42_tune"), ExtResource("43_strength"), ExtResource("44_quality"), ExtResource("45_carrier"), ExtResource("46_locked"), ExtResource("47_turn_active"), ExtResource("48_force"), ExtResource("50_hovering"), ExtResource("51_grabbing"), ExtResource("52_focused"), ExtResource("60_viewing"), ExtResource("62_sequence"), ExtResource("63_speak_open"), ExtResource("64_acked"), ExtResource("65_transmitting")])
+
+[node name="PassLoader" type="Node" parent="."]
+script = ExtResource("3_loader")
+passes = Array[ExtResource("4_window")]([ExtResource("20_pass_01")])
+window_number = ExtResource("22_window_number")
+current_pass = ExtResource("23_current")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_room")
+
+[node name="DeskLamp" type="OmniLight3D" parent="."]
+position = Vector3(0, 2.1, -0.4)
+light_color = Color(1, 0.85, 0.6, 1)
+light_energy = 1.4
+omni_range = 4.0
+
+[node name="Geometry" type="Node3D" parent="."]
+
+[node name="Floor" type="CSGBox3D" parent="Geometry"]
+position = Vector3(0, -0.05, -0.4)
+size = Vector3(3.2, 0.1, 3.2)
+
+[node name="BackWall" type="CSGBox3D" parent="Geometry"]
+position = Vector3(0, 1.3, -1.65)
+size = Vector3(3.2, 2.6, 0.1)
+
+[node name="LeftWall" type="CSGBox3D" parent="Geometry"]
+position = Vector3(-1.6, 1.3, -0.4)
+size = Vector3(0.1, 2.6, 3.2)
+
+[node name="RightWall" type="CSGBox3D" parent="Geometry"]
+position = Vector3(1.6, 1.3, -0.4)
+size = Vector3(0.1, 2.6, 3.2)
+
+[node name="Desk" type="CSGBox3D" parent="Geometry"]
+position = Vector3(0, 0.725, -0.75)
+size = Vector3(2.2, 0.05, 0.8)
+
+[node name="Pass" parent="." instance=ExtResource("10_pass")]
+position = Vector3(0, 1.95, -1.59)
+
+[node name="Player" parent="." instance=ExtResource("11_player")]
+
+[node name="Antenna" parent="." instance=ExtResource("12_antenna")]
+position = Vector3(-0.75, 0.75, -0.8)
+rotation_degrees = Vector3(0, 25, 0)
+
+[node name="Terminal" parent="." instance=ExtResource("13_terminal")]
+position = Vector3(0, 1.0, -1.0)
+
+[node name="StarCard" type="Label3D" parent="."]
+position = Vector3(0.45, 0.76, -0.5)
+rotation_degrees = Vector3(-70, 0, 0)
+pixel_size = 0.0012
+font_size = 24
+text = "STAR CARD - TONIGHT
+THE VOICE   AZ 214.6   EL 38.2
+DIAL 52"
+
+[node name="Letter" type="Label3D" parent="."]
+position = Vector3(-0.2, 0.76, -0.45)
+rotation_degrees = Vector3(-70, 0, 0)
+pixel_size = 0.001
+font_size = 20
+width = 520.0
+autowrap_mode = 3
+text = "Seek: set the brass wheels to the numbers on the Card, then turn slowly until the Voice comes out of the hiss. Bind: turn the black dial until the green lamp stops blinking. Speak: lean to the screen, type SEQ ADD ACK, and when the Speak lamp lights, type TX. Hold the Voice until it is sent."
+
+[node name="ShiftEnd" type="Node" parent="." node_paths=PackedStringArray("fade")]
+script = ExtResource("5_shift_end")
+tunables = ExtResource("21_tunables")
+morning_bell = ExtResource("31_bell")
+shift_ended = ExtResource("32_shift_ended")
+acked = ExtResource("64_acked")
+out = ExtResource("61_stdout")
+fade = NodePath("../Fade/Black")
+
+[node name="DebugCommands" type="Node" parent="."]
+script = ExtResource("6_debug")
+pass_time = ExtResource("30_time")
+force_lock = ExtResource("48_force")
+
+[node name="Fade" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="Black" type="ColorRect" parent="Fade"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
