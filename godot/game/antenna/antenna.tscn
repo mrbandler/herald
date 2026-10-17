@@ -1,3 +1,218 @@
 [gd_scene format=3]
 
+[ext_resource type="Script" path="res://scripts/antenna/receiver.gd" id="1_receiver"]
+[ext_resource type="Script" path="res://scripts/core/interaction/knob.gd" id="2_knob"]
+[ext_resource type="Script" path="res://scripts/antenna/needle.gd" id="3_needle"]
+[ext_resource type="Script" path="res://scripts/antenna/lamp.gd" id="4_lamp"]
+[ext_resource type="Script" path="res://scripts/antenna/carrier_tone.gd" id="5_tone"]
+[ext_resource type="Script" path="res://scripts/core/atoms/nodes/value_label.gd" id="6_label"]
+[ext_resource type="Script" path="res://scripts/core/atoms/nodes/event_latch.gd" id="7_latch"]
+[ext_resource type="Resource" path="res://game/data/models/receiver.tres" id="10_m_receiver"]
+[ext_resource type="Resource" path="res://game/data/models/azimuth_knob.tres" id="11_m_az"]
+[ext_resource type="Resource" path="res://game/data/models/elevation_knob.tres" id="12_m_el"]
+[ext_resource type="Resource" path="res://game/data/models/tuning_knob.tres" id="13_m_tune"]
+[ext_resource type="Resource" path="res://game/data/models/needle.tres" id="14_m_needle"]
+[ext_resource type="Resource" path="res://game/data/models/lamp.tres" id="15_m_lamp"]
+[ext_resource type="Resource" path="res://game/data/models/tone.tres" id="16_m_tone"]
+[ext_resource type="Resource" path="res://game/data/atoms/pass/current_pass.tres" id="20_current"]
+[ext_resource type="Resource" path="res://game/data/atoms/pass/pass_time.tres" id="21_time"]
+[ext_resource type="Resource" path="res://game/data/atoms/pass/aos.tres" id="22_aos"]
+[ext_resource type="Resource" path="res://game/data/atoms/pass/los.tres" id="23_los"]
+[ext_resource type="Resource" path="res://game/data/atoms/pass/turn_started.tres" id="24_turn"]
+[ext_resource type="Resource" path="res://game/data/atoms/pass/speak_opened.tres" id="25_speak"]
+[ext_resource type="Resource" path="res://game/data/atoms/antenna/dish_azimuth.tres" id="30_az"]
+[ext_resource type="Resource" path="res://game/data/atoms/antenna/dish_elevation.tres" id="31_el"]
+[ext_resource type="Resource" path="res://game/data/atoms/antenna/tuning.tres" id="32_tune"]
+[ext_resource type="Resource" path="res://game/data/atoms/antenna/signal_strength.tres" id="33_strength"]
+[ext_resource type="Resource" path="res://game/data/atoms/antenna/lock_quality.tres" id="34_quality"]
+[ext_resource type="Resource" path="res://game/data/atoms/antenna/carrier_present.tres" id="35_carrier"]
+[ext_resource type="Resource" path="res://game/data/atoms/antenna/locked.tres" id="36_locked"]
+[ext_resource type="Resource" path="res://game/data/atoms/antenna/turn_active.tres" id="37_turn_active"]
+[ext_resource type="Resource" path="res://game/data/atoms/antenna/force_lock.tres" id="38_force"]
+[ext_resource type="Resource" path="res://game/data/atoms/uplink/speak_open.tres" id="39_speak_open"]
+
+[sub_resource type="CylinderShape3D" id="Shape_wheel"]
+height = 0.04
+radius = 0.07
+
+[sub_resource type="CylinderMesh" id="Mesh_wheel"]
+top_radius = 0.07
+bottom_radius = 0.07
+height = 0.03
+
+[sub_resource type="BoxMesh" id="Mesh_spoke"]
+size = Vector3(0.04, 0.04, 0.015)
+
+[sub_resource type="BoxMesh" id="Mesh_face"]
+size = Vector3(0.18, 0.12, 0.01)
+
+[sub_resource type="BoxMesh" id="Mesh_pointer"]
+size = Vector3(0.006, 0.09, 0.004)
+
+[sub_resource type="SphereMesh" id="Mesh_lamp"]
+radius = 0.02
+height = 0.04
+
 [node name="Antenna" type="Node3D"]
+
+[node name="Console" type="CSGBox3D" parent="."]
+position = Vector3(0, 0.175, 0)
+size = Vector3(0.9, 0.35, 0.4)
+
+[node name="AzimuthKnob" type="Area3D" parent="." node_paths=PackedStringArray("visual")]
+position = Vector3(-0.28, 0.2, 0.21)
+rotation_degrees = Vector3(90, 0, 0)
+script = ExtResource("2_knob")
+target = ExtResource("30_az")
+model = ExtResource("11_m_az")
+visual = NodePath("Visual")
+
+[node name="Shape" type="CollisionShape3D" parent="AzimuthKnob"]
+shape = SubResource("Shape_wheel")
+
+[node name="Visual" type="Node3D" parent="AzimuthKnob"]
+
+[node name="Wheel" type="MeshInstance3D" parent="AzimuthKnob/Visual"]
+mesh = SubResource("Mesh_wheel")
+
+[node name="Spoke" type="MeshInstance3D" parent="AzimuthKnob/Visual"]
+position = Vector3(0.045, 0.02, 0)
+mesh = SubResource("Mesh_spoke")
+
+[node name="ElevationKnob" type="Area3D" parent="." node_paths=PackedStringArray("visual")]
+position = Vector3(-0.08, 0.2, 0.21)
+rotation_degrees = Vector3(90, 0, 0)
+script = ExtResource("2_knob")
+target = ExtResource("31_el")
+model = ExtResource("12_m_el")
+visual = NodePath("Visual")
+
+[node name="Shape" type="CollisionShape3D" parent="ElevationKnob"]
+shape = SubResource("Shape_wheel")
+
+[node name="Visual" type="Node3D" parent="ElevationKnob"]
+
+[node name="Wheel" type="MeshInstance3D" parent="ElevationKnob/Visual"]
+mesh = SubResource("Mesh_wheel")
+
+[node name="Spoke" type="MeshInstance3D" parent="ElevationKnob/Visual"]
+position = Vector3(0.045, 0.02, 0)
+mesh = SubResource("Mesh_spoke")
+
+[node name="TuningKnob" type="Area3D" parent="." node_paths=PackedStringArray("visual")]
+position = Vector3(0.3, 0.12, 0.21)
+rotation_degrees = Vector3(90, 0, 0)
+script = ExtResource("2_knob")
+target = ExtResource("32_tune")
+model = ExtResource("13_m_tune")
+visual = NodePath("Visual")
+
+[node name="Shape" type="CollisionShape3D" parent="TuningKnob"]
+shape = SubResource("Shape_wheel")
+
+[node name="Visual" type="Node3D" parent="TuningKnob"]
+
+[node name="Wheel" type="MeshInstance3D" parent="TuningKnob/Visual"]
+mesh = SubResource("Mesh_wheel")
+
+[node name="Spoke" type="MeshInstance3D" parent="TuningKnob/Visual"]
+position = Vector3(0.045, 0.02, 0)
+mesh = SubResource("Mesh_spoke")
+
+[node name="AzimuthCounter" type="Label3D" parent="."]
+position = Vector3(-0.28, 0.31, 0.205)
+pixel_size = 0.001
+font_size = 28
+text = "AZ 180.0"
+script = ExtResource("6_label")
+source = ExtResource("30_az")
+format = "AZ %05.1f"
+
+[node name="ElevationCounter" type="Label3D" parent="."]
+position = Vector3(-0.08, 0.31, 0.205)
+pixel_size = 0.001
+font_size = 28
+text = "EL 20.0"
+script = ExtResource("6_label")
+source = ExtResource("31_el")
+format = "EL %04.1f"
+
+[node name="TuningCounter" type="Label3D" parent="."]
+position = Vector3(0.3, 0.2, 0.205)
+pixel_size = 0.001
+font_size = 28
+text = "DIAL 40.0"
+script = ExtResource("6_label")
+source = ExtResource("32_tune")
+format = "DIAL %04.1f"
+
+[node name="NeedleFace" type="MeshInstance3D" parent="."]
+position = Vector3(0.18, 0.28, 0.2)
+mesh = SubResource("Mesh_face")
+
+[node name="Needle" type="Node3D" parent="."]
+position = Vector3(0.18, 0.23, 0.208)
+script = ExtResource("3_needle")
+model = ExtResource("14_m_needle")
+source = ExtResource("33_strength")
+
+[node name="Pointer" type="MeshInstance3D" parent="Needle"]
+position = Vector3(0, 0.045, 0)
+mesh = SubResource("Mesh_pointer")
+
+[node name="LockLamp" type="MeshInstance3D" parent="."]
+position = Vector3(0.36, 0.28, 0.2)
+mesh = SubResource("Mesh_lamp")
+script = ExtResource("4_lamp")
+model = ExtResource("15_m_lamp")
+source = ExtResource("36_locked")
+blink_source = ExtResource("33_strength")
+color = Color(0.3, 1, 0.4, 1)
+
+[node name="SpeakLamp" type="MeshInstance3D" parent="."]
+position = Vector3(0.36, 0.2, 0.2)
+mesh = SubResource("Mesh_lamp")
+script = ExtResource("4_lamp")
+model = ExtResource("15_m_lamp")
+source = ExtResource("39_speak_open")
+color = Color(1, 0.6, 0.1, 1)
+
+[node name="Receiver" type="Node" parent="."]
+script = ExtResource("1_receiver")
+model = ExtResource("10_m_receiver")
+current_pass = ExtResource("20_current")
+pass_time = ExtResource("21_time")
+dish_azimuth = ExtResource("30_az")
+dish_elevation = ExtResource("31_el")
+tuning = ExtResource("32_tune")
+carrier_present = ExtResource("35_carrier")
+force_lock = ExtResource("38_force")
+signal_strength = ExtResource("33_strength")
+lock_quality = ExtResource("34_quality")
+locked = ExtResource("36_locked")
+
+[node name="CarrierTone" type="AudioStreamPlayer3D" parent="."]
+position = Vector3(0, 0.3, 0)
+script = ExtResource("5_tone")
+model = ExtResource("16_m_tone")
+signal_strength = ExtResource("33_strength")
+lock_quality = ExtResource("34_quality")
+turn_active = ExtResource("37_turn_active")
+
+[node name="CarrierLatch" type="Node" parent="."]
+script = ExtResource("7_latch")
+on = ExtResource("22_aos")
+off = ExtResource("23_los")
+target = ExtResource("35_carrier")
+
+[node name="TurnLatch" type="Node" parent="."]
+script = ExtResource("7_latch")
+on = ExtResource("24_turn")
+off = ExtResource("25_speak")
+target = ExtResource("37_turn_active")
+
+[node name="SpeakLatch" type="Node" parent="."]
+script = ExtResource("7_latch")
+on = ExtResource("25_speak")
+off = ExtResource("23_los")
+target = ExtResource("39_speak_open")
