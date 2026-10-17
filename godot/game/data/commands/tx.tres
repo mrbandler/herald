@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="TxCommand" format=3]
+
+[ext_resource type="Script" path="res://scripts/terminal/tx_command.gd" id="1_script"]
+[ext_resource type="Resource" path="res://game/data/atoms/terminal/stdout.tres" id="2_stdout"]
+[ext_resource type="Resource" path="res://game/data/atoms/uplink/speak_open.tres" id="3_speak"]
+[ext_resource type="Resource" path="res://game/data/atoms/uplink/sequence.tres" id="4_sequence"]
+[ext_resource type="Resource" path="res://game/data/atoms/antenna/locked.tres" id="5_locked"]
+[ext_resource type="Resource" path="res://game/data/atoms/uplink/tx_requested.tres" id="6_tx"]
+
+[resource]
+script = ExtResource("1_script")
+name = "TX"
+help = "TX                SEND THE SEQUENCE AT SPEAK
+                  HOLD THE LOCK UNTIL IT IS SENT"
+out = ExtResource("2_stdout")
+speak_open = ExtResource("3_speak")
+sequence = ExtResource("4_sequence")
+locked = ExtResource("5_locked")
+tx_requested = ExtResource("6_tx")
