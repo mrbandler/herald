@@ -12,6 +12,12 @@ default:
 import:
     {{ godot }} --headless --editor --quit-after 300
 
+# Open the Godot editor detached from the shell (log in the repo-root reports/editor.log)
+[unix]
+[working-directory("godot")]
+edit: build
+    mkdir -p ../reports && nohup {{ godot }} --editor --path . > ../reports/editor.log 2>&1 &
+
 # GDScript tests (GdUnit4), headless. Extra args go to Godot.
 # Reports go to the repo-root reports/, outside res://.
 [working-directory("godot")]
