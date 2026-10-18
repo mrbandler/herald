@@ -21,6 +21,8 @@ func test_antenna_scene_is_wired() -> void:
 	assert_object(lock_lamp.source).is_same(receiver.locked)
 	assert_object(lock_lamp.blink_source).is_same(receiver.signal_strength)
 	assert_object(tone.signal_strength).is_same(receiver.signal_strength)
+	for knob: Knob in [azimuth, scene.get_node("TuningKnob") as Knob]:
+		assert_object(knob.click.stream).is_instanceof(ClickStream)
 	var elevation := scene.get_node("ElevationKnob") as Knob
 	assert_bool(azimuth.model.wraps).is_true()
 	assert_bool(elevation.model.wraps).is_false()

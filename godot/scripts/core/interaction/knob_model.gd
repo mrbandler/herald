@@ -16,6 +16,13 @@ extends Resource
 ## Visual rotation per value unit. Handwheels use 36, so one full turn is 10 units.
 ## A wrapping knob only turns smoothly across the wrap if range times this is a multiple of 360.
 @export var visual_degrees_per_unit := 36.0
+## Units between detent clicks while dragging; 0 for none.
+@export var click_step := 1.0
+
+
+## True when a move from `previous` to `current` passes a detent, every `click_step` units.
+func crossed_detent(previous: float, current: float) -> bool:
+	return click_step > 0.0 and floorf(previous / click_step) != floorf(current / click_step)
 
 
 ## The new value after dragging `dx` pixels, wrapped or clamped to the range.

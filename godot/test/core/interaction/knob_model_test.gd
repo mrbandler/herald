@@ -30,3 +30,14 @@ func test_respects_a_non_zero_minimum() -> void:
 	model.minimum = 10.0
 	model.maximum = 20.0
 	assert_float(model.apply(10.5, -100.0, false)).is_equal(10.0)
+
+
+func test_detents_click_on_whole_steps() -> void:
+	var model := KnobModel.new()
+	model.click_step = 1.0
+	assert_bool(model.crossed_detent(10.2, 10.8)).is_false()
+	assert_bool(model.crossed_detent(10.8, 11.1)).is_true()
+	assert_bool(model.crossed_detent(11.1, 10.9)).is_true()
+	assert_bool(model.crossed_detent(359.9, 0.1)).is_true()
+	model.click_step = 0.0
+	assert_bool(model.crossed_detent(10.8, 11.1)).is_false()

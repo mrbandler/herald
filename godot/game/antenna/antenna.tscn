@@ -30,6 +30,7 @@
 [ext_resource type="Resource" path="res://game/data/atoms/antenna/turn_active.tres" id="37_turn_active"]
 [ext_resource type="Resource" path="res://game/data/atoms/antenna/force_lock.tres" id="38_force"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/speak_open.tres" id="39_speak_open"]
+[ext_resource type="AudioStream" path="res://game/data/audio/click.tres" id="18_click"]
 
 [sub_resource type="CylinderShape3D" id="Shape_wheel"]
 height = 0.04
@@ -59,13 +60,14 @@ height = 0.04
 position = Vector3(0, 0.175, 0)
 size = Vector3(0.9, 0.35, 0.4)
 
-[node name="AzimuthKnob" type="Area3D" parent="." node_paths=PackedStringArray("visual")]
+[node name="AzimuthKnob" type="Area3D" parent="." node_paths=PackedStringArray("visual", "click")]
 position = Vector3(-0.28, 0.2, 0.21)
 rotation_degrees = Vector3(90, 0, 0)
 script = ExtResource("2_knob")
 target = ExtResource("30_az")
 model = ExtResource("11_m_az")
 visual = NodePath("Visual")
+click = NodePath("Click")
 
 [node name="Shape" type="CollisionShape3D" parent="AzimuthKnob"]
 shape = SubResource("Shape_wheel")
@@ -79,13 +81,18 @@ mesh = SubResource("Mesh_wheel")
 position = Vector3(0.045, 0.02, 0)
 mesh = SubResource("Mesh_spoke")
 
-[node name="ElevationKnob" type="Area3D" parent="." node_paths=PackedStringArray("visual")]
+[node name="Click" type="AudioStreamPlayer3D" parent="AzimuthKnob"]
+stream = ExtResource("18_click")
+max_polyphony = 4
+
+[node name="ElevationKnob" type="Area3D" parent="." node_paths=PackedStringArray("visual", "click")]
 position = Vector3(-0.08, 0.2, 0.21)
 rotation_degrees = Vector3(90, 0, 0)
 script = ExtResource("2_knob")
 target = ExtResource("31_el")
 model = ExtResource("12_m_el")
 visual = NodePath("Visual")
+click = NodePath("Click")
 
 [node name="Shape" type="CollisionShape3D" parent="ElevationKnob"]
 shape = SubResource("Shape_wheel")
@@ -99,13 +106,18 @@ mesh = SubResource("Mesh_wheel")
 position = Vector3(0.045, 0.02, 0)
 mesh = SubResource("Mesh_spoke")
 
-[node name="TuningKnob" type="Area3D" parent="." node_paths=PackedStringArray("visual")]
+[node name="Click" type="AudioStreamPlayer3D" parent="ElevationKnob"]
+stream = ExtResource("18_click")
+max_polyphony = 4
+
+[node name="TuningKnob" type="Area3D" parent="." node_paths=PackedStringArray("visual", "click")]
 position = Vector3(0.3, 0.12, 0.21)
 rotation_degrees = Vector3(90, 0, 0)
 script = ExtResource("2_knob")
 target = ExtResource("32_tune")
 model = ExtResource("13_m_tune")
 visual = NodePath("Visual")
+click = NodePath("Click")
 
 [node name="Shape" type="CollisionShape3D" parent="TuningKnob"]
 shape = SubResource("Shape_wheel")
@@ -118,6 +130,10 @@ mesh = SubResource("Mesh_wheel")
 [node name="Spoke" type="MeshInstance3D" parent="TuningKnob/Visual"]
 position = Vector3(0.045, 0.02, 0)
 mesh = SubResource("Mesh_spoke")
+
+[node name="Click" type="AudioStreamPlayer3D" parent="TuningKnob"]
+stream = ExtResource("18_click")
+max_polyphony = 4
 
 [node name="AzimuthCounter" type="Label3D" parent="."]
 position = Vector3(-0.28, 0.31, 0.205)

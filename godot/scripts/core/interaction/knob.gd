@@ -8,6 +8,8 @@ extends Interactable
 @export var model: KnobModel
 ## Spins around its local Y axis to show the value.
 @export var visual: Node3D
+## Played on each detent the drag passes. Optional.
+@export var click: AudioStreamPlayer3D
 
 
 func _ready() -> void:
@@ -17,7 +19,10 @@ func _ready() -> void:
 
 ## Moves the target by the drag, via the model.
 func drag(dx: float, fine: bool) -> void:
-	target.value = model.apply(target.value, dx, fine)
+	var previous := target.value
+	target.value = model.apply(previous, dx, fine)
+	if click != null and model.crossed_detent(previous, target.value):
+		click.play()
 
 
 func _on_updated(_previous: Variant, _current: Variant) -> void:
