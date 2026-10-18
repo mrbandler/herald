@@ -1,15 +1,14 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://bvf1lh7xjrgat"]
 
-[ext_resource type="Script" path="res://scripts/core/atoms/nodes/resetter.gd" id="1_resetter"]
-[ext_resource type="Script" path="res://scripts/core/atoms/values/value.gd" id="2_value"]
-[ext_resource type="Script" path="res://scripts/pass/pass_loader.gd" id="3_loader"]
-[ext_resource type="Script" path="res://scripts/pass/pass_window.gd" id="4_window"]
-[ext_resource type="Script" path="res://scripts/room/shift_end.gd" id="5_shift_end"]
-[ext_resource type="Script" path="res://scripts/room/debug_commands.gd" id="6_debug"]
-[ext_resource type="Script" path="res://scripts/core/atoms/nodes/event_latch.gd" id="7_latch"]
-[ext_resource type="Script" path="res://scripts/room/lamp_chain.gd" id="8_chain"]
-[ext_resource type="Script" path="res://scripts/room/sleep.gd" id="9_sleep"]
-[ext_resource type="Resource" path="res://game/data/models/sleep.tres" id="24_m_sleep"]
+[ext_resource type="Script" uid="uid://gbwjl2hmce2g" path="res://scripts/core/atoms/nodes/resetter.gd" id="1_resetter"]
+[ext_resource type="Script" uid="uid://dhwoysu8mckse" path="res://scripts/core/atoms/values/value.gd" id="2_value"]
+[ext_resource type="Script" uid="uid://bolq6ni7k4uyp" path="res://scripts/pass/pass_loader.gd" id="3_loader"]
+[ext_resource type="Script" uid="uid://c47dbxuo8d1i" path="res://scripts/pass/pass_window.gd" id="4_window"]
+[ext_resource type="Script" uid="uid://bh1iu82ke1klo" path="res://scripts/room/shift_end.gd" id="5_shift_end"]
+[ext_resource type="Script" uid="uid://p1gjsugcif4f" path="res://scripts/room/debug_commands.gd" id="6_debug"]
+[ext_resource type="Script" uid="uid://ctcdhqtsbys52" path="res://scripts/core/atoms/nodes/event_latch.gd" id="7_latch"]
+[ext_resource type="Script" uid="uid://0fxs33kybbm" path="res://scripts/room/lamp_chain.gd" id="8_chain"]
+[ext_resource type="Script" uid="uid://de2pjly3flbx8" path="res://scripts/room/sleep.gd" id="9_sleep"]
 [ext_resource type="PackedScene" path="res://game/pass/pass.tscn" id="10_pass"]
 [ext_resource type="PackedScene" path="res://game/player/player.tscn" id="11_player"]
 [ext_resource type="PackedScene" path="res://game/antenna/antenna.tscn" id="12_antenna"]
@@ -18,11 +17,11 @@
 [ext_resource type="Resource" path="res://game/data/tunables.tres" id="21_tunables"]
 [ext_resource type="Resource" path="res://game/data/atoms/campaign/window_number.tres" id="22_window_number"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/current_pass.tres" id="23_current"]
+[ext_resource type="Resource" path="res://game/data/models/sleep.tres" id="24_m_sleep"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/pass_time.tres" id="30_time"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/morning_bell.tres" id="31_bell"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/shift_ended.tres" id="32_shift_ended"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/los.tres" id="33_los"]
-[ext_resource type="Resource" path="res://game/data/atoms/room/chain_unlocked.tres" id="70_chain_unlocked"]
 [ext_resource type="Resource" path="res://game/data/atoms/antenna/dish_azimuth.tres" id="40_az"]
 [ext_resource type="Resource" path="res://game/data/atoms/antenna/dish_elevation.tres" id="41_el"]
 [ext_resource type="Resource" path="res://game/data/atoms/antenna/tuning.tres" id="42_tune"]
@@ -40,6 +39,14 @@
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/speak_open.tres" id="63_speak_open"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/acked.tres" id="64_acked"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/transmitting.tres" id="65_transmitting"]
+[ext_resource type="Resource" path="res://game/data/atoms/room/chain_unlocked.tres" id="70_chain_unlocked"]
+
+[sub_resource type="Environment" id="Environment_room"]
+background_mode = 1
+background_color = Color(0.03, 0.03, 0.035, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.35, 0.33, 0.3, 1)
+ambient_light_energy = 0.4
 
 [sub_resource type="SphereShape3D" id="Shape_bead"]
 radius = 0.05
@@ -53,109 +60,99 @@ height = 0.45
 radius = 0.02
 height = 0.04
 
-[sub_resource type="Environment" id="Environment_room"]
-background_mode = 1
-background_color = Color(0.03, 0.03, 0.035, 1)
-ambient_light_source = 2
-ambient_light_color = Color(0.35, 0.33, 0.3, 1)
-ambient_light_energy = 0.4
+[node name="Room" type="Node3D" unique_id=1331904615]
 
-[node name="Room" type="Node3D"]
-
-[node name="Resetter" type="Node" parent="."]
+[node name="Resetter" type="Node" parent="." unique_id=221681823]
 script = ExtResource("1_resetter")
 atoms = Array[ExtResource("2_value")]([ExtResource("30_time"), ExtResource("40_az"), ExtResource("41_el"), ExtResource("42_tune"), ExtResource("43_strength"), ExtResource("44_quality"), ExtResource("45_carrier"), ExtResource("46_locked"), ExtResource("48_force"), ExtResource("50_hovering"), ExtResource("51_grabbing"), ExtResource("52_focused"), ExtResource("60_viewing"), ExtResource("62_sequence"), ExtResource("63_speak_open"), ExtResource("64_acked"), ExtResource("65_transmitting"), ExtResource("70_chain_unlocked")])
 
-[node name="PassLoader" type="Node" parent="."]
+[node name="PassLoader" type="Node" parent="." unique_id=824546816]
 script = ExtResource("3_loader")
 passes = Array[ExtResource("4_window")]([ExtResource("20_pass_01")])
 window_number = ExtResource("22_window_number")
 current_pass = ExtResource("23_current")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1842271000]
 environment = SubResource("Environment_room")
 
-[node name="DeskLamp" type="OmniLight3D" parent="."]
-position = Vector3(0, 2.1, -0.4)
+[node name="DeskLamp" type="OmniLight3D" parent="." unique_id=778780737]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1, -0.4)
 light_color = Color(1, 0.85, 0.6, 1)
 light_energy = 1.4
 omni_range = 4.0
 
-[node name="Geometry" type="Node3D" parent="."]
+[node name="Geometry" type="Node3D" parent="." unique_id=2038383481]
 
-[node name="Floor" type="CSGBox3D" parent="Geometry"]
-position = Vector3(0, -0.05, -0.4)
+[node name="Floor" type="CSGBox3D" parent="Geometry" unique_id=1707663974]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, -0.4)
 size = Vector3(3.2, 0.1, 3.2)
 
-[node name="BackWall" type="CSGBox3D" parent="Geometry"]
-position = Vector3(0, 1.3, -1.65)
+[node name="BackWall" type="CSGBox3D" parent="Geometry" unique_id=2020507245]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, -1.65)
 size = Vector3(3.2, 2.6, 0.1)
 
-[node name="LeftWall" type="CSGBox3D" parent="Geometry"]
-position = Vector3(-1.6, 1.3, -0.4)
+[node name="LeftWall" type="CSGBox3D" parent="Geometry" unique_id=2065403973]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1.3, -0.4)
 size = Vector3(0.1, 2.6, 3.2)
 
-[node name="RightWall" type="CSGBox3D" parent="Geometry"]
-position = Vector3(1.6, 1.3, -0.4)
+[node name="RightWall" type="CSGBox3D" parent="Geometry" unique_id=1414174918]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 1.3, -0.4)
 size = Vector3(0.1, 2.6, 3.2)
 
-[node name="Desk" type="CSGBox3D" parent="Geometry"]
-position = Vector3(0, 0.725, -0.75)
+[node name="Desk" type="CSGBox3D" parent="Geometry" unique_id=1352032104]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.725, -0.75)
 size = Vector3(2.2, 0.05, 0.8)
 
-[node name="Pass" parent="." instance=ExtResource("10_pass")]
-position = Vector3(0, 1.95, -1.59)
+[node name="Pass" parent="." unique_id=1557326940 instance=ExtResource("10_pass")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.95, -1.59)
 
-[node name="Player" parent="." instance=ExtResource("11_player")]
+[node name="Player" parent="." unique_id=2125880003 instance=ExtResource("11_player")]
 
-[node name="Antenna" parent="." instance=ExtResource("12_antenna")]
-position = Vector3(-0.75, 0.75, -0.8)
-rotation_degrees = Vector3(0, 25, 0)
+[node name="Antenna" parent="." unique_id=690363022 instance=ExtResource("12_antenna")]
+transform = Transform3D(0.90630776, 0, 0.42261827, 0, 1, 0, -0.42261827, 0, 0.90630776, -0.75, 0.75, -0.8)
 
-[node name="Terminal" parent="." instance=ExtResource("13_terminal")]
-position = Vector3(0, 1.0, -1.0)
+[node name="Terminal" parent="." unique_id=1433016471 instance=ExtResource("13_terminal")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1)
 
-[node name="StarCard" type="Label3D" parent="."]
-position = Vector3(0.45, 0.752, -0.5)
-rotation_degrees = Vector3(-90, 0, 0)
+[node name="StarCard" type="Label3D" parent="." unique_id=661038256]
+transform = Transform3D(0.9986056, 0.052790955, 2.307566e-09, 0, -4.371139e-08, 1, 0.052790955, -0.9986056, -4.3650438e-08, 0.1370247, 0.752, -0.45742118)
 pixel_size = 0.0012
-font_size = 24
 text = "STAR CARD - TONIGHT
 THE VOICE   AZ 214.6   EL 38.2
 DIAL 52"
+font_size = 24
 
-[node name="Letter" type="Label3D" parent="."]
-position = Vector3(-0.2, 0.752, -0.45)
-rotation_degrees = Vector3(-90, 0, 0)
+[node name="Letter" type="Label3D" parent="." unique_id=1073506083]
+transform = Transform3D(0.9425383, -0.33409813, -1.4603892e-08, 0, -4.371139e-08, 1, -0.33409813, -0.9425383, -4.119966e-08, -0.25424606, 0.752, -0.5841208)
 pixel_size = 0.001
-font_size = 20
-width = 520.0
-autowrap_mode = 3
 text = "Seek: set the brass wheels to the numbers on the Card, then turn slowly until the Voice comes out of the hiss. Bind: turn the black dial until the green lamp stops blinking. Speak: lean to the screen, type SEQ ADD ACK, and when the Speak lamp lights, type TX. Hold the Voice until it is sent. When the Voice is gone, pull the lamp chain and rest."
+font_size = 20
+autowrap_mode = 3
+width = 520.0
 
-[node name="LampChain" type="Area3D" parent="."]
-position = Vector3(0.45, 1.25, -0.6)
+[node name="LampChain" type="Area3D" parent="." unique_id=1402926389]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.45, 1.25, -0.6)
 script = ExtResource("8_chain")
 unlocked = ExtResource("70_chain_unlocked")
 pull = ExtResource("31_bell")
 
-[node name="Shape" type="CollisionShape3D" parent="LampChain"]
+[node name="Shape" type="CollisionShape3D" parent="LampChain" unique_id=468245170]
 shape = SubResource("Shape_bead")
 
-[node name="Cord" type="MeshInstance3D" parent="LampChain"]
-position = Vector3(0, 0.225, 0)
+[node name="Cord" type="MeshInstance3D" parent="LampChain" unique_id=659290142]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.225, 0)
 mesh = SubResource("Mesh_cord")
 
-[node name="Bead" type="MeshInstance3D" parent="LampChain"]
+[node name="Bead" type="MeshInstance3D" parent="LampChain" unique_id=287848357]
 mesh = SubResource("Mesh_bead")
 
-[node name="ChainLatch" type="Node" parent="."]
+[node name="ChainLatch" type="Node" parent="." unique_id=560108814]
 script = ExtResource("7_latch")
 on = ExtResource("33_los")
 off = ExtResource("31_bell")
 target = ExtResource("70_chain_unlocked")
 
-[node name="Sleep" type="Node" parent="." node_paths=PackedStringArray("camera", "top_lid", "bottom_lid")]
+[node name="Sleep" type="Node" parent="." unique_id=1364885553 node_paths=PackedStringArray("camera", "top_lid", "bottom_lid")]
 script = ExtResource("9_sleep")
 model = ExtResource("24_m_sleep")
 camera = NodePath("../Player/Pivot/Camera3D")
@@ -165,7 +162,7 @@ pass_time = ExtResource("30_time")
 current_pass = ExtResource("23_current")
 shift_ended = ExtResource("32_shift_ended")
 
-[node name="ShiftEnd" type="Node" parent="." node_paths=PackedStringArray("sleep", "lamp")]
+[node name="ShiftEnd" type="Node" parent="." unique_id=733588695 node_paths=PackedStringArray("sleep", "lamp")]
 script = ExtResource("5_shift_end")
 tunables = ExtResource("21_tunables")
 morning_bell = ExtResource("31_bell")
@@ -175,20 +172,22 @@ out = ExtResource("61_stdout")
 sleep = NodePath("../Sleep")
 lamp = NodePath("../DeskLamp")
 
-[node name="DebugCommands" type="Node" parent="."]
+[node name="DebugCommands" type="Node" parent="." unique_id=1370657304]
 script = ExtResource("6_debug")
 pass_time = ExtResource("30_time")
 force_lock = ExtResource("48_force")
 
-[node name="Eyelids" type="CanvasLayer" parent="."]
+[node name="Eyelids" type="CanvasLayer" parent="." unique_id=1413141727]
 layer = 10
 
-[node name="Top" type="ColorRect" parent="Eyelids"]
+[node name="Top" type="ColorRect" parent="Eyelids" unique_id=1223867091]
+anchors_preset = 10
 anchor_right = 1.0
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
-[node name="Bottom" type="ColorRect" parent="Eyelids"]
+[node name="Bottom" type="ColorRect" parent="Eyelids" unique_id=442364640]
+anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
