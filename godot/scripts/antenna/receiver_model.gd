@@ -6,6 +6,8 @@ extends Resource
 @export_group("Hearing")
 ## Degrees off target at which the carrier fades out completely.
 @export_range(0.01, 10.0) var hearing_radius := 1.5
+## Falloff exponent: 1 is linear, higher stays faint near the edge and rises near the target.
+@export_range(0.5, 4.0) var hearing_curve := 1.0
 
 @export_group("Lock")
 ## Lock quality (0..1) at which an unlocked receiver locks.
@@ -50,9 +52,9 @@ func pointing_error(dish: Vector2, target: Vector2) -> float:
 	return Vector2(wrapf(dish.x - target.x, -180.0, 180.0), dish.y - target.y).length()
 
 
-## Signal strength 0..1: 1 on target, 0 at `hearing_radius`.
+## Signal strength 0..1: 1 on target, 0 at `hearing_radius`, shaped by `hearing_curve`.
 func strength(error_deg: float) -> float:
-	return clampf(1.0 - error_deg / hearing_radius, 0.0, 1.0)
+	return pow(clampf(1.0 - error_deg / hearing_radius, 0.0, 1.0), hearing_curve)
 
 
 ## The carrier's true dial position `t` seconds into the pass. Matches the card until AOS.
