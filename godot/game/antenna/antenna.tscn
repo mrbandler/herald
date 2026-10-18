@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://scripts/antenna/carrier_tone.gd" id="5_tone"]
 [ext_resource type="Script" path="res://scripts/core/atoms/nodes/value_label.gd" id="6_label"]
 [ext_resource type="Script" path="res://scripts/core/atoms/nodes/event_latch.gd" id="7_latch"]
+[ext_resource type="Script" path="res://scripts/antenna/needle_mark.gd" id="8_mark"]
 [ext_resource type="Resource" path="res://game/data/models/receiver.tres" id="10_m_receiver"]
 [ext_resource type="Resource" path="res://game/data/models/azimuth_knob.tres" id="11_m_az"]
 [ext_resource type="Resource" path="res://game/data/models/elevation_knob.tres" id="12_m_el"]
@@ -47,7 +48,14 @@ height = 0.03
 size = Vector3(0.04, 0.04, 0.015)
 
 [sub_resource type="BoxMesh" id="Mesh_face"]
-size = Vector3(0.18, 0.12, 0.01)
+size = Vector3(0.16, 0.12, 0.01)
+
+[sub_resource type="StandardMaterial3D" id="Material_mark"]
+albedo_color = Color(0.1, 0.1, 0.1, 1)
+
+[sub_resource type="BoxMesh" id="Mesh_mark"]
+material = SubResource("Material_mark")
+size = Vector3(0.004, 0.02, 0.002)
 
 [sub_resource type="BoxMesh" id="Mesh_pointer"]
 size = Vector3(0.006, 0.09, 0.004)
@@ -200,16 +208,56 @@ source = ExtResource("40_volume")
 format = "VOL %.2f"
 
 [node name="NeedleFace" type="MeshInstance3D" parent="."]
-position = Vector3(0.18, 0.28, 0.2)
+position = Vector3(0.1, 0.28, 0.2)
 mesh = SubResource("Mesh_face")
 
+[node name="SignalCaption" type="Label3D" parent="."]
+position = Vector3(0.1, 0.325, 0.206)
+pixel_size = 0.001
+modulate = Color(0.15, 0.15, 0.15, 1)
+font_size = 14
+outline_size = 0
+text = "SIGNAL"
+
 [node name="Needle" type="Node3D" parent="."]
-position = Vector3(0.18, 0.23, 0.208)
+position = Vector3(0.1, 0.23, 0.208)
 script = ExtResource("3_needle")
 model = ExtResource("14_m_needle")
 source = ExtResource("33_strength")
 
 [node name="Pointer" type="MeshInstance3D" parent="Needle"]
+position = Vector3(0, 0.045, 0)
+mesh = SubResource("Mesh_pointer")
+
+[node name="TuneFace" type="MeshInstance3D" parent="."]
+position = Vector3(0.28, 0.28, 0.2)
+mesh = SubResource("Mesh_face")
+
+[node name="TuneCaption" type="Label3D" parent="."]
+position = Vector3(0.28, 0.325, 0.206)
+pixel_size = 0.001
+modulate = Color(0.15, 0.15, 0.15, 1)
+font_size = 14
+outline_size = 0
+text = "TUNE"
+
+[node name="LockMark" type="Node3D" parent="."]
+position = Vector3(0.28, 0.23, 0.206)
+script = ExtResource("8_mark")
+needle_model = ExtResource("14_m_needle")
+receiver_model = ExtResource("10_m_receiver")
+
+[node name="Tick" type="MeshInstance3D" parent="LockMark"]
+position = Vector3(0, 0.083, 0)
+mesh = SubResource("Mesh_mark")
+
+[node name="TuneNeedle" type="Node3D" parent="."]
+position = Vector3(0.28, 0.23, 0.208)
+script = ExtResource("3_needle")
+model = ExtResource("14_m_needle")
+source = ExtResource("34_quality")
+
+[node name="Pointer" type="MeshInstance3D" parent="TuneNeedle"]
 position = Vector3(0, 0.045, 0)
 mesh = SubResource("Mesh_pointer")
 

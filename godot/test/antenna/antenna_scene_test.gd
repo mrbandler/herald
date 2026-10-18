@@ -22,6 +22,9 @@ func test_antenna_scene_is_wired() -> void:
 	assert_object(lock_lamp.blink_source).is_same(receiver.signal_strength)
 	assert_object(tone.signal_strength).is_same(receiver.signal_strength)
 	assert_object(tone.tuning).is_same(receiver.tuning)
+	assert_object((scene.get_node("TuneNeedle") as Needle).source).is_same(receiver.lock_quality)
+	var mark := scene.get_node("LockMark") as NeedleMark
+	assert_object(mark.receiver_model).is_same(receiver.model)
 	var volume := scene.get_node("VolumeKnob") as Knob
 	assert_object(tone.volume).is_same(volume.target)
 	for knob: Knob in [azimuth, volume, scene.get_node("TuningKnob") as Knob]:
