@@ -7,7 +7,7 @@ godot := env("GODOT", "ggg run")
 default:
     @just --list
 
-# Import the project headless (class cache, extension list)
+# Import the project headless (class cache)
 [working-directory("godot")]
 import:
     {{ godot }} --headless --editor --quit-after 300
@@ -15,109 +15,25 @@ import:
 # Open the Godot editor detached from the shell (log in the repo-root reports/editor.log)
 [unix]
 [working-directory("godot")]
-edit: build
+edit:
     mkdir -p ../reports && nohup {{ godot }} --editor --path . > ../reports/editor.log 2>&1 &
 
 # GDScript tests (GdUnit4), headless. Extra args go to Godot.
 # Reports go to the repo-root reports/, outside res://.
 [working-directory("godot")]
-test-gd *ARGS="--headless --ignoreHeadlessMode": build import
+test-gd *ARGS="--headless --ignoreHeadlessMode": import
     bash addons/gdUnit4/runtest.sh --godot_binary "$GODOT" -a res://test -c -rd ../reports {{ ARGS }}
-
-lib_ext := if os() == "macos" { "dylib" } else if os() == "windows" { "dll" } else { "so" }
-lib_prefix := if os() == "windows" { "" } else { "lib" }
-
-# Build every Rust extension (cdylib crate) into godot/extensions/rust/bin (profile: debug | release; release on macOS is universal)
-[unix]
-build-rust profile="debug":
-    #!/usr/bin/env bash
-    set -euo pipefail
-    [ -d rust ] || exit 0
-    m=rust/Cargo.toml
-    out=godot/extensions/rust/bin
-    mkdir -p "$out"
-    flag=$([ "{{ profile }}" = release ] && echo --release || true)
-    exts=$(cargo metadata --manifest-path $m --no-deps --format-version 1 \
-        | jq -r '.packages[].targets[] | select(.crate_types | index("cdylib")) | .name')
-    if [ "{{ os() }}" = macos ] && [ "{{ profile }}" = release ]; then
-        cargo build --manifest-path $m --workspace $flag --target aarch64-apple-darwin
-        cargo build --manifest-path $m --workspace $flag --target x86_64-apple-darwin
-        for e in $exts; do
-            lipo -create rust/target/{aarch64,x86_64}-apple-darwin/release/lib$e.dylib -output "$out/lib$e.dylib"
-        done
-    else
-        cargo build --manifest-path $m --workspace $flag
-        for e in $exts; do cp "rust/target/{{ profile }}/{{ lib_prefix }}$e.{{ lib_ext }}" "$out/"; done
-    fi
-
-[windows]
-build-rust profile="debug":
-    if (Test-Path rust) { \
-      cargo build --manifest-path rust/Cargo.toml --workspace $(if ("{{ profile }}" -eq "release") { "--release" }); \
-      New-Item -ItemType Directory -Force godot/extensions/rust/bin | Out-Null; \
-      $meta = cargo metadata --manifest-path rust/Cargo.toml --no-deps --format-version 1 | ConvertFrom-Json; \
-      $meta.packages.targets | Where-Object { $_.crate_types -contains "cdylib" } | ForEach-Object { Copy-Item "rust/target/{{ profile }}/$($_.name).dll" godot/extensions/rust/bin/ } \
-    }
-
-# Rust unit tests (all crates)
-test-rust:
-    {{ if path_exists("rust") == "true" { "cargo test --manifest-path rust/Cargo.toml --workspace" } else { "echo 'no rust/, skipping'" } }}
-
-# C++ unit tests (doctest via ctest, all extensions)
-test-cpp:
-    {{ if path_exists("cpp") == "true" { "cmake --preset debug -S cpp && cmake --build cpp/build/debug && ctest --test-dir cpp/build/debug --output-on-failure" } else { "echo 'no cpp/, skipping'" } }}
-
-# Build every C++ extension into godot/extensions/cpp/bin (profile: debug | release; release on macOS is universal)
-[unix]
-build-cpp profile="debug":
-    #!/usr/bin/env bash
-    set -euo pipefail
-    [ -d cpp ] || exit 0
-    out=godot/extensions/cpp/bin
-    mkdir -p "$out"
-    exts=$(find cpp/extensions -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
-    if [ "{{ os() }}" = macos ] && [ "{{ profile }}" = release ]; then
-        for arch in arm64 x86_64; do
-            triplet=$([ $arch = arm64 ] && echo arm64-osx || echo x64-osx)
-            cmake --preset release -S cpp -B "cpp/build/release-$arch" \
-                -DCMAKE_OSX_ARCHITECTURES=$arch -DVCPKG_TARGET_TRIPLET=$triplet
-            cmake --build "cpp/build/release-$arch" --target $exts
-        done
-        for e in $exts; do
-            lipo -create "cpp/build/release-arm64/extensions/$e/lib$e.dylib" \
-                "cpp/build/release-x86_64/extensions/$e/lib$e.dylib" -output "$out/lib$e.dylib"
-        done
-    else
-        cmake --preset {{ profile }} -S cpp
-        cmake --build cpp/build/{{ profile }} --target $exts
-        for e in $exts; do cp "cpp/build/{{ profile }}/extensions/$e/{{ lib_prefix }}$e.{{ lib_ext }}" "$out/"; done
-    fi
-
-[windows]
-build-cpp profile="debug":
-    if (Test-Path cpp) { \
-      cmake --preset {{ profile }} -S cpp; \
-      $exts = (Get-ChildItem cpp/extensions -Directory).Name; \
-      cmake --build cpp/build/{{ profile }} --target $exts; \
-      New-Item -ItemType Directory -Force godot/extensions/cpp/bin | Out-Null; \
-      foreach ($e in $exts) { Copy-Item "cpp/build/{{ profile }}/extensions/$e/$e.dll" godot/extensions/cpp/bin/ } \
-    }
-
-# Build all extensions
-build profile="debug": (build-rust profile) (build-cpp profile)
 
 # Format all code
 fmt:
     -gdscript-formatter $(git ls-files '*.gd' ':!godot/addons')
-    {{ if path_exists("rust") == "true" { "cargo fmt --manifest-path rust/Cargo.toml --all" } else { "" } }}
-    {{ if path_exists("cpp") == "true" { "clang-format -i cpp/extensions/*/src/* cpp/extensions/*/tests/*" } else { "" } }}
 
 # Run all pre-commit hooks on every file
 lint:
     prek run --all-files
 
-# All tests: Rust, C++, then GDScript + engine tests
-test: test-rust test-cpp test-gd
+# All tests: GDScript + engine tests
+test: test-gd
 
 # Everything CI runs
 check: lint test
@@ -127,16 +43,16 @@ gh-setup:
     gh api --method POST "repos/{owner}/{repo}/rulesets" --input .github/rulesets/main.json
     gh api --method PATCH "repos/{owner}/{repo}" -F allow_squash_merge=true -F allow_merge_commit=false -F allow_rebase_merge=false -F delete_branch_on_merge=true -f squash_merge_commit_title=PR_TITLE -f squash_merge_commit_message=PR_BODY
 
-# Export a preset (Linux | Windows | macOS) to the repo-root build/<preset>/ (outside res://) with release libraries
+# Export a preset (Linux | Windows | macOS) to the repo-root build/<preset>/ (outside res://)
 [unix]
 [working-directory("godot")]
-export preset: (build "release") import
+export preset: import
     mkdir -p ../build/{{ preset }}
     {{ godot }} --headless --export-release "{{ preset }}"
 
 [windows]
 [working-directory("godot")]
-export preset: (build "release") import
+export preset: import
     New-Item -ItemType Directory -Force ../build/{{ preset }} | Out-Null; {{ godot }} --headless --export-release "{{ preset }}"
 
 # One-shot setup right after "Use this template" + clone: LFS and labels. Safe to re-run. Never pushes.

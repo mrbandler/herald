@@ -8,11 +8,6 @@
 /reports/
 *.translation
 
-# --- Extensions ----------------------------------------------------------
-/godot/extensions/*/bin/
-/rust/target/
-/cpp/build/
-
 # --- Addon user settings -------------------------------------------------
 /godot/cyclops_settings.config
 
