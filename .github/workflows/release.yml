@@ -71,9 +71,17 @@ jobs:
             curl -fsSL "https://github.com/godotneers/ggg/releases/download/$GGG_VERSION/ggg-installer.sh" | sh
           fi
           echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+      # ggg queries the GitHub API without a token, so a cache hit avoids its rate limit and the template download.
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ runner.temp }}/ggg
+          key: ggg-${{ matrix.os }}-${{ hashFiles('godot/ggg.toml', 'godot/ggg.lock') }}
+          restore-keys: ggg-${{ matrix.os }}-
       - name: Godot, export templates and addons
         run: ggg sync --with-export-templates
         working-directory: godot
+        env:
+          GGG_CACHE_DIR: ${{ runner.temp }}/ggg
       - name: Native unit tests
         run: just test-rust test-cpp
       - name: Read version
