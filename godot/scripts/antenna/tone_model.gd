@@ -1,7 +1,7 @@
 class_name ToneModel
 extends Resource
 
-## The carrier sound: hiss against tone by strength, warble by poor lock, pulse while listening.
+## The carrier sound: hiss against tone by strength, warble by poor lock.
 
 ## Audio samples per second.
 @export var mix_rate := 22050.0
@@ -15,8 +15,6 @@ extends Resource
 @export var warble_depth := 6.0
 ## Warble speed in Hz.
 @export var warble_rate := 5.0
-## Listening pulses per second while the uplink is open.
-@export var pulse_rate := 0.8
 ## Dial units per full sweep of the hiss colour, so every turn of the dial is heard.
 @export var hiss_sweep_units := 1.0
 ## Darkest hiss: low-pass coefficient 0..1, lower is duller.
@@ -38,12 +36,8 @@ func hiss_gain(alpha: float) -> float:
 
 ## One mono sample at `t` seconds, within -1..1 for `strength` and `quality` in 0..1.
 ## `noise` is a random value in -1..1. `strength` mixes hiss against carrier, `quality` calms
-## the warble. `listening_for` is the seconds since the uplink opened, negative when not listening;
-## the pulse starts at full volume, so the uplink opens without a click.
-func sample(t: float, strength: float, quality: float, listening_for: float, noise: float) -> float:
+## the warble, so a locked carrier is a steady tone.
+func sample(t: float, strength: float, quality: float, noise: float) -> float:
 	var warble := warble_depth * (1.0 - quality) * sin(TAU * warble_rate * t)
 	var carrier := sin(TAU * carrier_pitch * t + warble)
-	if listening_for >= 0.0:
-		var pulse := 0.5 + 0.5 * cos(TAU * pulse_rate * listening_for)
-		carrier *= pulse * pulse
 	return noise * hiss_level * (1.0 - 0.6 * strength) + carrier * carrier_level * strength

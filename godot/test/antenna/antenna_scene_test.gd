@@ -37,7 +37,11 @@ func test_antenna_scene_is_wired() -> void:
 	var speak_latch := scene.get_node("SpeakLatch") as EventLatch
 	assert_object(carrier_latch.target).is_same(receiver.carrier_present)
 	assert_object((scene.get_node("SpeakLamp") as Lamp).source).is_same(speak_latch.target)
-	assert_object(tone.listening).is_same(speak_latch.target)
+	var chime := scene.get_node("UplinkChime") as BoolSound
+	assert_object(chime.source).is_same(speak_latch.target)
+	assert_object(chime.on_sound.stream).is_instanceof(ChimeStream)
+	assert_object(chime.off_sound.stream).is_instanceof(ChimeStream)
+	assert_object(chime.on_sound.stream).is_not_same(chime.off_sound.stream)
 	for latch: EventLatch in [carrier_latch, speak_latch]:
 		assert_object(latch.on).is_not_same(latch.off)
 	assert_vector(azimuth.rotation_degrees).is_equal_approx(Vector3(90, 0, 0), Vector3.ONE * 0.01)
