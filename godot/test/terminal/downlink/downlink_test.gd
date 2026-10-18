@@ -141,6 +141,7 @@ func test_uplink_cuts_the_running_item_and_drops_the_queue() -> void:
 	var stored := _downlink.storage.value[0] as StoredItem
 	assert_int(stored.sent()).is_equal(9)
 	assert_str(_notices.calls[-1]).is_equal("21 CUT 9/16. CLEAN 9 NOISY 0 LOST 0")
+	assert_int(_completions.calls.size()).is_equal(0)
 	assert_bool(_downlink.downlink_open.value).is_false()
 	assert_str(_downlink.progress_line.value).is_empty()
 
@@ -152,3 +153,34 @@ func test_uplink_abandons_an_unfinished_push() -> void:
 	_run(5.0)
 	assert_bool(_downlink.manifest_received.value).is_false()
 	assert_str(_downlink.progress_line.value).is_empty()
+
+func test_a_cut_before_the_first_row_stores_nothing() -> void:
+	_receive_manifest()
+	_downlink.download_queue.add(_downlink.manifest.value[0])
+	_run(0.5)
+	_downlink.speak_open.value = true
+	_downlink.speak_opened.raise()
+	assert_int(_downlink.storage.value.size()).is_equal(0)
+	assert_int(_downlink.download_queue.value.size()).is_equal(0)
+	assert_int(_downlink.download_received.value).is_equal(0)
+	assert_str(_notices.calls[-1]).is_equal("MANIFEST RECEIVED. 2 ITEMS")
+
+func test_the_next_item_starts_from_zero() -> void:
+	_receive_manifest()
+	_downlink.download_queue.add(_downlink.manifest.value[0])
+	_downlink.download_queue.add(_downlink.manifest.value[1])
+	_run(15.1)
+	assert_int(_downlink.storage.value.size()).is_equal(1)
+	assert_int(_downlink.download_received.value).is_equal(0)
+
+func test_storage_is_written_before_the_queue_drops_the_item() -> void:
+	_receive_manifest()
+	var item := _downlink.manifest.value[0]
+	_downlink.download_queue.add(item)
+	var queued_at_store: Array[bool] = []
+	_downlink.storage.updated.connect(
+		func(_previous: Variant, _current: Variant) -> void:
+			queued_at_store.append(_downlink.download_queue.value.has(item)),
+	)
+	_run(15.1)
+	assert_array(queued_at_store).is_equal([true])

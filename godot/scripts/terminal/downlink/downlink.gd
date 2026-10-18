@@ -148,20 +148,27 @@ func _store_running() -> void:
 	storage.add(_running)
 	download_queue.remove(item)
 
+	_clear_running()
+
+## Forgets the running item and clears its progress.
+func _clear_running() -> void:
 	_running = null
 	_item_elapsed = 0.0
 	download_received.value = 0
 	progress_line.value = ""
 
-## Cuts the running item into a partial, drops the queue and abandons an unfinished push.
+## Cuts the running item into a partial, drops the queue and abandons an unfinished push. An
+## item cut before its first row was sent is dropped: no rows, nothing stored.
 func _on_speak_opened(_payload: Variant) -> void:
 	downlink_open.value = false
 	_push_elapsed = 0.0
 	progress_line.value = ""
 
-	if _running != null:
+	if _running != null and _running.sent() > 0:
 		var notice := model.cut_notice(_running)
 		_store_running()
 		status_notice.raise(notice)
+	else:
+		_clear_running()
 
 	download_queue.clear()
