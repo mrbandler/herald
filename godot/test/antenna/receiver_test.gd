@@ -30,12 +30,22 @@ func test_on_target_and_tuned_locks() -> void:
 	assert_bool(_receiver.locked.value).is_true()
 
 
-func test_losing_the_carrier_drops_to_silence() -> void:
+func test_after_los_the_carrier_sets_without_lock() -> void:
 	_point_at_target()
 	_tune(0.0)
 	_receiver.carrier_present.value = true
 	_receiver.sense()
 	_receiver.carrier_present.value = false
+	_receiver.pass_time.value = 115.0 + _receiver.model.set_seconds * 0.5
+	_point_at_target()
+	_tune(0.0)
+	_receiver.sense()
+	assert_float(_receiver.signal_strength.value).is_equal_approx(0.5, 0.0001)
+	assert_bool(_receiver.locked.value).is_false()
+
+
+func test_without_a_pass_there_is_silence() -> void:
+	_receiver.current_pass.value = null
 	_receiver.sense()
 	assert_float(_receiver.signal_strength.value).is_equal(0.0)
 	assert_float(_receiver.lock_quality.value).is_equal(0.0)

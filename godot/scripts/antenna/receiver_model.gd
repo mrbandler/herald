@@ -17,6 +17,10 @@ extends Resource
 ## Dial units off the true carrier at which lock quality reaches zero.
 @export_range(0.01, 20.0) var tuning_tolerance := 2.0
 
+@export_group("Set")
+## Seconds after LOS the carrier takes to fade out. It rises over the whole prep.
+@export_range(0.1, 120.0) var set_seconds := 15.0
+
 @export_group("Card error")
 ## Degrees of star card error at window 0.
 @export var card_error_base := 0.5
@@ -68,11 +72,14 @@ func target_at(window: PassWindow, t: float) -> Vector2:
 	return card + direction * card_error(window) + dish_drift * (t - window.aos)
 
 
-## 0..1 how far the carrier has risen out of the hiss: from nothing at pass start to full at AOS.
-func rise(window: PassWindow, t: float) -> float:
+## 0..1 how far the carrier stands out of the hiss: it rises from nothing at pass start to full
+## at AOS, and after LOS sets over `set_seconds`.
+func presence(window: PassWindow, t: float) -> float:
 	if window.aos <= 0.0:
 		return 1.0
-	return clampf(t / window.aos, 0.0, 1.0)
+	if t < window.los:
+		return clampf(t / window.aos, 0.0, 1.0)
+	return clampf(1.0 - (t - window.los) / set_seconds, 0.0, 1.0)
 
 
 ## Degrees between dish and target. Azimuth wraps around 360.

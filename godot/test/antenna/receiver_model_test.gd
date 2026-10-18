@@ -83,10 +83,19 @@ func test_true_tuning_drifts_into_aos_and_on_past_it() -> void:
 
 func test_the_carrier_rises_over_the_prep() -> void:
 	var window := PassFixture.window_one()
-	assert_float(_model.rise(window, 0.0)).is_equal(0.0)
-	assert_float(_model.rise(window, 15.0)).is_equal_approx(0.5, 0.0001)
-	assert_float(_model.rise(window, 30.0)).is_equal(1.0)
-	assert_float(_model.rise(window, 100.0)).is_equal(1.0)
+	assert_float(_model.presence(window, 0.0)).is_equal(0.0)
+	assert_float(_model.presence(window, 15.0)).is_equal_approx(0.5, 0.0001)
+	assert_float(_model.presence(window, 30.0)).is_equal(1.0)
+	assert_float(_model.presence(window, 100.0)).is_equal(1.0)
+
+
+func test_the_carrier_sets_over_set_seconds_after_los() -> void:
+	var window := PassFixture.window_one()
+	_model.set_seconds = 10.0
+	assert_float(_model.presence(window, 115.0)).is_equal(1.0)
+	assert_float(_model.presence(window, 120.0)).is_equal_approx(0.5, 0.0001)
+	assert_float(_model.presence(window, 125.0)).is_equal(0.0)
+	assert_float(_model.presence(window, 175.0)).is_equal(0.0)
 
 
 func test_lock_quality_by_tuning_error() -> void:
