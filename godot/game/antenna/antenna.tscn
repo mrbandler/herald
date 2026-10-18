@@ -259,6 +259,17 @@ receiver_model = ExtResource("10_m_receiver")
 position = Vector3(0, 0.083, 0)
 mesh = SubResource("Mesh_mark")
 
+[node name="MarginMark" type="Node3D" parent="."]
+position = Vector3(0.1, 0.23, 0.206)
+script = ExtResource("8_mark")
+needle_model = ExtResource("14_m_needle")
+receiver_model = ExtResource("10_m_receiver")
+threshold = "margin"
+
+[node name="Tick" type="MeshInstance3D" parent="MarginMark"]
+position = Vector3(0, 0.083, 0)
+mesh = SubResource("Mesh_mark")
+
 [node name="TuneNeedle" type="Node3D" parent="."]
 position = Vector3(0.28, 0.23, 0.208)
 script = ExtResource("3_needle")
