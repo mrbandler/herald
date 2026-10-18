@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="PassWindow" format=3]
+
+[ext_resource type="Script" path="res://scripts/pass/pass_window.gd" id="1"]
+[ext_resource type="Resource" path="res://game/data/commands/window_01.tres" id="2"]
+
+[resource]
+script = ExtResource("1")
+number = 1
+aos = 30.0
+speak = 95.0
+los = 115.0
+bell = 175.0
+clock_start = 9600.0
+card_azimuth = 214.6
+card_elevation = 38.2
+card_tuning = 52.0
+card_seed = 1
+command_set = ExtResource("2")

@@ -44,8 +44,6 @@ body:
       multiple: true
       options:
         - GDScript
-        - Rust
-        - C++
         - Not language specific
     validations:
       required: true

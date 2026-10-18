@@ -1,0 +1,152 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/terminal/terminal.gd" id="1_terminal"]
+[ext_resource type="Script" path="res://scripts/terminal/uplink.gd" id="2_uplink"]
+[ext_resource type="Script" path="res://scripts/core/interaction/focus_target.gd" id="3_focus"]
+[ext_resource type="Script" path="res://scripts/terminal/link_status.gd" id="4_link_status"]
+[ext_resource type="Script" path="res://scripts/core/atoms/nodes/event_latch.gd" id="5_latch"]
+[ext_resource type="Resource" path="res://game/data/atoms/terminal/screen_cleared.tres" id="40_cleared"]
+[ext_resource type="Resource" path="res://game/data/atoms/uplink/speak_open.tres" id="39_speak_open"]
+[ext_resource type="Resource" path="res://game/data/models/terminal.tres" id="10_m_terminal"]
+[ext_resource type="Resource" path="res://game/data/models/uplink.tres" id="11_m_uplink"]
+[ext_resource type="Resource" path="res://game/data/input/leave_terminal.tres" id="12_leave"]
+[ext_resource type="Resource" path="res://game/data/input/terminal.tres" id="13_context"]
+[ext_resource type="Resource" path="res://game/data/atoms/terminal/stdout.tres" id="20_stdout"]
+[ext_resource type="Resource" path="res://game/data/atoms/terminal/command_history.tres" id="21_history"]
+[ext_resource type="Resource" path="res://game/data/atoms/terminal/viewing.tres" id="22_viewing"]
+[ext_resource type="Resource" path="res://game/data/atoms/pass/current_pass.tres" id="23_current"]
+[ext_resource type="Resource" path="res://game/data/atoms/player/terminal_focused.tres" id="24_focused"]
+[ext_resource type="Resource" path="res://game/data/atoms/player/terminal_focus_point.tres" id="25_point"]
+[ext_resource type="Resource" path="res://game/data/atoms/uplink/tx_requested.tres" id="30_tx"]
+[ext_resource type="Resource" path="res://game/data/atoms/uplink/uplinked.tres" id="31_uplinked"]
+[ext_resource type="Resource" path="res://game/data/atoms/uplink/sequence.tres" id="32_sequence"]
+[ext_resource type="Resource" path="res://game/data/atoms/uplink/transmitting.tres" id="33_transmitting"]
+[ext_resource type="Resource" path="res://game/data/atoms/uplink/acked.tres" id="34_acked"]
+[ext_resource type="Resource" path="res://game/data/atoms/antenna/locked.tres" id="35_locked"]
+[ext_resource type="Resource" path="res://game/data/atoms/pass/los.tres" id="36_los"]
+[ext_resource type="Resource" path="res://game/data/atoms/antenna/signal_strength.tres" id="41_strength"]
+[ext_resource type="Resource" path="res://game/data/atoms/pass/pass_time.tres" id="42_time"]
+
+[sub_resource type="SystemFont" id="Font_mono"]
+font_names = PackedStringArray("monospace")
+
+[sub_resource type="ViewportTexture" id="Texture_screen"]
+viewport_path = NodePath("Screen")
+
+[sub_resource type="StandardMaterial3D" id="Material_crt"]
+resource_local_to_scene = true
+shading_mode = 0
+albedo_texture = SubResource("Texture_screen")
+
+[sub_resource type="QuadMesh" id="Mesh_crt"]
+size = Vector2(0.48, 0.36)
+
+[sub_resource type="BoxShape3D" id="Shape_crt"]
+size = Vector3(0.5, 0.38, 0.05)
+
+[node name="Terminal" type="Node3D"]
+
+[node name="Screen" type="SubViewport" parent="."]
+size = Vector2i(512, 384)
+render_target_update_mode = 4
+
+[node name="Background" type="ColorRect" parent="Screen"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.015, 0.01, 1)
+
+[node name="StatusBand" type="ColorRect" parent="Screen"]
+offset_left = 6.0
+offset_top = 6.0
+offset_right = 506.0
+offset_bottom = 28.0
+color = Color(1, 0.72, 0.25, 1)
+
+[node name="StatusBar" type="Label" parent="Screen"]
+offset_left = 12.0
+offset_top = 6.0
+offset_right = 500.0
+offset_bottom = 28.0
+theme_override_colors/font_color = Color(0.1, 0.07, 0.02, 1)
+theme_override_fonts/font = SubResource("Font_mono")
+theme_override_font_sizes/font_size = 17
+text = "NO CARRIER"
+script = ExtResource("4_link_status")
+pass_time = ExtResource("42_time")
+current_pass = ExtResource("23_current")
+signal_strength = ExtResource("41_strength")
+locked = ExtResource("35_locked")
+uplink_open = ExtResource("39_speak_open")
+transmitting = ExtResource("33_transmitting")
+
+[node name="Text" type="Label" parent="Screen"]
+offset_left = 12.0
+offset_top = 32.0
+offset_right = 500.0
+offset_bottom = 354.0
+theme_override_colors/font_color = Color(1, 0.72, 0.25, 1)
+theme_override_fonts/font = SubResource("Font_mono")
+theme_override_font_sizes/font_size = 17
+text = "LP4> _"
+
+[node name="KeyHints" type="Label" parent="Screen"]
+offset_left = 12.0
+offset_top = 356.0
+offset_right = 500.0
+offset_bottom = 378.0
+theme_override_colors/font_color = Color(0.6, 0.42, 0.14, 1)
+theme_override_fonts/font = SubResource("Font_mono")
+theme_override_font_sizes/font_size = 17
+text = "ESC LEAVE   UP/DOWN HISTORY   PGUP/PGDN SCROLL"
+
+[node name="Bezel" type="CSGBox3D" parent="."]
+position = Vector3(0, 0, -0.06)
+size = Vector3(0.6, 0.48, 0.1)
+
+[node name="Crt" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0, 0.001)
+mesh = SubResource("Mesh_crt")
+material_override = SubResource("Material_crt")
+
+[node name="FocusTarget" type="Area3D" parent="." node_paths=PackedStringArray("anchor")]
+script = ExtResource("3_focus")
+focused = ExtResource("24_focused")
+focus_point = ExtResource("25_point")
+anchor = NodePath("Anchor")
+
+[node name="Shape" type="CollisionShape3D" parent="FocusTarget"]
+shape = SubResource("Shape_crt")
+
+[node name="Anchor" type="Node3D" parent="FocusTarget"]
+
+[node name="Terminal" type="Node" parent="." node_paths=PackedStringArray("screen")]
+script = ExtResource("1_terminal")
+model = ExtResource("10_m_terminal")
+screen = NodePath("../Screen/Text")
+out = ExtResource("20_stdout")
+history = ExtResource("21_history")
+focused = ExtResource("24_focused")
+viewing = ExtResource("22_viewing")
+current_pass = ExtResource("23_current")
+leave = ExtResource("12_leave")
+terminal_context = ExtResource("13_context")
+clear = ExtResource("40_cleared")
+
+[node name="Uplink" type="Node" parent="."]
+script = ExtResource("2_uplink")
+model = ExtResource("11_m_uplink")
+tx_requested = ExtResource("30_tx")
+los = ExtResource("36_los")
+uplinked = ExtResource("31_uplinked")
+sequence = ExtResource("32_sequence")
+locked = ExtResource("35_locked")
+transmitting = ExtResource("33_transmitting")
+out = ExtResource("20_stdout")
+
+[node name="AckLatch" type="Node" parent="."]
+script = ExtResource("5_latch")
+on = ExtResource("31_uplinked")
+target = ExtResource("34_acked")

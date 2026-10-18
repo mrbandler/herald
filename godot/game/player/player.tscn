@@ -1,0 +1,80 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/player/mouse_look.gd" id="1_look"]
+[ext_resource type="Script" path="res://scripts/player/picker.gd" id="2_picker"]
+[ext_resource type="Script" path="res://scripts/player/lean.gd" id="3_lean"]
+[ext_resource type="Script" path="res://scripts/player/crosshair.gd" id="4_crosshair"]
+[ext_resource type="Resource" path="res://game/data/models/player.tres" id="10_model"]
+[ext_resource type="Resource" path="res://game/data/input/look.tres" id="11_look"]
+[ext_resource type="Resource" path="res://game/data/input/grab.tres" id="12_grab"]
+[ext_resource type="Resource" path="res://game/data/input/fine.tres" id="13_fine"]
+[ext_resource type="Resource" path="res://game/data/input/release_mouse.tres" id="14_release"]
+[ext_resource type="Resource" path="res://game/data/input/room.tres" id="15_room"]
+[ext_resource type="Resource" path="res://game/data/atoms/player/hovering.tres" id="20_hovering"]
+[ext_resource type="Resource" path="res://game/data/atoms/player/grabbing.tres" id="21_grabbing"]
+[ext_resource type="Resource" path="res://game/data/atoms/player/terminal_focused.tres" id="22_focused"]
+[ext_resource type="Resource" path="res://game/data/atoms/player/terminal_focus_point.tres" id="23_point"]
+[ext_resource type="Texture2D" path="res://assets/kenney/cursors/cross_small.png" id="30_idle"]
+[ext_resource type="Texture2D" path="res://assets/kenney/cursors/hand_open.png" id="31_hover"]
+[ext_resource type="Texture2D" path="res://assets/kenney/cursors/hand_closed.png" id="32_grab"]
+
+[node name="Player" type="Node3D"]
+
+[node name="Pivot" type="Node3D" parent="."]
+position = Vector3(0, 1.15, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Pivot"]
+current = true
+fov = 70.0
+near = 0.02
+
+[node name="MouseLook" type="Node" parent="." node_paths=PackedStringArray("pivot")]
+script = ExtResource("1_look")
+model = ExtResource("10_model")
+pivot = NodePath("../Pivot")
+look = ExtResource("11_look")
+release_mouse = ExtResource("14_release")
+room_context = ExtResource("15_room")
+grabbing = ExtResource("21_grabbing")
+
+[node name="Picker" type="Node" parent="." node_paths=PackedStringArray("camera")]
+script = ExtResource("2_picker")
+model = ExtResource("10_model")
+camera = NodePath("../Pivot/Camera3D")
+grab_action = ExtResource("12_grab")
+look = ExtResource("11_look")
+fine = ExtResource("13_fine")
+hovering = ExtResource("20_hovering")
+grabbing = ExtResource("21_grabbing")
+
+[node name="Lean" type="Node" parent="." node_paths=PackedStringArray("pivot")]
+script = ExtResource("3_lean")
+model = ExtResource("10_model")
+pivot = NodePath("../Pivot")
+focused = ExtResource("22_focused")
+focus_point = ExtResource("23_point")
+
+[node name="Hud" type="CanvasLayer" parent="."]
+
+[node name="Crosshair" type="TextureRect" parent="Hud"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 16.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+texture = ExtResource("30_idle")
+script = ExtResource("4_crosshair")
+hovering = ExtResource("20_hovering")
+grabbing = ExtResource("21_grabbing")
+idle_icon = ExtResource("30_idle")
+hover_icon = ExtResource("31_hover")
+grab_icon = ExtResource("32_grab")
