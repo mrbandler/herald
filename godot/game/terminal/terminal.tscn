@@ -6,6 +6,8 @@
 [ext_resource type="Script" path="res://scripts/core/atoms/nodes/event_printer.gd" id="4_printer"]
 [ext_resource type="Script" path="res://scripts/core/atoms/nodes/event_latch.gd" id="5_latch"]
 [ext_resource type="Script" path="res://scripts/core/atoms/nodes/bool_printer.gd" id="6_bool_printer"]
+[ext_resource type="Script" path="res://scripts/terminal/link_mode_printer.gd" id="7_link_mode"]
+[ext_resource type="Resource" path="res://game/data/atoms/uplink/speak_open.tres" id="39_speak_open"]
 [ext_resource type="Resource" path="res://game/data/models/terminal.tres" id="10_m_terminal"]
 [ext_resource type="Resource" path="res://game/data/models/uplink.tres" id="11_m_uplink"]
 [ext_resource type="Resource" path="res://game/data/input/leave_terminal.tres" id="12_leave"]
@@ -103,6 +105,14 @@ script = ExtResource("6_bool_printer")
 source = ExtResource("35_locked")
 on_text = "-- SIGNAL ACQUIRED. CONNECTED TO HERALD. --"
 off_text = "-- SIGNAL LOST. DISCONNECTED FROM HERALD. --"
+out = ExtResource("20_stdout")
+
+[node name="LinkModePrinter" type="Node" parent="."]
+script = ExtResource("7_link_mode")
+locked = ExtResource("35_locked")
+uplink_open = ExtResource("39_speak_open")
+downlink_text = "-- DOWNLINK OPEN. HERALD SPEAKING. --"
+uplink_text = "-- UPLINK OPEN. HERALD LISTENING. --"
 out = ExtResource("20_stdout")
 
 [node name="Terminal" type="Node" parent="." node_paths=PackedStringArray("screen")]
