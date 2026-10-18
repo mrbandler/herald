@@ -37,3 +37,10 @@ func test_after_the_bell_stays_at_bell_zero() -> void:
 	var mark := PassFixture.window_one().next_mark(200.0)
 	assert_str(mark.name).is_equal("BELL")
 	assert_float(mark.remaining).is_equal(0.0)
+
+
+func test_station_time_runs_faster_after_los() -> void:
+	var window := PassFixture.window_one()
+	assert_float(window.station_time(0.0)).is_equal(9600.0)
+	assert_float(window.station_time(115.0)).is_equal(9715.0)
+	assert_float(window.station_time(175.0)).is_equal(9715.0 + 60.0 * 60.0)

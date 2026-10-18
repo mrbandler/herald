@@ -299,7 +299,7 @@ pixel_size = 0.001
 modulate = Color(0.15, 0.15, 0.15, 1)
 font_size = 14
 outline_size = 0
-text = "SPEAK"
+text = "UPLINK"
 
 [node name="Receiver" type="Node" parent="."]
 script = ExtResource("1_receiver")

@@ -4,7 +4,7 @@ extends Resource
 ## Content of one contact window. Pure data plus lookups; it never runs anything.
 
 ## Mark names, in time order.
-const MARK_NAMES: PackedStringArray = ["AOS", "TURN", "SPEAK", "LOS", "BELL"]
+const MARK_NAMES: PackedStringArray = ["AOS", "TURN", "UPLINK", "LOS", "BELL"]
 
 ## 1-based. `PassLoader` picks the window by this number. 0 means not authored yet.
 @export var number := 0
@@ -20,6 +20,10 @@ const MARK_NAMES: PackedStringArray = ["AOS", "TURN", "SPEAK", "LOS", "BELL"]
 @export var los := 0.0
 ## The morning bell: the shift ends.
 @export var bell := 0.0
+## Station time of day at pass start, in seconds after midnight. The wall clock shows it after LOS.
+@export var clock_start := 0.0
+## How much faster station time runs than real time after LOS, so the rest of the night passes.
+@export var night_rate := 60.0
 
 @export_group("Star Card")
 ## Azimuth printed on the star card, in degrees.
@@ -34,6 +38,12 @@ const MARK_NAMES: PackedStringArray = ["AOS", "TURN", "SPEAK", "LOS", "BELL"]
 @export_group("Terminal")
 ## The commands this window offers. Every window needs one: Terminal and HELP read it.
 @export var command_set: CommandSet
+
+
+## Station time of day in seconds after midnight, `t` seconds into the pass. Real time until
+## LOS, then `night_rate` times faster.
+func station_time(t: float) -> float:
+	return clock_start + minf(t, los) + maxf(t - los, 0.0) * night_rate
 
 
 ## The five mark times in `MARK_NAMES` order, in seconds.

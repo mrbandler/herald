@@ -16,4 +16,5 @@ static func window_one() -> PassWindow:
 	window.card_elevation = 38.2
 	window.card_tuning = 52.0
 	window.card_seed = 1
+	window.clock_start = 9600.0
 	return window

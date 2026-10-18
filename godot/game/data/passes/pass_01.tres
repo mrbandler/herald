@@ -11,6 +11,7 @@ turn = 75.0
 speak = 95.0
 los = 115.0
 bell = 175.0
+clock_start = 9600.0
 card_azimuth = 214.6
 card_elevation = 38.2
 card_tuning = 52.0
