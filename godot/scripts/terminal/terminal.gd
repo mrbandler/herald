@@ -37,6 +37,9 @@ const GREETING := "LISTENING POST 4 - HTB MODULE - TYPE HELP"
 ## Raised by CLR. Empties the screen; the history is kept.
 @export var clear: Event
 
+## Read. Drawn on the bottom line of the screen. Optional.
+@export var progress_line: StringValue
+
 ## Wrapped stdout lines, oldest first, capped at the model's scrollback.
 var lines := PackedStringArray()
 
@@ -49,6 +52,8 @@ func _ready() -> void:
 	focused.updated.connect(_on_focused)
 	leave.just_triggered.connect(leave_pressed)
 	clear.raised.connect(_on_clear)
+	if progress_line != null:
+		progress_line.updated.connect(_on_progress)
 
 	out.raise(GREETING)
 
@@ -154,7 +159,14 @@ func _on_focused(_previous: bool, current: bool) -> void:
 	else:
 		GUIDE.disable_mapping_context(terminal_context)
 
-## Redraws the screen from the lines, the input line and the scroll.
+## Redraws the screen from the lines, the input line, the scroll and the progress line.
 func _refresh() -> void:
-	if screen != null:
-		screen.text = model.compose(lines, editor.text, editor.scroll)
+	if screen == null:
+		return
+
+	var progress := progress_line.value if progress_line != null else ""
+	screen.text = model.compose(lines, editor.text, editor.scroll, progress)
+
+## Redraws when the progress line changes.
+func _on_progress(_previous: Variant, _current: Variant) -> void:
+	_refresh()

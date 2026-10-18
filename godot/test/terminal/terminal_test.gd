@@ -16,6 +16,7 @@ func before_test() -> void:
 	_terminal.leave = GUIDEAction.new()
 	_terminal.terminal_context = GUIDEMappingContext.new()
 	_terminal.clear = Event.new()
+	_terminal.progress_line = StringValue.new()
 	_out = AtomSpy.events(_terminal.out)
 	_seq = SeqCommand.new()
 	_seq.name = "SEQ"
@@ -86,3 +87,7 @@ func test_escape_closes_the_popup_before_leaving() -> void:
 	assert_bool(_terminal.focused.value).is_true()
 	_terminal.leave_pressed()
 	assert_bool(_terminal.focused.value).is_false()
+
+func test_draws_the_progress_line() -> void:
+	_terminal.progress_line.value = "RECV MANIFEST [#---------]"
+	assert_str(_terminal.screen.text).ends_with("RECV MANIFEST [#---------]")

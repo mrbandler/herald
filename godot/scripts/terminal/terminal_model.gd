@@ -37,12 +37,12 @@ func wrap_line(line: String) -> PackedStringArray:
 
 	return chunks
 
-## The screen: scrollback above, the prompt line, and a reserved bottom line (progress, later).
-func compose(lines: PackedStringArray, input: String, scroll: int) -> String:
+## The screen: scrollback above, the prompt line, and the progress line at the bottom.
+func compose(lines: PackedStringArray, input: String, scroll: int, progress := "") -> String:
 	var end := maxi(lines.size() - scroll, 0)
 	var shown := lines.slice(maxi(end - (rows - 2), 0), end)
 
 	shown.append(prompt + input + "_")
-	shown.append("")
+	shown.append(progress)
 
 	return "\n".join(shown)

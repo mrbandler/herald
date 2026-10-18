@@ -22,3 +22,10 @@ func test_scroll_moves_the_window_up() -> void:
 func test_max_input_leaves_room_for_prompt_and_cursor() -> void:
 	var model := TerminalModel.new()
 	assert_int(model.max_input()).is_equal(model.columns - model.prompt.length() - 1)
+
+func test_compose_draws_the_progress_line_last() -> void:
+	var model := TerminalModel.new()
+	var screen := model.compose(PackedStringArray(["A"]), "", 0, "RECV 21")
+	var rows := screen.split("\n")
+	assert_str(rows[rows.size() - 1]).is_equal("RECV 21")
+	assert_str(model.compose(PackedStringArray(), "", 0).split("\n")[-1]).is_empty()
