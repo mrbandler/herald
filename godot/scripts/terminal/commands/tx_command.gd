@@ -5,13 +5,15 @@ extends Command
 
 ## Read. The uplink only works while true.
 @export var speak_open: BoolValue
+
 ## Read. Must not be empty.
 @export var sequence: StringListValue
+
 ## Read. Must be true.
 @export var locked: BoolValue
+
 ## Raised when all checks pass. `Uplink` does the transmission.
 @export var tx_requested: Event
-
 
 ## Raises `tx_requested`, or writes why it cannot.
 func run(args: PackedStringArray) -> void:

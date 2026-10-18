@@ -16,11 +16,11 @@ var value: String:
 	set(v):
 		_store(v)
 
-
+## Seeds the backing store with an empty string.
 func _init() -> void:
 	# Seed: an unchanged default is not stored in the .tres, so its setter never runs.
 	_value = ""
 
-
+## The value `reset()` stores: `default`.
 func _default() -> Variant:
 	return default

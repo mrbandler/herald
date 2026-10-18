@@ -6,7 +6,6 @@ var _end: ShiftEnd
 var _spy: AtomSpy
 var _ended: AtomSpy
 
-
 func before_test() -> void:
 	_end = auto_free(ShiftEnd.new())
 	_end.tunables = Tunables.new()
@@ -18,18 +17,15 @@ func before_test() -> void:
 	_ended = AtomSpy.events(_end.shift_ended)
 	add_child(_end)
 
-
 func test_reports_the_ack_and_ends_the_shift() -> void:
 	_end.acked.value = true
 	_end.morning_bell.raise()
 	assert_array(_spy.calls).is_equal(["HEARTBEAT ACKNOWLEDGED"])
 	assert_int(_ended.calls.size()).is_equal(1)
 
-
 func test_reports_a_missing_ack() -> void:
 	_end.morning_bell.raise()
 	assert_array(_spy.calls).is_equal(["NO ACK SENT"])
-
 
 func test_ends_the_shift_only_once() -> void:
 	_end.morning_bell.raise()

@@ -1,6 +1,5 @@
 extends GdUnitTestSuite
 
-
 func test_starts_empty_and_resets_to_default() -> void:
 	var atom := StringValue.new()
 	assert_str(atom.value).is_empty()
@@ -8,7 +7,6 @@ func test_starts_empty_and_resets_to_default() -> void:
 	atom.value = ""
 	atom.reset()
 	assert_str(atom.value).is_equal("USR:/ODA/NOTES")
-
 
 func test_json_round_trip_keeps_string() -> void:
 	var atom := StringValue.new()

@@ -3,7 +3,6 @@ extends GdUnitTestSuite
 ## Checks wiring without entering the tree (MouseLook would capture the mouse).
 ## Node exports are checked by path, since they only resolve inside the tree.
 
-
 func test_player_scene_is_wired() -> void:
 	var scene: Node = auto_free(
 		(load("res://game/player/player.tscn") as PackedScene).instantiate()

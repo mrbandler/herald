@@ -1,6 +1,5 @@
 extends GdUnitTestSuite
 
-
 func test_default_seeds_and_reset_returns() -> void:
 	var atom := IntValue.new()
 	assert_int(atom.value).is_equal(0)
@@ -9,7 +8,6 @@ func test_default_seeds_and_reset_returns() -> void:
 	atom.value = 2
 	atom.reset()
 	assert_int(atom.value).is_equal(6)
-
 
 func test_json_round_trip_keeps_int() -> void:
 	var atom := IntValue.new()

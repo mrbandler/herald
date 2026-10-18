@@ -10,14 +10,12 @@ const KEPT: PackedStringArray = [
 	"res://game/data/atoms/antenna/volume.tres",
 ]
 
-
 func test_every_value_atom_is_reset_or_kept() -> void:
 	var reset := _reset_paths()
 	assert_int(reset.size()).is_greater(0)
 	for path: String in _value_atoms("res://game/data/atoms"):
 		var listed := reset.has(path) or KEPT.has(path)
 		assert_bool(listed).override_failure_message(path + " is neither reset nor kept").is_true()
-
 
 func _reset_paths() -> PackedStringArray:
 	var state := (load("res://game/room/room.tscn") as PackedScene).get_state()
@@ -32,7 +30,6 @@ func _reset_paths() -> PackedStringArray:
 			for atom: Resource in atoms:
 				paths.append(atom.resource_path)
 	return paths
-
 
 func _value_atoms(dir: String) -> PackedStringArray:
 	var found := PackedStringArray()

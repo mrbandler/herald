@@ -25,5 +25,8 @@ indent_size = 4
 [*.{gd,tscn,tres,cfg,godot}]
 indent_style = tab
 
+[*.gd]
+gdscript_formatter_blank_lines_around_definitions = 1
+
 [*.{cpp,hpp,h}]
 max_line_length = 120

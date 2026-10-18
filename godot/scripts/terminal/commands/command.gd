@@ -6,16 +6,16 @@ extends Resource
 
 ## What the player types.
 @export var name := ""
+
 ## Shown by HELP <NAME>, one output line per line break.
 @export_multiline var help := ""
+
 ## Written. Usually stdout.
 @export var out: StringEvent
-
 
 ## Executes with the words after the command name. Subclasses override.
 func run(_args: PackedStringArray) -> void:
 	pass
-
 
 ## Writes one line to `out` (stdout).
 func write(line: String) -> void:

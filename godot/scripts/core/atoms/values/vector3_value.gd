@@ -16,24 +16,25 @@ var value: Vector3:
 	set(v):
 		_store(v)
 
-
+## Seeds the backing store with Vector3.ZERO.
 func _init() -> void:
 	# Seed: an unchanged default is not stored in the .tres, so its setter never runs.
 	_value = Vector3.ZERO
 
-
+## The value `reset()` stores: `default`.
 func _default() -> Variant:
 	return default
-
 
 ## Saved as [x, y, z], since JSON has no Vector3.
 func snapshot() -> Variant:
 	return [value.x, value.y, value.z]
 
-
+## Turns a saved `[x, y, z]` back into a Vector3.
 func _coerce(v: Variant) -> Variant:
 	var items: Array = v
+
 	var x: float = items[0]
 	var y: float = items[1]
 	var z: float = items[2]
+
 	return Vector3(x, y, z)

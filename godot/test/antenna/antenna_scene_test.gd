@@ -2,7 +2,6 @@ extends GdUnitTestSuite
 
 ## Checks the scene's wiring. Exported node paths only resolve once the scene is in the tree.
 
-
 func test_antenna_scene_is_wired() -> void:
 	var scene: Node = auto_free(
 		(load("res://game/antenna/antenna.tscn") as PackedScene).instantiate()

@@ -1,6 +1,5 @@
 extends GdUnitTestSuite
 
-
 func test_tick_moves_the_reading_toward_the_source() -> void:
 	var needle: Needle = auto_free(Needle.new())
 	needle.model = NeedleModel.new()

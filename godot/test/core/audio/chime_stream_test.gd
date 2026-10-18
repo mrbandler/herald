@@ -1,6 +1,5 @@
 extends GdUnitTestSuite
 
-
 func test_builds_one_peep_per_note_with_gaps() -> void:
 	var chime := ChimeStream.new()
 	chime.notes = PackedFloat32Array([1000.0, 1500.0])

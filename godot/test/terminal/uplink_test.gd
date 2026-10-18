@@ -4,7 +4,6 @@ var _uplink: Uplink
 var _spy: AtomSpy
 var _sent: AtomSpy
 
-
 func before_test() -> void:
 	_uplink = auto_free(Uplink.new())
 	_uplink.model = UplinkModel.new()
@@ -23,7 +22,6 @@ func before_test() -> void:
 	add_child(_uplink)
 	_uplink.set_process(false)
 
-
 func test_sends_after_the_transmit_time() -> void:
 	_uplink.tx_requested.raise()
 	assert_bool(_uplink.transmitting.value).is_true()
@@ -35,7 +33,6 @@ func test_sends_after_the_transmit_time() -> void:
 	assert_int(_sent.calls.size()).is_equal(1)
 	assert_array(_spy.calls).is_equal(["TRANSMITTING...", "1 COMMANDS SENT."])
 
-
 func test_losing_lock_aborts_and_keeps_the_sequence() -> void:
 	_uplink.tx_requested.raise()
 	_uplink.locked.value = false
@@ -44,7 +41,6 @@ func test_losing_lock_aborts_and_keeps_the_sequence() -> void:
 	assert_array(_uplink.sequence.value).contains_exactly(["ACK"])
 	assert_array(_sent.calls).is_empty()
 	assert_array(_spy.calls).is_equal(["TRANSMITTING...", "UPLINK FAILED. LOCK LOST"])
-
 
 func test_los_aborts_and_a_retry_still_sends() -> void:
 	_uplink.tx_requested.raise()
@@ -57,7 +53,6 @@ func test_los_aborts_and_a_retry_still_sends() -> void:
 	_uplink.tick(2.5)
 	assert_int(_sent.calls.size()).is_equal(1)
 
-
 func test_duration_scales_with_the_sequence() -> void:
 	_uplink.sequence.value = PackedStringArray(["ACK", "ACK"])
 	_uplink.tx_requested.raise()
@@ -66,7 +61,6 @@ func test_duration_scales_with_the_sequence() -> void:
 	_uplink.tick(0.2)
 	assert_bool(_uplink.transmitting.value).is_false()
 	assert_str(_spy.calls[-1]).is_equal("2 COMMANDS SENT.")
-
 
 func test_busy_guard() -> void:
 	_uplink.tx_requested.raise()

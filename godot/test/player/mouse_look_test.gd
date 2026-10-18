@@ -1,6 +1,5 @@
 extends GdUnitTestSuite
 
-
 func test_turn_by_rotates_the_pivot() -> void:
 	var look: MouseLook = auto_free(MouseLook.new())
 	look.model = PlayerModel.new()

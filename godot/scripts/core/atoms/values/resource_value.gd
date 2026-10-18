@@ -18,6 +18,6 @@ var value: Resource:
 	set(v):
 		_store(v)
 
-
+## The value `reset()` stores: `default`.
 func _default() -> Variant:
 	return default

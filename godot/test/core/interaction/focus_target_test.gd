@@ -1,6 +1,5 @@
 extends GdUnitTestSuite
 
-
 func test_publishes_its_anchor_and_focuses_on_grab() -> void:
 	var target: FocusTarget = auto_free(FocusTarget.new())
 	var anchor := Node3D.new()

@@ -5,9 +5,10 @@ extends Node3D
 
 ## Gives the angle for a reading.
 @export var needle_model: NeedleModel
+
 ## Supplies the lock threshold.
 @export var receiver_model: ReceiverModel
 
-
+## Turns the tick to the lock threshold.
 func _ready() -> void:
 	rotation_degrees.z = needle_model.angle(receiver_model.lock_on)

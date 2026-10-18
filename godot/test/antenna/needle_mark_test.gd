@@ -1,6 +1,5 @@
 extends GdUnitTestSuite
 
-
 func test_points_at_the_lock_threshold() -> void:
 	var mark: NeedleMark = auto_free(NeedleMark.new())
 	mark.needle_model = NeedleModel.new()

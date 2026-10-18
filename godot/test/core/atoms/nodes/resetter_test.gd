@@ -1,6 +1,5 @@
 extends GdUnitTestSuite
 
-
 func test_resets_every_atom_on_ready() -> void:
 	var time := FloatValue.new()
 	time.default = 5.0

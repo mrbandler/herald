@@ -3,7 +3,6 @@ extends RefCounted
 
 ## Window 1 from the GDD time budget and Star Card, for tests.
 
-
 static func window_one() -> PassWindow:
 	var window := PassWindow.new()
 	window.number = 1

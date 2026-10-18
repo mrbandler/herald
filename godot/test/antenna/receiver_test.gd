@@ -2,7 +2,6 @@ extends GdUnitTestSuite
 
 var _receiver: Receiver
 
-
 func before_test() -> void:
 	_receiver = auto_free(Receiver.new())
 	_receiver.model = ReceiverModel.new()
@@ -19,7 +18,6 @@ func before_test() -> void:
 	_receiver.locked = BoolValue.new()
 	_receiver.pass_time.value = 30.0
 
-
 func test_on_target_and_tuned_locks() -> void:
 	_point_at_target()
 	_tune(0.0)
@@ -28,7 +26,6 @@ func test_on_target_and_tuned_locks() -> void:
 	assert_float(_receiver.signal_strength.value).is_equal_approx(1.0, 0.0001)
 	assert_float(_receiver.lock_quality.value).is_equal_approx(1.0, 0.0001)
 	assert_bool(_receiver.locked.value).is_true()
-
 
 func test_after_los_the_carrier_sets_without_lock() -> void:
 	_point_at_target()
@@ -43,14 +40,12 @@ func test_after_los_the_carrier_sets_without_lock() -> void:
 	assert_float(_receiver.signal_strength.value).is_equal_approx(0.5, 0.0001)
 	assert_bool(_receiver.locked.value).is_false()
 
-
 func test_without_a_pass_there_is_silence() -> void:
 	_receiver.current_pass.value = null
 	_receiver.sense()
 	assert_float(_receiver.signal_strength.value).is_equal(0.0)
 	assert_float(_receiver.lock_quality.value).is_equal(0.0)
 	assert_bool(_receiver.locked.value).is_false()
-
 
 func test_a_held_lock_survives_a_small_detune() -> void:
 	_point_at_target()
@@ -62,14 +57,12 @@ func test_a_held_lock_survives_a_small_detune() -> void:
 	_receiver.sense()
 	assert_bool(_receiver.locked.value).is_true()
 
-
 func test_a_small_detune_does_not_lock_from_cold() -> void:
 	_point_at_target()
 	_receiver.carrier_present.value = true
 	_tune(0.4)
 	_receiver.sense()
 	assert_bool(_receiver.locked.value).is_false()
-
 
 func test_before_aos_the_carrier_rises_but_cannot_lock() -> void:
 	_receiver.pass_time.value = 15.0
@@ -80,12 +73,10 @@ func test_before_aos_the_carrier_rises_but_cannot_lock() -> void:
 	assert_float(_receiver.lock_quality.value).is_equal_approx(1.0, 0.0001)
 	assert_bool(_receiver.locked.value).is_false()
 
-
 func test_force_lock_wins_even_without_carrier() -> void:
 	_receiver.force_lock.value = true
 	_receiver.sense()
 	assert_bool(_receiver.locked.value).is_true()
-
 
 func test_detuned_carrier_is_heard_but_not_locked() -> void:
 	_point_at_target()
@@ -95,13 +86,11 @@ func test_detuned_carrier_is_heard_but_not_locked() -> void:
 	assert_float(_receiver.signal_strength.value).is_greater(0.9)
 	assert_bool(_receiver.locked.value).is_false()
 
-
 func _point_at_target() -> void:
 	var window := _receiver.current_pass.value as PassWindow
 	var target := _receiver.model.target_at(window, _receiver.pass_time.value)
 	_receiver.dish_azimuth.value = target.x
 	_receiver.dish_elevation.value = target.y
-
 
 func _tune(offset: float) -> void:
 	var window := _receiver.current_pass.value as PassWindow

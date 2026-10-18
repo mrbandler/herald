@@ -2,7 +2,6 @@ extends GdUnitTestSuite
 
 ## Checks the scene's wiring without running it: every export points at an atom.
 
-
 func test_pass_scene_is_wired() -> void:
 	var scene: Node = auto_free((load("res://game/pass/pass.tscn") as PackedScene).instantiate())
 	var clock := scene.get_node("PassClock") as PassClock

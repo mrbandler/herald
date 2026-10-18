@@ -1,6 +1,5 @@
 extends GdUnitTestSuite
 
-
 func test_picks_the_icon_by_state() -> void:
 	var crosshair: Crosshair = auto_free(Crosshair.new())
 	crosshair.idle_icon = PlaceholderTexture2D.new()

@@ -12,18 +12,19 @@ enum State {
 
 ## Blinks per second.
 @export var blink_rate := 3.0
+
 ## Emission energy while lit.
 @export var on_energy := 4.0
+
 ## Emission energy while dark.
 @export var off_energy := 0.0
-
 
 ## ON if `on`, else BLINK while `blink_level` is above zero, else OFF.
 func state(on: bool, blink_level: float) -> State:
 	if on:
 		return State.ON
-	return State.BLINK if blink_level > 0.0 else State.OFF
 
+	return State.BLINK if blink_level > 0.0 else State.OFF
 
 ## Emission energy for a state at time `seconds`. BLINK is on for half of each period.
 func energy(lamp_state: State, seconds: float) -> float:

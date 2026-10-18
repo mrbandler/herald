@@ -1,6 +1,5 @@
 extends GdUnitTestSuite
 
-
 func test_builds_a_short_decaying_tick() -> void:
 	var click := ClickStream.new()
 	assert_int(click.data.size()).is_equal(int(click.rate * click.duration) * 2)

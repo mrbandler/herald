@@ -1,6 +1,5 @@
 extends GdUnitTestSuite
 
-
 func test_draws_on_ready_and_on_update() -> void:
 	var label: ValueLabel = auto_free(ValueLabel.new())
 	label.source = FloatValue.new()

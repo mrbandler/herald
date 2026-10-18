@@ -1,6 +1,5 @@
 extends GdUnitTestSuite
 
-
 func test_pulls_only_once_unlocked() -> void:
 	var chain: LampChain = auto_free(LampChain.new())
 	chain.unlocked = BoolValue.new()

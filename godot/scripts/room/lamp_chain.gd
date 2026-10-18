@@ -5,9 +5,9 @@ extends Interactable
 
 ## Read. True between LOS and the end of the shift.
 @export var unlocked: BoolValue
+
 ## Raised on a pull while unlocked. Usually the morning bell.
 @export var pull: Event
-
 
 ## Ends the shift if the chain is unlocked; does nothing during the pass.
 func grab() -> void:

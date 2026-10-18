@@ -16,11 +16,11 @@ var value: float:
 	set(v):
 		_store(v)
 
-
+## Seeds the backing store with 0.0.
 func _init() -> void:
 	# Zero seed: a default of 0 is not stored in the .tres, so its setter never runs.
 	_value = 0.0
 
-
+## The value `reset()` stores: `default`.
 func _default() -> Variant:
 	return default

@@ -2,14 +2,12 @@ extends GdUnitTestSuite
 
 const PASS_01 := "res://game/data/passes/pass_01.tres"
 
-
 func test_window_one_offers_help_seq_and_tx() -> void:
 	var window: PassWindow = load(PASS_01)
 	assert_array(window.command_set.names()).contains_exactly(["HELP", "SEQ", "TX"])
 	var tx := window.command_set.find("TX") as TxCommand
 	assert_object(tx.tx_requested).is_not_null()
 	assert_object(tx.out).is_same(window.command_set.find("SEQ").out)
-
 
 func test_terminal_scene_is_wired() -> void:
 	var scene: Node = auto_free(
