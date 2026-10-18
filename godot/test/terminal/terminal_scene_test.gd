@@ -30,17 +30,13 @@ func test_terminal_scene_is_wired() -> void:
 	var focus := scene.get_node("FocusTarget") as FocusTarget
 	assert_object(focus.focused).is_same(terminal.focused)
 	assert_str(focus.focus_point.resource_path.get_file()).is_equal("terminal_focus_point.tres")
-	var uplink_open := scene.get_node("UplinkOpenPrinter") as EventPrinter
-	assert_str(uplink_open.event.resource_path.get_file()).is_equal("speak_opened.tres")
-	assert_object(uplink_open.out).is_same(terminal.out)
-	var lock := scene.get_node("LockPrinter") as BoolPrinter
-	assert_object(lock.source).is_same(locked)
-	assert_object(lock.out).is_same(terminal.out)
-	var mode := scene.get_node("LinkModePrinter") as LinkModePrinter
-	assert_object(mode.locked).is_same(locked)
-	assert_object(mode.uplink_open).is_same(tx.speak_open)
-	assert_object(mode.out).is_same(terminal.out)
-	assert_int(mode.get_index()).is_greater(lock.get_index())
+	var status := scene.get_node("Screen/StatusBar") as LinkStatus
+	assert_object(status.locked).is_same(locked)
+	assert_object(status.uplink_open).is_same(tx.speak_open)
+	assert_object(status.transmitting).is_same(uplink.transmitting)
+	assert_str(status.signal_strength.resource_path.get_file()).is_equal("signal_strength.tres")
+	assert_object(status.current_pass).is_same(terminal.current_pass)
+	assert_object(scene.get_node("Screen/KeyHints")).is_not_null()
 	var crt := scene.get_node("Crt") as MeshInstance3D
 	var material := crt.material_override as StandardMaterial3D
 	assert_vector(material.albedo_texture.get_size()).is_equal(Vector2(512, 384))

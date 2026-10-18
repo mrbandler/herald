@@ -3,10 +3,8 @@
 [ext_resource type="Script" path="res://scripts/terminal/terminal.gd" id="1_terminal"]
 [ext_resource type="Script" path="res://scripts/terminal/uplink.gd" id="2_uplink"]
 [ext_resource type="Script" path="res://scripts/core/interaction/focus_target.gd" id="3_focus"]
-[ext_resource type="Script" path="res://scripts/core/atoms/nodes/event_printer.gd" id="4_printer"]
+[ext_resource type="Script" path="res://scripts/terminal/link_status.gd" id="4_link_status"]
 [ext_resource type="Script" path="res://scripts/core/atoms/nodes/event_latch.gd" id="5_latch"]
-[ext_resource type="Script" path="res://scripts/core/atoms/nodes/bool_printer.gd" id="6_bool_printer"]
-[ext_resource type="Script" path="res://scripts/terminal/link_mode_printer.gd" id="7_link_mode"]
 [ext_resource type="Resource" path="res://game/data/atoms/terminal/screen_cleared.tres" id="40_cleared"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/speak_open.tres" id="39_speak_open"]
 [ext_resource type="Resource" path="res://game/data/models/terminal.tres" id="10_m_terminal"]
@@ -26,7 +24,8 @@
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/acked.tres" id="34_acked"]
 [ext_resource type="Resource" path="res://game/data/atoms/antenna/locked.tres" id="35_locked"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/los.tres" id="36_los"]
-[ext_resource type="Resource" path="res://game/data/atoms/pass/speak_opened.tres" id="38_speak"]
+[ext_resource type="Resource" path="res://game/data/atoms/antenna/signal_strength.tres" id="41_strength"]
+[ext_resource type="Resource" path="res://game/data/atoms/pass/pass_time.tres" id="42_time"]
 
 [sub_resource type="SystemFont" id="Font_mono"]
 font_names = PackedStringArray("monospace")
@@ -59,15 +58,49 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.02, 0.015, 0.01, 1)
 
+[node name="StatusBand" type="ColorRect" parent="Screen"]
+offset_left = 6.0
+offset_top = 6.0
+offset_right = 506.0
+offset_bottom = 28.0
+color = Color(1, 0.72, 0.25, 1)
+
+[node name="StatusBar" type="Label" parent="Screen"]
+offset_left = 12.0
+offset_top = 6.0
+offset_right = 500.0
+offset_bottom = 28.0
+theme_override_colors/font_color = Color(0.1, 0.07, 0.02, 1)
+theme_override_fonts/font = SubResource("Font_mono")
+theme_override_font_sizes/font_size = 17
+text = "NO CARRIER"
+script = ExtResource("4_link_status")
+pass_time = ExtResource("42_time")
+current_pass = ExtResource("23_current")
+signal_strength = ExtResource("41_strength")
+locked = ExtResource("35_locked")
+uplink_open = ExtResource("39_speak_open")
+transmitting = ExtResource("33_transmitting")
+
 [node name="Text" type="Label" parent="Screen"]
 offset_left = 12.0
-offset_top = 10.0
+offset_top = 32.0
 offset_right = 500.0
-offset_bottom = 374.0
+offset_bottom = 354.0
 theme_override_colors/font_color = Color(1, 0.72, 0.25, 1)
 theme_override_fonts/font = SubResource("Font_mono")
 theme_override_font_sizes/font_size = 17
 text = "LP4> _"
+
+[node name="KeyHints" type="Label" parent="Screen"]
+offset_left = 12.0
+offset_top = 356.0
+offset_right = 500.0
+offset_bottom = 378.0
+theme_override_colors/font_color = Color(0.6, 0.42, 0.14, 1)
+theme_override_fonts/font = SubResource("Font_mono")
+theme_override_font_sizes/font_size = 17
+text = "ESC LEAVE   UP/DOWN HISTORY   PGUP/PGDN SCROLL"
 
 [node name="Bezel" type="CSGBox3D" parent="."]
 position = Vector3(0, 0, -0.06)
@@ -88,33 +121,6 @@ anchor = NodePath("Anchor")
 shape = SubResource("Shape_crt")
 
 [node name="Anchor" type="Node3D" parent="FocusTarget"]
-
-[node name="UplinkOpenPrinter" type="Node" parent="."]
-script = ExtResource("4_printer")
-event = ExtResource("38_speak")
-text = "-- UPLINK OPEN. HERALD LISTENING. --"
-out = ExtResource("20_stdout")
-
-[node name="LosPrinter" type="Node" parent="."]
-script = ExtResource("4_printer")
-event = ExtResource("36_los")
-text = "-- LOS. CARRIER LOST. --"
-out = ExtResource("20_stdout")
-
-[node name="LockPrinter" type="Node" parent="."]
-script = ExtResource("6_bool_printer")
-source = ExtResource("35_locked")
-on_text = "-- SIGNAL ACQUIRED. CONNECTED TO HERALD. --"
-off_text = "-- SIGNAL LOST. DISCONNECTED FROM HERALD. --"
-out = ExtResource("20_stdout")
-
-[node name="LinkModePrinter" type="Node" parent="."]
-script = ExtResource("7_link_mode")
-locked = ExtResource("35_locked")
-uplink_open = ExtResource("39_speak_open")
-downlink_text = "-- DOWNLINK OPEN. HERALD SPEAKING. --"
-uplink_text = "-- UPLINK OPEN. HERALD LISTENING. --"
-out = ExtResource("20_stdout")
 
 [node name="Terminal" type="Node" parent="." node_paths=PackedStringArray("screen")]
 script = ExtResource("1_terminal")
