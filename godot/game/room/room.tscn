@@ -42,6 +42,12 @@
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/acked.tres" id="64_acked"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/transmitting.tres" id="65_transmitting"]
 [ext_resource type="Resource" path="res://game/data/atoms/room/chain_unlocked.tres" id="70_chain_unlocked"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/manifest.tres" id="80_manifest"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/manifest_received.tres" id="81_manifest_received"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/download_queue.tres" id="82_queue"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/download_received.tres" id="83_dl_received"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/progress_line.tres" id="84_progress"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/downlink_open.tres" id="85_dl_open"]
 
 [sub_resource type="Environment" id="Environment_room"]
 background_mode = 1
@@ -66,7 +72,7 @@ height = 0.04
 
 [node name="Resetter" type="Node" parent="." unique_id=221681823]
 script = ExtResource("1_resetter")
-atoms = Array[ExtResource("2_value")]([ExtResource("30_time"), ExtResource("40_az"), ExtResource("41_el"), ExtResource("42_tune"), ExtResource("43_strength"), ExtResource("44_quality"), ExtResource("45_carrier"), ExtResource("46_locked"), ExtResource("48_force"), ExtResource("50_hovering"), ExtResource("51_grabbing"), ExtResource("52_focused"), ExtResource("60_viewing"), ExtResource("62_sequence"), ExtResource("63_speak_open"), ExtResource("64_acked"), ExtResource("65_transmitting"), ExtResource("70_chain_unlocked")])
+atoms = Array[ExtResource("2_value")]([ExtResource("30_time"), ExtResource("40_az"), ExtResource("41_el"), ExtResource("42_tune"), ExtResource("43_strength"), ExtResource("44_quality"), ExtResource("45_carrier"), ExtResource("46_locked"), ExtResource("48_force"), ExtResource("50_hovering"), ExtResource("51_grabbing"), ExtResource("52_focused"), ExtResource("60_viewing"), ExtResource("62_sequence"), ExtResource("63_speak_open"), ExtResource("64_acked"), ExtResource("65_transmitting"), ExtResource("70_chain_unlocked"), ExtResource("80_manifest"), ExtResource("81_manifest_received"), ExtResource("82_queue"), ExtResource("83_dl_received"), ExtResource("84_progress"), ExtResource("85_dl_open")])
 
 [node name="PassLoader" type="Node" parent="." unique_id=824546816]
 script = ExtResource("3_loader")

@@ -62,3 +62,9 @@ func test_window_two_lists_its_manifest() -> void:
 	assert_int(two.manifest[1].rows).is_equal(32)
 	var one: PassWindow = load(PASS_01)
 	assert_int(one.manifest.size()).is_equal(0)
+
+func test_window_two_offers_the_downlink_commands() -> void:
+	var two: PassWindow = load(PASS_02)
+	var names := two.command_set.names()
+	for command: String in ["HELP", "SEQ", "TX", "CLR", "MANIFEST", "GET", "STAT", "STORE", "DEL"]:
+		assert_bool(names.has(command)).override_failure_message(command).is_true()

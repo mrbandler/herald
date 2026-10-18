@@ -26,6 +26,21 @@
 [ext_resource type="Resource" path="res://game/data/atoms/pass/los.tres" id="36_los"]
 [ext_resource type="Resource" path="res://game/data/atoms/antenna/signal_strength.tres" id="41_strength"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/pass_time.tres" id="42_time"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/manifest.tres" id="50_manifest"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/manifest_received.tres" id="51_manifest_received"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/download_queue.tres" id="52_queue"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/storage.tres" id="53_storage"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/download_received.tres" id="54_dl_received"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/progress_line.tres" id="55_progress"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/status_notice.tres" id="56_notice"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/row_received.tres" id="57_row"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/download_complete.tres" id="58_complete"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/downlink_open.tres" id="59_dl_open"]
+[ext_resource type="Script" path="res://scripts/terminal/downlink/downlink.gd" id="60_downlink"]
+[ext_resource type="Resource" path="res://game/data/models/downlink.tres" id="61_m_downlink"]
+[ext_resource type="Resource" path="res://game/data/models/receiver.tres" id="62_m_receiver"]
+[ext_resource type="Resource" path="res://game/data/atoms/pass/speak_opened.tres" id="63_speak_opened"]
+[ext_resource type="Resource" path="res://game/data/atoms/antenna/carrier_present.tres" id="64_carrier"]
 
 [sub_resource type="SystemFont" id="Font_mono"]
 font_names = PackedStringArray("monospace")
@@ -81,6 +96,7 @@ signal_strength = ExtResource("41_strength")
 locked = ExtResource("35_locked")
 uplink_open = ExtResource("39_speak_open")
 transmitting = ExtResource("33_transmitting")
+status_notice = ExtResource("56_notice")
 
 [node name="Text" type="Label" parent="Screen"]
 offset_left = 12.0
@@ -134,6 +150,7 @@ current_pass = ExtResource("23_current")
 leave = ExtResource("12_leave")
 terminal_context = ExtResource("13_context")
 clear = ExtResource("40_cleared")
+progress_line = ExtResource("55_progress")
 
 [node name="Uplink" type="Node" parent="."]
 script = ExtResource("2_uplink")
@@ -145,6 +162,27 @@ sequence = ExtResource("32_sequence")
 locked = ExtResource("35_locked")
 transmitting = ExtResource("33_transmitting")
 out = ExtResource("20_stdout")
+
+[node name="Downlink" type="Node" parent="."]
+script = ExtResource("60_downlink")
+model = ExtResource("61_m_downlink")
+receiver_model = ExtResource("62_m_receiver")
+current_pass = ExtResource("23_current")
+carrier_present = ExtResource("64_carrier")
+speak_open = ExtResource("39_speak_open")
+locked = ExtResource("35_locked")
+signal_strength = ExtResource("41_strength")
+speak_opened = ExtResource("63_speak_opened")
+downlink_open = ExtResource("59_dl_open")
+manifest = ExtResource("50_manifest")
+manifest_received = ExtResource("51_manifest_received")
+download_queue = ExtResource("52_queue")
+storage = ExtResource("53_storage")
+download_received = ExtResource("54_dl_received")
+progress_line = ExtResource("55_progress")
+status_notice = ExtResource("56_notice")
+row_received = ExtResource("57_row")
+download_complete = ExtResource("58_complete")
 
 [node name="AckLatch" type="Node" parent="."]
 script = ExtResource("5_latch")

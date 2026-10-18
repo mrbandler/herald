@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="CommandSet" format=3]
+
+[ext_resource type="Script" path="res://scripts/terminal/commands/command_set.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/terminal/commands/command.gd" id="2_command"]
+[ext_resource type="Resource" path="res://game/data/commands/help.tres" id="3_help"]
+[ext_resource type="Resource" path="res://game/data/commands/seq.tres" id="4_seq"]
+[ext_resource type="Resource" path="res://game/data/commands/tx.tres" id="5_tx"]
+[ext_resource type="Resource" path="res://game/data/commands/clr.tres" id="6_clr"]
+[ext_resource type="Resource" path="res://game/data/commands/manifest.tres" id="7_manifest"]
+[ext_resource type="Resource" path="res://game/data/commands/get.tres" id="8_get"]
+[ext_resource type="Resource" path="res://game/data/commands/stat.tres" id="9_stat"]
+[ext_resource type="Resource" path="res://game/data/commands/store.tres" id="10_store"]
+[ext_resource type="Resource" path="res://game/data/commands/del.tres" id="11_del"]
+
+[resource]
+script = ExtResource("1_script")
+commands = Array[ExtResource("2_command")]([ExtResource("3_help"), ExtResource("4_seq"), ExtResource("5_tx"), ExtResource("6_clr"), ExtResource("7_manifest"), ExtResource("8_get"), ExtResource("9_stat"), ExtResource("10_store"), ExtResource("11_del")])

@@ -1,6 +1,8 @@
 extends GdUnitTestSuite
 
 const PASS_01 := "res://game/data/passes/pass_01.tres"
+const PASS_02 := "res://game/data/passes/pass_02.tres"
+const TERMINAL := "res://game/terminal/terminal.tscn"
 
 func test_window_one_offers_help_seq_tx_and_clr() -> void:
 	var window: PassWindow = load(PASS_01)
@@ -10,9 +12,7 @@ func test_window_one_offers_help_seq_tx_and_clr() -> void:
 	assert_object(tx.out).is_same(window.command_set.find("SEQ").out)
 
 func test_terminal_scene_is_wired() -> void:
-	var scene: Node = auto_free(
-		(load("res://game/terminal/terminal.tscn") as PackedScene).instantiate()
-	)
+	var scene: Node = auto_free((load(TERMINAL) as PackedScene).instantiate())
 	add_child(scene)
 	var terminal := scene.get_node("Terminal") as Terminal
 	var uplink := scene.get_node("Uplink") as Uplink
@@ -40,3 +40,18 @@ func test_terminal_scene_is_wired() -> void:
 	var crt := scene.get_node("Crt") as MeshInstance3D
 	var material := crt.material_override as StandardMaterial3D
 	assert_vector(material.albedo_texture.get_size()).is_equal(Vector2(512, 384))
+
+func test_downlink_is_wired() -> void:
+	var scene: Node = auto_free((load(TERMINAL) as PackedScene).instantiate())
+	var downlink := scene.get_node("Downlink") as Downlink
+	var terminal := scene.get_node("Terminal") as Terminal
+	var status := scene.get_node("Screen/StatusBar") as LinkStatus
+	assert_object(terminal.progress_line).is_same(downlink.progress_line)
+	assert_object(status.status_notice).is_same(downlink.status_notice)
+	assert_str(downlink.storage.resource_path.get_file()).is_equal("storage.tres")
+	assert_str(downlink.speak_opened.resource_path.get_file()).is_equal("speak_opened.tres")
+	var two: PassWindow = load(PASS_02)
+	var get_command := two.command_set.find("GET") as GetCommand
+	assert_object(get_command.download_queue).is_same(downlink.download_queue)
+	assert_object(get_command.downlink_open).is_same(downlink.downlink_open)
+	assert_object(get_command.storage).is_same(downlink.storage)
