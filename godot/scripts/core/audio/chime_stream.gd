@@ -35,6 +35,12 @@ extends AudioStreamWAV
 		level = value
 		_build()
 
+## Silence before the first peep in seconds, e.g. so a bell rings after another sound.
+@export var lead_seconds := 0.0:
+	set(value):
+		lead_seconds = value
+		_build()
+
 ## Builds the samples from the defaults.
 func _init() -> void:
 	_build()
@@ -43,9 +49,10 @@ func _init() -> void:
 func _build() -> void:
 	var note_frames := int(rate * note_seconds)
 	var step_frames := int(rate * (note_seconds + gap_seconds))
+	var lead_frames := int(rate * lead_seconds)
 
 	var bytes := PackedByteArray()
-	bytes.resize(notes.size() * step_frames * 2)
+	bytes.resize((lead_frames + notes.size() * step_frames) * 2)
 
 	for n: int in range(notes.size()):
 		for i: int in range(note_frames):
@@ -54,7 +61,10 @@ func _build() -> void:
 			var envelope := minf(t / 0.004, 1.0) * (1.0 - float(i) / note_frames)
 			var s := sin(TAU * notes[n] * t) * envelope * level
 
-			bytes.encode_s16((n * step_frames + i) * 2, int(clampf(s, -1.0, 1.0) * 32767.0))
+			bytes.encode_s16(
+				(lead_frames + n * step_frames + i) * 2,
+				int(clampf(s, -1.0, 1.0) * 32767.0),
+			)
 
 	format = AudioStreamWAV.FORMAT_16_BITS
 	mix_rate = rate
