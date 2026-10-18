@@ -47,3 +47,11 @@ func test_antenna_scene_is_wired() -> void:
 	for latch: EventLatch in [carrier_latch, speak_latch]:
 		assert_object(latch.on).is_not_same(latch.off)
 	assert_vector(azimuth.rotation_degrees).is_equal_approx(Vector3(90, 0, 0), Vector3.ONE * 0.01)
+	var data_lamp := scene.get_node("DataLamp") as DataLamp
+	assert_str(data_lamp.row_received.resource_path.get_file()).is_equal("row_received.tres")
+	var storage_lamps := scene.get_node("StorageLamps") as StorageLamps
+	assert_int(storage_lamps.get_child_count()).is_equal(8)
+	assert_str(storage_lamps.storage.resource_path.get_file()).is_equal("storage.tres")
+	var bell := scene.get_node("BellSound") as EventSound
+	assert_str(bell.event.resource_path.get_file()).is_equal("download_complete.tres")
+	assert_object(bell.sound.stream).is_instanceof(ChimeStream)
