@@ -4,7 +4,7 @@ extends Node
 ## The CRT's keyboard side: line editing, command dispatch, and drawing stdout on the screen.
 ## Keyboard only. Owns Esc: the first press closes a file popup, the next one leaves the terminal.
 
-## Printed once, on first focus.
+## Printed when the pass starts.
 const GREETING := "LISTENING POST 4 - HTB MODULE - TYPE HELP"
 
 ## Model to use.
@@ -34,6 +34,8 @@ const GREETING := "LISTENING POST 4 - HTB MODULE - TYPE HELP"
 ## GUIDE context enabled while focused.
 @export var terminal_context: GUIDEMappingContext
 
+## Raised by CLR. Empties the screen; the history is kept.
+@export var clear: Event
 
 ## Wrapped stdout lines, oldest first, capped at the model's scrollback.
 var lines := PackedStringArray()
@@ -41,16 +43,14 @@ var lines := PackedStringArray()
 ## The input line, its history position and its scroll.
 var editor := LineEditor.new()
 
-## True once the greeting was printed.
-var _greeted := false
-
-## Connects stdout, focus and Esc, then draws the empty screen.
+## Connects stdout, focus, Esc and CLR, then greets.
 func _ready() -> void:
 	out.raised.connect(_on_out)
 	focused.updated.connect(_on_focused)
 	leave.just_triggered.connect(leave_pressed)
+	clear.raised.connect(_on_clear)
 
-	_refresh()
+	out.raise(GREETING)
 
 ## Drops the terminal input context when the room unloads.
 func _exit_tree() -> void:
@@ -139,14 +139,18 @@ func _on_out(line: String) -> void:
 
 	_refresh()
 
-## Enables the terminal input context while focused and greets once, disables it otherwise.
+## Empties the screen and scrolls back to the newest line. The history is kept.
+func _on_clear(_payload: Variant) -> void:
+	lines = PackedStringArray()
+	editor.scroll = 0
+
+	_refresh()
+
+## Enables the terminal input context while focused, disables it otherwise.
 func _on_focused(_previous: bool, current: bool) -> void:
 	if current:
 		# GUIDE gives lower numbers precedence, so -1 puts the terminal context above the room's 0.
 		GUIDE.enable_mapping_context(terminal_context, false, -1)
-		if not _greeted:
-			_greeted = true
-			out.raise(GREETING)
 	else:
 		GUIDE.disable_mapping_context(terminal_context)
 

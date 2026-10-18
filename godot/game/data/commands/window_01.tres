@@ -5,7 +5,8 @@
 [ext_resource type="Resource" path="res://game/data/commands/help.tres" id="3_help"]
 [ext_resource type="Resource" path="res://game/data/commands/seq.tres" id="4_seq"]
 [ext_resource type="Resource" path="res://game/data/commands/tx.tres" id="5_tx"]
+[ext_resource type="Resource" path="res://game/data/commands/clr.tres" id="6_clr"]
 
 [resource]
 script = ExtResource("1_script")
-commands = Array[ExtResource("2_command")]([ExtResource("3_help"), ExtResource("4_seq"), ExtResource("5_tx")])
+commands = Array[ExtResource("2_command")]([ExtResource("3_help"), ExtResource("4_seq"), ExtResource("5_tx"), ExtResource("6_clr")])

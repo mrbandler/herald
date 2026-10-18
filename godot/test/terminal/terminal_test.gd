@@ -2,6 +2,7 @@ extends GdUnitTestSuite
 
 var _terminal: Terminal
 var _seq: SeqCommand
+var _out: AtomSpy
 
 func before_test() -> void:
 	_terminal = auto_free(Terminal.new())
@@ -14,6 +15,8 @@ func before_test() -> void:
 	_terminal.viewing = StringValue.new()
 	_terminal.leave = GUIDEAction.new()
 	_terminal.terminal_context = GUIDEMappingContext.new()
+	_terminal.clear = Event.new()
+	_out = AtomSpy.events(_terminal.out)
 	_seq = SeqCommand.new()
 	_seq.name = "SEQ"
 	_seq.out = _terminal.out
@@ -21,6 +24,7 @@ func before_test() -> void:
 	_seq.transmitting = BoolValue.new()
 	_terminal.current_pass = TerminalFixture.pass_with([_seq])
 	add_child(_terminal)
+	_terminal.clear.raise()
 
 func test_submit_echoes_runs_and_draws() -> void:
 	_terminal.submit("seq add ack")
@@ -62,11 +66,17 @@ func test_only_keys_the_terminal_uses_are_consumed() -> void:
 	assert_bool(_terminal.handle_key(KEY_ESCAPE, 0)).is_false()
 	assert_bool(_terminal.handle_key(KEY_F1, 0)).is_false()
 
-func test_greets_once_on_first_focus() -> void:
+func test_greets_when_the_pass_starts() -> void:
+	assert_array(_out.calls).contains_exactly([Terminal.GREETING])
 	_terminal.focused.value = true
-	_terminal.focused.value = false
-	_terminal.focused.value = true
-	assert_array(_terminal.lines).contains_exactly([Terminal.GREETING])
+	assert_array(_out.calls).contains_exactly([Terminal.GREETING])
+
+func test_clear_empties_the_screen_but_keeps_the_history() -> void:
+	_terminal.submit("seq add ack")
+	_terminal.clear.raise()
+	assert_array(_terminal.lines).is_empty()
+	assert_str(_terminal.screen.text).not_contains("ACK")
+	assert_array(_terminal.history.value).contains_exactly(["SEQ ADD ACK"])
 
 func test_escape_closes_the_popup_before_leaving() -> void:
 	_terminal.focused.value = true

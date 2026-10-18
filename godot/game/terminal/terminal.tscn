@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://scripts/core/atoms/nodes/event_latch.gd" id="5_latch"]
 [ext_resource type="Script" path="res://scripts/core/atoms/nodes/bool_printer.gd" id="6_bool_printer"]
 [ext_resource type="Script" path="res://scripts/terminal/link_mode_printer.gd" id="7_link_mode"]
+[ext_resource type="Resource" path="res://game/data/atoms/terminal/screen_cleared.tres" id="40_cleared"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/speak_open.tres" id="39_speak_open"]
 [ext_resource type="Resource" path="res://game/data/models/terminal.tres" id="10_m_terminal"]
 [ext_resource type="Resource" path="res://game/data/models/uplink.tres" id="11_m_uplink"]
@@ -126,6 +127,7 @@ viewing = ExtResource("22_viewing")
 current_pass = ExtResource("23_current")
 leave = ExtResource("12_leave")
 terminal_context = ExtResource("13_context")
+clear = ExtResource("40_cleared")
 
 [node name="Uplink" type="Node" parent="."]
 script = ExtResource("2_uplink")

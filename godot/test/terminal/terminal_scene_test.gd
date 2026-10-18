@@ -2,9 +2,9 @@ extends GdUnitTestSuite
 
 const PASS_01 := "res://game/data/passes/pass_01.tres"
 
-func test_window_one_offers_help_seq_and_tx() -> void:
+func test_window_one_offers_help_seq_tx_and_clr() -> void:
 	var window: PassWindow = load(PASS_01)
-	assert_array(window.command_set.names()).contains_exactly(["HELP", "SEQ", "TX"])
+	assert_array(window.command_set.names()).contains_exactly(["HELP", "SEQ", "TX", "CLR"])
 	var tx := window.command_set.find("TX") as TxCommand
 	assert_object(tx.tx_requested).is_not_null()
 	assert_object(tx.out).is_same(window.command_set.find("SEQ").out)
@@ -25,6 +25,8 @@ func test_terminal_scene_is_wired() -> void:
 	assert_object(tx.locked).is_same(locked)
 	assert_object(tx.tx_requested).is_same(uplink.tx_requested)
 	assert_object(tx.sequence).is_same(uplink.sequence)
+	var clr := (load(PASS_01) as PassWindow).command_set.find("CLR") as ClrCommand
+	assert_object(clr.cleared).is_same(terminal.clear)
 	var focus := scene.get_node("FocusTarget") as FocusTarget
 	assert_object(focus.focused).is_same(terminal.focused)
 	assert_str(focus.focus_point.resource_path.get_file()).is_equal("terminal_focus_point.tres")

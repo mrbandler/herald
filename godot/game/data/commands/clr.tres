@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ClrCommand" format=3]
+
+[ext_resource type="Script" path="res://scripts/terminal/commands/clr_command.gd" id="1_script"]
+[ext_resource type="Resource" path="res://game/data/atoms/terminal/stdout.tres" id="2_stdout"]
+[ext_resource type="Resource" path="res://game/data/atoms/terminal/screen_cleared.tres" id="3_cleared"]
+
+[resource]
+script = ExtResource("1_script")
+name = "CLR"
+help = "CLR               CLEAR THE SCREEN"
+out = ExtResource("2_stdout")
+cleared = ExtResource("3_cleared")
