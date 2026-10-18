@@ -32,5 +32,15 @@ func test_lamp_chain_ends_the_shift_after_los() -> void:
 	assert_object(latch.target).is_same(chain.unlocked)
 	assert_str(latch.on.resource_path.get_file()).is_equal("los.tres")
 	assert_object(latch.off).is_same(chain.pull)
-	var flicker := room.get_node("LampFlicker") as LampFlicker
-	assert_object(flicker.shift_ended).is_same((room.get_node("ShiftEnd") as ShiftEnd).shift_ended)
+
+
+func test_the_listener_falls_asleep_at_shift_end() -> void:
+	var room: Node = auto_free((load(ROOM) as PackedScene).instantiate())
+	var sleep := room.get_node("Sleep") as Sleep
+	var end := room.get_node("ShiftEnd") as ShiftEnd
+	assert_object(end.sleep).is_same(sleep)
+	assert_object(sleep.shift_ended).is_same(end.shift_ended)
+	assert_object(sleep.camera).is_same(room.get_node("Player/Pivot/Camera3D"))
+	assert_object(sleep.top_lid).is_not_null()
+	assert_object(sleep.bottom_lid).is_not_null()
+	assert_object(sleep.model).is_not_null()

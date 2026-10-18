@@ -8,7 +8,8 @@
 [ext_resource type="Script" path="res://scripts/room/debug_commands.gd" id="6_debug"]
 [ext_resource type="Script" path="res://scripts/core/atoms/nodes/event_latch.gd" id="7_latch"]
 [ext_resource type="Script" path="res://scripts/room/lamp_chain.gd" id="8_chain"]
-[ext_resource type="Script" path="res://scripts/room/lamp_flicker.gd" id="9_flicker"]
+[ext_resource type="Script" path="res://scripts/room/sleep.gd" id="9_sleep"]
+[ext_resource type="Resource" path="res://game/data/models/sleep.tres" id="24_m_sleep"]
 [ext_resource type="PackedScene" path="res://game/pass/pass.tscn" id="10_pass"]
 [ext_resource type="PackedScene" path="res://game/player/player.tscn" id="11_player"]
 [ext_resource type="PackedScene" path="res://game/antenna/antenna.tscn" id="12_antenna"]
@@ -154,22 +155,24 @@ on = ExtResource("33_los")
 off = ExtResource("31_bell")
 target = ExtResource("70_chain_unlocked")
 
-[node name="LampFlicker" type="Node" parent="." node_paths=PackedStringArray("light")]
-script = ExtResource("9_flicker")
-light = NodePath("../DeskLamp")
+[node name="Sleep" type="Node" parent="." node_paths=PackedStringArray("camera", "top_lid", "bottom_lid")]
+script = ExtResource("9_sleep")
+model = ExtResource("24_m_sleep")
+camera = NodePath("../Player/Pivot/Camera3D")
+top_lid = NodePath("../Eyelids/Top")
+bottom_lid = NodePath("../Eyelids/Bottom")
 pass_time = ExtResource("30_time")
 current_pass = ExtResource("23_current")
-tunables = ExtResource("21_tunables")
 shift_ended = ExtResource("32_shift_ended")
 
-[node name="ShiftEnd" type="Node" parent="." node_paths=PackedStringArray("fade", "lamp")]
+[node name="ShiftEnd" type="Node" parent="." node_paths=PackedStringArray("sleep", "lamp")]
 script = ExtResource("5_shift_end")
 tunables = ExtResource("21_tunables")
 morning_bell = ExtResource("31_bell")
 shift_ended = ExtResource("32_shift_ended")
 acked = ExtResource("64_acked")
 out = ExtResource("61_stdout")
-fade = NodePath("../Fade/Black")
+sleep = NodePath("../Sleep")
 lamp = NodePath("../DeskLamp")
 
 [node name="DebugCommands" type="Node" parent="."]
@@ -177,14 +180,17 @@ script = ExtResource("6_debug")
 pass_time = ExtResource("30_time")
 force_lock = ExtResource("48_force")
 
-[node name="Fade" type="CanvasLayer" parent="."]
+[node name="Eyelids" type="CanvasLayer" parent="."]
 layer = 10
 
-[node name="Black" type="ColorRect" parent="Fade"]
-anchors_preset = 15
+[node name="Top" type="ColorRect" parent="Eyelids"]
+anchor_right = 1.0
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Bottom" type="ColorRect" parent="Eyelids"]
+anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 mouse_filter = 2
-color = Color(0, 0, 0, 0)
+color = Color(0, 0, 0, 1)

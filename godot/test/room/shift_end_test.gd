@@ -1,6 +1,6 @@
 extends GdUnitTestSuite
 
-## Runs without a fade node, so the test never reloads the scene.
+## Runs without a Sleep node, so the test never reloads the scene.
 
 var _end: ShiftEnd
 var _spy: AtomSpy
