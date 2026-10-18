@@ -108,8 +108,8 @@ out = ExtResource("20_stdout")
 [node name="LockPrinter" type="Node" parent="."]
 script = ExtResource("6_bool_printer")
 source = ExtResource("35_locked")
-on_text = "-- LOCK --"
-off_text = "-- LOCK LOST --"
+on_text = "-- SIGNAL ACQUIRED. CONNECTED TO HERALD --"
+off_text = "-- SIGNAL LOST. DISCONNECTED FROM HERALD --"
 out = ExtResource("20_stdout")
 
 [node name="Terminal" type="Node" parent="." node_paths=PackedStringArray("screen")]
