@@ -86,6 +86,24 @@ shape = SubResource("Shape_crt")
 
 [node name="Anchor" type="Node3D" parent="FocusTarget"]
 
+[node name="TurnPrinter" type="Node" parent="."]
+script = ExtResource("4_printer")
+event = ExtResource("37_turn")
+text = "-- TURN --"
+out = ExtResource("20_stdout")
+
+[node name="UplinkOpenPrinter" type="Node" parent="."]
+script = ExtResource("4_printer")
+event = ExtResource("38_speak")
+text = "-- UPLINK OPEN --"
+out = ExtResource("20_stdout")
+
+[node name="LosPrinter" type="Node" parent="."]
+script = ExtResource("4_printer")
+event = ExtResource("36_los")
+text = "-- LOS. CARRIER LOST --"
+out = ExtResource("20_stdout")
+
 [node name="Terminal" type="Node" parent="." node_paths=PackedStringArray("screen")]
 script = ExtResource("1_terminal")
 model = ExtResource("10_m_terminal")
@@ -113,21 +131,3 @@ out = ExtResource("20_stdout")
 script = ExtResource("5_latch")
 on = ExtResource("31_uplinked")
 target = ExtResource("34_acked")
-
-[node name="TurnPrinter" type="Node" parent="."]
-script = ExtResource("4_printer")
-event = ExtResource("37_turn")
-text = "-- TURN --"
-out = ExtResource("20_stdout")
-
-[node name="UplinkOpenPrinter" type="Node" parent="."]
-script = ExtResource("4_printer")
-event = ExtResource("38_speak")
-text = "-- UPLINK OPEN --"
-out = ExtResource("20_stdout")
-
-[node name="LosPrinter" type="Node" parent="."]
-script = ExtResource("4_printer")
-event = ExtResource("36_los")
-text = "-- LOS. CARRIER LOST --"
-out = ExtResource("20_stdout")
