@@ -5,7 +5,7 @@ extends Node
 
 ## Fires the line. Its payload is ignored.
 @export var event: Event
-## The fixed line to write, e.g. `-- TURN --`.
+## The fixed line to write, e.g. `-- LOS. CARRIER LOST. --`.
 @export var text: String
 ## Receives the line. Usually stdout.
 @export var out: StringEvent

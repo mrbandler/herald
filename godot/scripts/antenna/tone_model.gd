@@ -15,7 +15,7 @@ extends Resource
 @export var warble_depth := 6.0
 ## Warble speed in Hz.
 @export var warble_rate := 5.0
-## Listening pulses per second during the Turn.
+## Listening pulses per second while the uplink is open.
 @export var pulse_rate := 0.8
 ## Dial units per full sweep of the hiss colour, so every turn of the dial is heard.
 @export var hiss_sweep_units := 1.0
@@ -38,8 +38,8 @@ func hiss_gain(alpha: float) -> float:
 
 ## One mono sample at `t` seconds, within -1..1 for `strength` and `quality` in 0..1.
 ## `noise` is a random value in -1..1. `strength` mixes hiss against carrier, `quality` calms
-## the warble. `listening_for` is the seconds since the Turn began, negative when not listening;
-## the pulse starts at full volume, so the Turn begins without a click.
+## the warble. `listening_for` is the seconds since the uplink opened, negative when not listening;
+## the pulse starts at full volume, so the uplink opens without a click.
 func sample(t: float, strength: float, quality: float, listening_for: float, noise: float) -> float:
 	var warble := warble_depth * (1.0 - quality) * sin(TAU * warble_rate * t)
 	var carrier := sin(TAU * carrier_pitch * t + warble)

@@ -8,7 +8,6 @@ static func window_one() -> PassWindow:
 	var window := PassWindow.new()
 	window.number = 1
 	window.aos = 30.0
-	window.turn = 75.0
 	window.speak = 95.0
 	window.los = 115.0
 	window.bell = 175.0

@@ -23,7 +23,6 @@
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/acked.tres" id="34_acked"]
 [ext_resource type="Resource" path="res://game/data/atoms/antenna/locked.tres" id="35_locked"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/los.tres" id="36_los"]
-[ext_resource type="Resource" path="res://game/data/atoms/pass/turn_started.tres" id="37_turn"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/speak_opened.tres" id="38_speak"]
 
 [sub_resource type="SystemFont" id="Font_mono"]
@@ -87,29 +86,23 @@ shape = SubResource("Shape_crt")
 
 [node name="Anchor" type="Node3D" parent="FocusTarget"]
 
-[node name="TurnPrinter" type="Node" parent="."]
-script = ExtResource("4_printer")
-event = ExtResource("37_turn")
-text = "-- TURN --"
-out = ExtResource("20_stdout")
-
 [node name="UplinkOpenPrinter" type="Node" parent="."]
 script = ExtResource("4_printer")
 event = ExtResource("38_speak")
-text = "-- UPLINK OPEN --"
+text = "-- UPLINK OPEN. HERALD LISTENING. --"
 out = ExtResource("20_stdout")
 
 [node name="LosPrinter" type="Node" parent="."]
 script = ExtResource("4_printer")
 event = ExtResource("36_los")
-text = "-- LOS. CARRIER LOST --"
+text = "-- LOS. CARRIER LOST. --"
 out = ExtResource("20_stdout")
 
 [node name="LockPrinter" type="Node" parent="."]
 script = ExtResource("6_bool_printer")
 source = ExtResource("35_locked")
-on_text = "-- SIGNAL ACQUIRED. CONNECTED TO HERALD --"
-off_text = "-- SIGNAL LOST. DISCONNECTED FROM HERALD --"
+on_text = "-- SIGNAL ACQUIRED. CONNECTED TO HERALD. --"
+off_text = "-- SIGNAL LOST. DISCONNECTED FROM HERALD. --"
 out = ExtResource("20_stdout")
 
 [node name="Terminal" type="Node" parent="." node_paths=PackedStringArray("screen")]

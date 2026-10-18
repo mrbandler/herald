@@ -19,7 +19,6 @@
 [ext_resource type="Resource" path="res://game/data/atoms/pass/pass_time.tres" id="21_time"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/aos.tres" id="22_aos"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/los.tres" id="23_los"]
-[ext_resource type="Resource" path="res://game/data/atoms/pass/turn_started.tres" id="24_turn"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/speak_opened.tres" id="25_speak"]
 [ext_resource type="Resource" path="res://game/data/atoms/antenna/dish_azimuth.tres" id="30_az"]
 [ext_resource type="Resource" path="res://game/data/atoms/antenna/dish_elevation.tres" id="31_el"]
@@ -28,7 +27,6 @@
 [ext_resource type="Resource" path="res://game/data/atoms/antenna/lock_quality.tres" id="34_quality"]
 [ext_resource type="Resource" path="res://game/data/atoms/antenna/carrier_present.tres" id="35_carrier"]
 [ext_resource type="Resource" path="res://game/data/atoms/antenna/locked.tres" id="36_locked"]
-[ext_resource type="Resource" path="res://game/data/atoms/antenna/turn_active.tres" id="37_turn_active"]
 [ext_resource type="Resource" path="res://game/data/atoms/antenna/force_lock.tres" id="38_force"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/speak_open.tres" id="39_speak_open"]
 [ext_resource type="Resource" path="res://game/data/atoms/antenna/volume.tres" id="40_volume"]
@@ -321,7 +319,7 @@ script = ExtResource("5_tone")
 model = ExtResource("16_m_tone")
 signal_strength = ExtResource("33_strength")
 lock_quality = ExtResource("34_quality")
-turn_active = ExtResource("37_turn_active")
+listening = ExtResource("39_speak_open")
 tuning = ExtResource("32_tune")
 volume = ExtResource("40_volume")
 
@@ -330,12 +328,6 @@ script = ExtResource("7_latch")
 on = ExtResource("22_aos")
 off = ExtResource("23_los")
 target = ExtResource("35_carrier")
-
-[node name="TurnLatch" type="Node" parent="."]
-script = ExtResource("7_latch")
-on = ExtResource("24_turn")
-off = ExtResource("25_speak")
-target = ExtResource("37_turn_active")
 
 [node name="SpeakLatch" type="Node" parent="."]
 script = ExtResource("7_latch")

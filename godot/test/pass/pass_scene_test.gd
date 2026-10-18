@@ -12,7 +12,6 @@ func test_pass_scene_is_wired() -> void:
 	assert_object(clock.shift_ended).is_not_null()
 	assert_object(schedule.current_pass).is_not_null()
 	assert_str(schedule.aos_event.resource_path.get_file()).is_equal("aos.tres")
-	assert_str(schedule.turn_event.resource_path.get_file()).is_equal("turn_started.tres")
 	assert_str(schedule.speak_event.resource_path.get_file()).is_equal("speak_opened.tres")
 	assert_str(schedule.los_event.resource_path.get_file()).is_equal("los.tres")
 	assert_str(schedule.bell_event.resource_path.get_file()).is_equal("morning_bell.tres")

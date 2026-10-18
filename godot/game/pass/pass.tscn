@@ -7,7 +7,6 @@
 [ext_resource type="Resource" path="res://game/data/atoms/pass/shift_ended.tres" id="5_shift"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/current_pass.tres" id="6_current"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/aos.tres" id="7_aos"]
-[ext_resource type="Resource" path="res://game/data/atoms/pass/turn_started.tres" id="8_turn"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/speak_opened.tres" id="9_speak"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/los.tres" id="10_los"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/morning_bell.tres" id="11_bell"]
@@ -24,7 +23,6 @@ script = ExtResource("2_schedule")
 pass_time = ExtResource("4_time")
 current_pass = ExtResource("6_current")
 aos_event = ExtResource("7_aos")
-turn_event = ExtResource("8_turn")
 speak_event = ExtResource("9_speak")
 los_event = ExtResource("10_los")
 bell_event = ExtResource("11_bell")

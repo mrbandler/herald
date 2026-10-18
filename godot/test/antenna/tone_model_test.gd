@@ -32,7 +32,7 @@ func test_listening_starts_at_full_volume() -> void:
 
 func test_listening_pulse_silences_the_carrier_between_pulses() -> void:
 	var model := ToneModel.new()
-	# Half a pulse period after the Turn began, the envelope is at zero.
+	# Half a pulse period after the uplink opened, the envelope is at zero.
 	var half := 0.5 / model.pulse_rate
 	assert_float(model.sample(0.0123, 1.0, 1.0, half, 0.0)).is_equal_approx(0.0, 0.0001)
 

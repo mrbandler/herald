@@ -30,9 +30,9 @@ func test_terminal_scene_is_wired() -> void:
 	var focus := scene.get_node("FocusTarget") as FocusTarget
 	assert_object(focus.focused).is_same(terminal.focused)
 	assert_str(focus.focus_point.resource_path.get_file()).is_equal("terminal_focus_point.tres")
-	var turn := scene.get_node("TurnPrinter") as EventPrinter
-	assert_str(turn.event.resource_path.get_file()).is_equal("turn_started.tres")
-	assert_object(turn.out).is_same(terminal.out)
+	var uplink_open := scene.get_node("UplinkOpenPrinter") as EventPrinter
+	assert_str(uplink_open.event.resource_path.get_file()).is_equal("speak_opened.tres")
+	assert_object(uplink_open.out).is_same(terminal.out)
 	var lock := scene.get_node("LockPrinter") as BoolPrinter
 	assert_object(lock.source).is_same(locked)
 	assert_object(lock.out).is_same(terminal.out)

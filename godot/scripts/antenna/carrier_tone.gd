@@ -8,8 +8,8 @@ extends AudioStreamPlayer3D
 @export var signal_strength: FloatValue
 ## Read. 0..1, the higher the less warble.
 @export var lock_quality: FloatValue
-## Read. While true the carrier pulses (the station is listening).
-@export var turn_active: BoolValue
+## Read. While true the carrier pulses: the uplink is open and HERALD is listening.
+@export var listening: BoolValue
 ## Read. Dial position; sweeps the colour of the hiss.
 @export var tuning: FloatValue
 ## Read. 0..1 output volume, set by the volume knob.
@@ -17,7 +17,7 @@ extends AudioStreamPlayer3D
 
 var _playback: AudioStreamGeneratorPlayback
 var _time := 0.0
-# Seconds since the Turn began; negative while not listening.
+# Seconds since the uplink opened; negative while not listening.
 var _listening_for := -1.0
 var _rng := RandomNumberGenerator.new()
 # Low-pass state of the hiss.
@@ -42,7 +42,7 @@ func _process(_delta: float) -> void:
 	var alpha := model.hiss_alpha(tuning.value)
 	var gain := model.hiss_gain(alpha)
 	var quality := lock_quality.value
-	if not turn_active.value:
+	if not listening.value:
 		_listening_for = -1.0
 	elif _listening_for < 0.0:
 		_listening_for = 0.0

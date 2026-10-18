@@ -4,7 +4,7 @@ extends Resource
 ## Content of one contact window. Pure data plus lookups; it never runs anything.
 
 ## Mark names, in time order.
-const MARK_NAMES: PackedStringArray = ["AOS", "TURN", "UPLINK", "LOS", "BELL"]
+const MARK_NAMES: PackedStringArray = ["AOS", "UPLINK", "LOS", "BELL"]
 
 ## 1-based. `PassLoader` picks the window by this number. 0 means not authored yet.
 @export var number := 0
@@ -12,9 +12,7 @@ const MARK_NAMES: PackedStringArray = ["AOS", "TURN", "UPLINK", "LOS", "BELL"]
 @export_group("Marks")
 ## Seconds since pass start, in time order. AOS: the carrier becomes receivable.
 @export var aos := 0.0
-## The probe stops speaking and starts listening.
-@export var turn := 0.0
-## The SPEAK lamp lights; the uplink opens.
+## The UPLINK lamp lights and HERALD starts listening; running downloads are cut off.
 @export var speak := 0.0
 ## LOS: the carrier is gone and the pass closes.
 @export var los := 0.0
@@ -46,9 +44,9 @@ func station_time(t: float) -> float:
 	return clock_start + minf(t, los) + maxf(t - los, 0.0) * night_rate
 
 
-## The five mark times in `MARK_NAMES` order, in seconds.
+## The four mark times in `MARK_NAMES` order, in seconds.
 func mark_times() -> PackedFloat64Array:
-	return PackedFloat64Array([aos, turn, speak, los, bell])
+	return PackedFloat64Array([aos, speak, los, bell])
 
 
 ## The first mark after `t` seconds and the time left to it. Stays at BELL, 0 after it.

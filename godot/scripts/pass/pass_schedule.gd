@@ -8,7 +8,6 @@ extends Node
 ## Read only. Supplies the mark times.
 @export var current_pass: ResourceValue
 @export var aos_event: Event
-@export var turn_event: Event
 @export var speak_event: Event
 @export var los_event: Event
 @export var bell_event: Event
@@ -24,7 +23,7 @@ func _on_time(previous: float, current: float) -> void:
 		return
 	var times := window.mark_times()
 	# Same order as PassWindow.MARK_NAMES and mark_times().
-	var events: Array[Event] = [aos_event, turn_event, speak_event, los_event, bell_event]
+	var events: Array[Event] = [aos_event, speak_event, los_event, bell_event]
 	for i: int in range(times.size()):
 		# Half-open (previous, current]: a mark fires exactly once, even when time lands on it.
 		if previous < times[i] and times[i] <= current:

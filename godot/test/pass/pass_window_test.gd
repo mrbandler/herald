@@ -9,8 +9,8 @@ func test_next_mark_before_aos() -> void:
 
 func test_landing_on_a_mark_points_at_the_next_one() -> void:
 	var mark := PassFixture.window_one().next_mark(30.0)
-	assert_str(mark.name).is_equal("TURN")
-	assert_float(mark.remaining).is_equal(45.0)
+	assert_str(mark.name).is_equal("UPLINK")
+	assert_float(mark.remaining).is_equal(65.0)
 
 
 func test_between_speak_and_los() -> void:

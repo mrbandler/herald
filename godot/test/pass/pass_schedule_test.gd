@@ -11,7 +11,6 @@ func before_test() -> void:
 	_schedule.current_pass = ResourceValue.new()
 	_schedule.current_pass.value = PassFixture.window_one()
 	_schedule.aos_event = _event("aos")
-	_schedule.turn_event = _event("turn")
 	_schedule.speak_event = _event("speak")
 	_schedule.los_event = _event("los")
 	_schedule.bell_event = _event("bell")
@@ -33,12 +32,12 @@ func test_landing_exactly_on_a_mark_raises_it_once() -> void:
 
 func test_a_jump_raises_every_crossed_mark_in_order() -> void:
 	_schedule.pass_time.value = 120.0
-	assert_array(_order).contains_exactly(["aos", "turn", "speak", "los"])
+	assert_array(_order).contains_exactly(["aos", "speak", "los"])
 
 
-func test_a_jump_past_the_bell_raises_all_five() -> void:
+func test_a_jump_past_the_bell_raises_all_four() -> void:
 	_schedule.pass_time.value = 200.0
-	assert_array(_order).contains_exactly(["aos", "turn", "speak", "los", "bell"])
+	assert_array(_order).contains_exactly(["aos", "speak", "los", "bell"])
 
 
 func test_going_back_raises_nothing() -> void:

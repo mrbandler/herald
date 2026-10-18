@@ -29,7 +29,6 @@
 [ext_resource type="Resource" path="res://game/data/atoms/antenna/lock_quality.tres" id="44_quality"]
 [ext_resource type="Resource" path="res://game/data/atoms/antenna/carrier_present.tres" id="45_carrier"]
 [ext_resource type="Resource" path="res://game/data/atoms/antenna/locked.tres" id="46_locked"]
-[ext_resource type="Resource" path="res://game/data/atoms/antenna/turn_active.tres" id="47_turn_active"]
 [ext_resource type="Resource" path="res://game/data/atoms/antenna/force_lock.tres" id="48_force"]
 [ext_resource type="Resource" path="res://game/data/atoms/player/hovering.tres" id="50_hovering"]
 [ext_resource type="Resource" path="res://game/data/atoms/player/grabbing.tres" id="51_grabbing"]
@@ -64,7 +63,7 @@ ambient_light_energy = 0.4
 
 [node name="Resetter" type="Node" parent="."]
 script = ExtResource("1_resetter")
-atoms = Array[ExtResource("2_value")]([ExtResource("30_time"), ExtResource("40_az"), ExtResource("41_el"), ExtResource("42_tune"), ExtResource("43_strength"), ExtResource("44_quality"), ExtResource("45_carrier"), ExtResource("46_locked"), ExtResource("47_turn_active"), ExtResource("48_force"), ExtResource("50_hovering"), ExtResource("51_grabbing"), ExtResource("52_focused"), ExtResource("60_viewing"), ExtResource("62_sequence"), ExtResource("63_speak_open"), ExtResource("64_acked"), ExtResource("65_transmitting"), ExtResource("70_chain_unlocked")])
+atoms = Array[ExtResource("2_value")]([ExtResource("30_time"), ExtResource("40_az"), ExtResource("41_el"), ExtResource("42_tune"), ExtResource("43_strength"), ExtResource("44_quality"), ExtResource("45_carrier"), ExtResource("46_locked"), ExtResource("48_force"), ExtResource("50_hovering"), ExtResource("51_grabbing"), ExtResource("52_focused"), ExtResource("60_viewing"), ExtResource("62_sequence"), ExtResource("63_speak_open"), ExtResource("64_acked"), ExtResource("65_transmitting"), ExtResource("70_chain_unlocked")])
 
 [node name="PassLoader" type="Node" parent="."]
 script = ExtResource("3_loader")
