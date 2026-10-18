@@ -49,13 +49,45 @@ enum Mode {
 ## Shown after LOS.
 @export var los_text := "LOS"
 
-## Refreshes the bar every frame; its inputs change continuously.
-func _process(_delta: float) -> void:
+## Raised with short notices that replace the mode text for `notice_seconds`. Optional.
+@export var status_notice: StringEvent
+
+## Seconds a notice stays before the mode text returns.
+@export var notice_seconds := 4.0
+
+## The notice on show, or empty for none.
+var _notice := ""
+
+## Seconds left on the notice.
+var _notice_left := 0.0
+
+## Listens for notices.
+func _ready() -> void:
+	if status_notice != null:
+		status_notice.raised.connect(_on_notice)
+
+## Advances the notice timer and refreshes every frame; the inputs change continuously.
+func _process(delta: float) -> void:
+	tick(delta)
+
+## Counts the notice down by `delta` seconds, then shows the notice or the current mode.
+func tick(delta: float) -> void:
+	if _notice_left > 0.0:
+		_notice_left -= delta
+		if _notice_left <= 0.0:
+			_notice = ""
+
 	refresh()
 
-## Shows the text of the current mode.
+## Shows the notice if one is on show, otherwise the text of the current mode.
 func refresh() -> void:
-	text = _text_for(mode())
+	text = _notice if not _notice.is_empty() else _text_for(mode())
+
+## Shows `line` for `notice_seconds`, over any mode, LOS included.
+func _on_notice(line: String) -> void:
+	_notice = line
+	_notice_left = notice_seconds
+	refresh()
 
 ## The current mode. LOS wins, then a held lock by uplink state, then whether anything is heard.
 func mode() -> Mode:
