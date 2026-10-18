@@ -6,6 +6,9 @@
 [ext_resource type="Script" path="res://scripts/pass/pass_window.gd" id="4_window"]
 [ext_resource type="Script" path="res://scripts/room/shift_end.gd" id="5_shift_end"]
 [ext_resource type="Script" path="res://scripts/room/debug_commands.gd" id="6_debug"]
+[ext_resource type="Script" path="res://scripts/core/atoms/nodes/event_latch.gd" id="7_latch"]
+[ext_resource type="Script" path="res://scripts/room/lamp_chain.gd" id="8_chain"]
+[ext_resource type="Script" path="res://scripts/room/lamp_flicker.gd" id="9_flicker"]
 [ext_resource type="PackedScene" path="res://game/pass/pass.tscn" id="10_pass"]
 [ext_resource type="PackedScene" path="res://game/player/player.tscn" id="11_player"]
 [ext_resource type="PackedScene" path="res://game/antenna/antenna.tscn" id="12_antenna"]
@@ -17,6 +20,8 @@
 [ext_resource type="Resource" path="res://game/data/atoms/pass/pass_time.tres" id="30_time"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/morning_bell.tres" id="31_bell"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/shift_ended.tres" id="32_shift_ended"]
+[ext_resource type="Resource" path="res://game/data/atoms/pass/los.tres" id="33_los"]
+[ext_resource type="Resource" path="res://game/data/atoms/room/chain_unlocked.tres" id="70_chain_unlocked"]
 [ext_resource type="Resource" path="res://game/data/atoms/antenna/dish_azimuth.tres" id="40_az"]
 [ext_resource type="Resource" path="res://game/data/atoms/antenna/dish_elevation.tres" id="41_el"]
 [ext_resource type="Resource" path="res://game/data/atoms/antenna/tuning.tres" id="42_tune"]
@@ -36,6 +41,18 @@
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/acked.tres" id="64_acked"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/transmitting.tres" id="65_transmitting"]
 
+[sub_resource type="SphereShape3D" id="Shape_bead"]
+radius = 0.05
+
+[sub_resource type="CylinderMesh" id="Mesh_cord"]
+top_radius = 0.003
+bottom_radius = 0.003
+height = 0.45
+
+[sub_resource type="SphereMesh" id="Mesh_bead"]
+radius = 0.02
+height = 0.04
+
 [sub_resource type="Environment" id="Environment_room"]
 background_mode = 1
 background_color = Color(0.03, 0.03, 0.035, 1)
@@ -47,7 +64,7 @@ ambient_light_energy = 0.4
 
 [node name="Resetter" type="Node" parent="."]
 script = ExtResource("1_resetter")
-atoms = Array[ExtResource("2_value")]([ExtResource("30_time"), ExtResource("40_az"), ExtResource("41_el"), ExtResource("42_tune"), ExtResource("43_strength"), ExtResource("44_quality"), ExtResource("45_carrier"), ExtResource("46_locked"), ExtResource("47_turn_active"), ExtResource("48_force"), ExtResource("50_hovering"), ExtResource("51_grabbing"), ExtResource("52_focused"), ExtResource("60_viewing"), ExtResource("62_sequence"), ExtResource("63_speak_open"), ExtResource("64_acked"), ExtResource("65_transmitting")])
+atoms = Array[ExtResource("2_value")]([ExtResource("30_time"), ExtResource("40_az"), ExtResource("41_el"), ExtResource("42_tune"), ExtResource("43_strength"), ExtResource("44_quality"), ExtResource("45_carrier"), ExtResource("46_locked"), ExtResource("47_turn_active"), ExtResource("48_force"), ExtResource("50_hovering"), ExtResource("51_grabbing"), ExtResource("52_focused"), ExtResource("60_viewing"), ExtResource("62_sequence"), ExtResource("63_speak_open"), ExtResource("64_acked"), ExtResource("65_transmitting"), ExtResource("70_chain_unlocked")])
 
 [node name="PassLoader" type="Node" parent="."]
 script = ExtResource("3_loader")
@@ -114,9 +131,39 @@ pixel_size = 0.001
 font_size = 20
 width = 520.0
 autowrap_mode = 3
-text = "Seek: set the brass wheels to the numbers on the Card, then turn slowly until the Voice comes out of the hiss. Bind: turn the black dial until the green lamp stops blinking. Speak: lean to the screen, type SEQ ADD ACK, and when the Speak lamp lights, type TX. Hold the Voice until it is sent."
+text = "Seek: set the brass wheels to the numbers on the Card, then turn slowly until the Voice comes out of the hiss. Bind: turn the black dial until the green lamp stops blinking. Speak: lean to the screen, type SEQ ADD ACK, and when the Speak lamp lights, type TX. Hold the Voice until it is sent. When the Voice is gone, pull the lamp chain and rest."
 
-[node name="ShiftEnd" type="Node" parent="." node_paths=PackedStringArray("fade")]
+[node name="LampChain" type="Area3D" parent="."]
+position = Vector3(0.45, 1.25, -0.6)
+script = ExtResource("8_chain")
+unlocked = ExtResource("70_chain_unlocked")
+pull = ExtResource("31_bell")
+
+[node name="Shape" type="CollisionShape3D" parent="LampChain"]
+shape = SubResource("Shape_bead")
+
+[node name="Cord" type="MeshInstance3D" parent="LampChain"]
+position = Vector3(0, 0.225, 0)
+mesh = SubResource("Mesh_cord")
+
+[node name="Bead" type="MeshInstance3D" parent="LampChain"]
+mesh = SubResource("Mesh_bead")
+
+[node name="ChainLatch" type="Node" parent="."]
+script = ExtResource("7_latch")
+on = ExtResource("33_los")
+off = ExtResource("31_bell")
+target = ExtResource("70_chain_unlocked")
+
+[node name="LampFlicker" type="Node" parent="." node_paths=PackedStringArray("light")]
+script = ExtResource("9_flicker")
+light = NodePath("../DeskLamp")
+pass_time = ExtResource("30_time")
+current_pass = ExtResource("23_current")
+tunables = ExtResource("21_tunables")
+shift_ended = ExtResource("32_shift_ended")
+
+[node name="ShiftEnd" type="Node" parent="." node_paths=PackedStringArray("fade", "lamp")]
 script = ExtResource("5_shift_end")
 tunables = ExtResource("21_tunables")
 morning_bell = ExtResource("31_bell")
@@ -124,6 +171,7 @@ shift_ended = ExtResource("32_shift_ended")
 acked = ExtResource("64_acked")
 out = ExtResource("61_stdout")
 fade = NodePath("../Fade/Black")
+lamp = NodePath("../DeskLamp")
 
 [node name="DebugCommands" type="Node" parent="."]
 script = ExtResource("6_debug")

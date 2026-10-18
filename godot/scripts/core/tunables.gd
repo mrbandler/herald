@@ -6,3 +6,5 @@ extends Resource
 
 ## Seconds the screen takes to fade to black at the morning bell.
 @export var shift_fade_seconds := 3.0
+## Seconds before the morning bell that the desk lamp starts to flicker.
+@export var sleep_warning_seconds := 15.0

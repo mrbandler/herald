@@ -29,3 +29,9 @@ func test_reports_the_ack_and_ends_the_shift() -> void:
 func test_reports_a_missing_ack() -> void:
 	_end.morning_bell.raise()
 	assert_array(_spy.calls).is_equal(["NO ACK SENT"])
+
+
+func test_ends_the_shift_only_once() -> void:
+	_end.morning_bell.raise()
+	_end.morning_bell.raise()
+	assert_int(_ended.calls.size()).is_equal(1)
