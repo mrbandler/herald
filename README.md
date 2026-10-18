@@ -4,7 +4,6 @@ An opinionated Godot 4.7 project template with GDScript, test-driven from the fi
 my own desktop games (Windows, Linux, macOS) and shared in case it is useful to you; expect strong
 defaults rather than a blank slate.
 
-- A GDScript sample class with unit tests and an engine test.
 - TDD: GdUnit4 behind one `just test`.
 - Static typing enforced in `godot/project.godot` (untyped and unsafe warnings are errors; `:=` is fine).
 - Addons pinned and locked with [ggg](https://github.com/godotneers/ggg) (`godot/ggg.toml`, `godot/ggg.lock`).
@@ -109,10 +108,10 @@ Tooling and raw assets stay at the repo root, outside `res://`.
 | `godot/project.godot`, `godot/export_presets.cfg` | Godot project; Windows, Linux, macOS presets |
 | `godot/ggg.toml`, `godot/ggg.lock` | Godot version, export templates, addons (run `ggg` in `godot/`) |
 | `godot/addons/` | Installed by `ggg sync`. Never edit. Three vendored addons are in git (see Addons) |
-| `godot/game/` | Features: scenes plus the feature's own assets (e.g. `game/main/main.tscn`) |
+| `godot/game/` | Features: scenes plus the feature's own assets (e.g. `game/room/room.tscn`) |
 | `godot/game/data/` | Shared data instances sorted by type: `atoms/`, `models/`, `passes/`, `commands/`, `input/` |
-| `godot/scripts/` | All GDScript, at the same relative path as its feature in `game/` (`game/characters/player/player.tscn` uses `scripts/characters/player/player.gd`). Scene-less reusable code goes in `scripts/components/` (sample: class `Health`), singletons in `scripts/autoloads/`, gameplay-neutral building blocks (atoms, interaction) in `scripts/core/<subdir>/` |
-| `godot/test/` | GdUnit4 tests, mirroring `scripts/` (`scripts/components/health.gd` is tested by `test/components/health_test.gd`) |
+| `godot/scripts/` | All GDScript, at the same relative path as its feature in `game/` (`game/characters/player/player.tscn` uses `scripts/characters/player/player.gd`). Scene-less reusable code goes in `scripts/components/`, singletons in `scripts/autoloads/`, gameplay-neutral building blocks (atoms, interaction) in `scripts/core/<subdir>/` |
+| `godot/test/` | GdUnit4 tests, mirroring `scripts/` (`scripts/pass/pass_clock.gd` is tested by `test/pass/pass_clock_test.gd`) |
 | `godot/assets/` | Only content shared across features (Kenney packs); a feature's own assets live next to its scene in `game/` |
 | `raw/` | Source assets (Blender, Aseprite, Krita, audio projects), stored via Git LFS; outside `res://`, so Godot never scans it |
 | `devenv.nix`, `justfile`, `.pre-commit-config.yaml`, `tools/` | Tooling |
@@ -128,8 +127,8 @@ keeps its third-party names as shipped, `addons/` is not checked). `.gd` and `.t
 
 ## Testing
 
-The sample is a health value (damage, heal, clamp): a unit test in
-`godot/test/components/health_test.gd` and a GdUnit4 scene-runner test in `godot/test/main/main_scene_test.gd`.
+Models and helpers are unit tested directly; nodes are driven through their public methods; each scene
+has a `*_scene_test.gd` that checks its wiring without running it.
 
 ```sh
 just test        # everything
