@@ -24,6 +24,12 @@ extends Resource
 @export var card_error_step := 0.3
 ## Cap on the card error, in degrees.
 @export var card_error_max := 4.0
+## Dial units of tuning error at window 0: the probe's oscillator has aged since the card.
+@export var tuning_error_base := 0.2
+## Dial units added per window.
+@export var tuning_error_step := 0.2
+## Cap on the tuning error, in dial units.
+@export var tuning_error_max := 2.0
 
 @export_group("Drift")
 ## Degrees per second the true target moves (azimuth, elevation).
@@ -32,19 +38,41 @@ extends Resource
 @export var doppler_drift := 0.02
 
 
-## Degrees the star card is off in this window. Grows per window, capped.
-func card_error(window_number: int) -> float:
-	return minf(card_error_base + card_error_step * window_number, card_error_max)
+## Degrees the star card position is off in this window: the window's own value, or one that
+## grows per window, capped.
+func card_error(window: PassWindow) -> float:
+	if window.card_error >= 0.0:
+		return window.card_error
+	return minf(card_error_base + card_error_step * window.number, card_error_max)
+
+
+## Signed dial units the card tuning is off in this window: the window's own size, or one that
+## grows per window, capped. The seed picks the sign.
+func card_tuning_offset(window: PassWindow) -> float:
+	var size := window.card_tuning_error
+	if size < 0.0:
+		size = minf(tuning_error_base + tuning_error_step * window.number, tuning_error_max)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = window.card_seed
+	rng.randf() # The first draw is the card error direction.
+	return size if rng.randf() < 0.5 else -size
 
 
 ## Where the dish must point (azimuth, elevation in degrees) `t` seconds into the pass:
-## the card position, offset by the seeded card error, plus drift.
+## the card position, offset by the seeded card error at AOS, drifting through it.
 func target_at(window: PassWindow, t: float) -> Vector2:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = window.card_seed
 	var direction := Vector2.from_angle(rng.randf() * TAU)
 	var card := Vector2(window.card_azimuth, window.card_elevation)
-	return card + direction * card_error(window.number) + dish_drift * t
+	return card + direction * card_error(window) + dish_drift * (t - window.aos)
+
+
+## 0..1 how far the carrier has risen out of the hiss: from nothing at pass start to full at AOS.
+func rise(window: PassWindow, t: float) -> float:
+	if window.aos <= 0.0:
+		return 1.0
+	return clampf(t / window.aos, 0.0, 1.0)
 
 
 ## Degrees between dish and target. Azimuth wraps around 360.
@@ -57,9 +85,10 @@ func strength(error_deg: float) -> float:
 	return pow(clampf(1.0 - error_deg / hearing_radius, 0.0, 1.0), hearing_curve)
 
 
-## The carrier's true dial position `t` seconds into the pass. Matches the card until AOS.
+## The carrier's true dial position `t` seconds into the pass: the card tuning, off by the
+## tuning error at AOS, drifting through it.
 func true_tuning(window: PassWindow, t: float) -> float:
-	return window.card_tuning + doppler_drift * maxf(t - window.aos, 0.0)
+	return window.card_tuning + card_tuning_offset(window) + doppler_drift * (t - window.aos)
 
 
 ## Lock quality 0..1 from the dial error: 1 on the carrier, 0 at `tuning_tolerance`.

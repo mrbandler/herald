@@ -30,8 +30,12 @@ const MARK_NAMES: PackedStringArray = ["AOS", "UPLINK", "LOS", "BELL"]
 @export var card_elevation := 0.0
 ## Tuning printed on the star card, in dial units.
 @export var card_tuning := 0.0
-## Picks the direction of the card error.
+## Picks the direction of the card error and the sign of the tuning error.
 @export var card_seed := 0
+## Degrees the card position is off at AOS. Negative uses the ReceiverModel formula.
+@export var card_error := -1.0
+## Dial units the card tuning is off at AOS. Negative uses the ReceiverModel formula.
+@export var card_tuning_error := -1.0
 
 @export_group("Terminal")
 ## The commands this window offers. Every window needs one: Terminal and HELP read it.

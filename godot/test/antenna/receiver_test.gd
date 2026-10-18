@@ -17,11 +17,12 @@ func before_test() -> void:
 	_receiver.signal_strength = FloatValue.new()
 	_receiver.lock_quality = FloatValue.new()
 	_receiver.locked = BoolValue.new()
+	_receiver.pass_time.value = 30.0
 
 
 func test_on_target_and_tuned_locks() -> void:
 	_point_at_target()
-	_receiver.tuning.value = 52.0
+	_tune(0.0)
 	_receiver.carrier_present.value = true
 	_receiver.sense()
 	assert_float(_receiver.signal_strength.value).is_equal_approx(1.0, 0.0001)
@@ -31,7 +32,7 @@ func test_on_target_and_tuned_locks() -> void:
 
 func test_losing_the_carrier_drops_to_silence() -> void:
 	_point_at_target()
-	_receiver.tuning.value = 52.0
+	_tune(0.0)
 	_receiver.carrier_present.value = true
 	_receiver.sense()
 	_receiver.carrier_present.value = false
@@ -44,10 +45,10 @@ func test_losing_the_carrier_drops_to_silence() -> void:
 func test_a_held_lock_survives_a_small_detune() -> void:
 	_point_at_target()
 	_receiver.carrier_present.value = true
-	_receiver.tuning.value = 52.0
+	_tune(0.0)
 	_receiver.sense()
 	# Quality 0.8: between lock_off (0.7) and lock_on (0.9).
-	_receiver.tuning.value = 52.4
+	_tune(0.4)
 	_receiver.sense()
 	assert_bool(_receiver.locked.value).is_true()
 
@@ -55,8 +56,18 @@ func test_a_held_lock_survives_a_small_detune() -> void:
 func test_a_small_detune_does_not_lock_from_cold() -> void:
 	_point_at_target()
 	_receiver.carrier_present.value = true
-	_receiver.tuning.value = 52.4
+	_tune(0.4)
 	_receiver.sense()
+	assert_bool(_receiver.locked.value).is_false()
+
+
+func test_before_aos_the_carrier_rises_but_cannot_lock() -> void:
+	_receiver.pass_time.value = 15.0
+	_point_at_target()
+	_tune(0.0)
+	_receiver.sense()
+	assert_float(_receiver.signal_strength.value).is_equal_approx(0.5, 0.0001)
+	assert_float(_receiver.lock_quality.value).is_equal_approx(1.0, 0.0001)
 	assert_bool(_receiver.locked.value).is_false()
 
 
@@ -68,7 +79,7 @@ func test_force_lock_wins_even_without_carrier() -> void:
 
 func test_detuned_carrier_is_heard_but_not_locked() -> void:
 	_point_at_target()
-	_receiver.tuning.value = 40.0
+	_tune(-12.0)
 	_receiver.carrier_present.value = true
 	_receiver.sense()
 	assert_float(_receiver.signal_strength.value).is_greater(0.9)
@@ -77,6 +88,11 @@ func test_detuned_carrier_is_heard_but_not_locked() -> void:
 
 func _point_at_target() -> void:
 	var window := _receiver.current_pass.value as PassWindow
-	var target := _receiver.model.target_at(window, 0.0)
+	var target := _receiver.model.target_at(window, _receiver.pass_time.value)
 	_receiver.dish_azimuth.value = target.x
 	_receiver.dish_elevation.value = target.y
+
+
+func _tune(offset: float) -> void:
+	var window := _receiver.current_pass.value as PassWindow
+	_receiver.tuning.value = _receiver.model.true_tuning(window, _receiver.pass_time.value) + offset

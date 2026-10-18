@@ -15,7 +15,8 @@ extends Node
 @export var dish_elevation: FloatValue
 ## Read. Dial units.
 @export var tuning: FloatValue
-## Read. True between AOS and LOS.
+## Read. True between AOS and LOS. Before AOS the carrier rises but cannot lock; after LOS it
+## is gone.
 @export var carrier_present: BoolValue
 ## Debug: forces `locked` true, even without a carrier. After release, hysteresis keeps the
 ## lock until quality drops below `lock_off`.
@@ -35,15 +36,17 @@ func _process(_delta: float) -> void:
 ## Recomputes strength, quality and lock from the current inputs.
 func sense() -> void:
 	var window := current_pass.value as PassWindow
-	if window == null or not carrier_present.value:
+	var t := pass_time.value
+	if window == null or (t >= window.aos and not carrier_present.value):
 		signal_strength.value = 0.0
 		lock_quality.value = 0.0
 		locked.value = force_lock.value
 		return
-	var t := pass_time.value
 	var dish := Vector2(dish_azimuth.value, dish_elevation.value)
-	var strength := model.strength(model.pointing_error(dish, model.target_at(window, t)))
+	var pointing := model.pointing_error(dish, model.target_at(window, t))
+	var strength := model.strength(pointing) * model.rise(window, t)
 	var quality := model.lock_quality(tuning.value - model.true_tuning(window, t))
 	signal_strength.value = strength
 	lock_quality.value = quality
-	locked.value = force_lock.value or model.next_locked(locked.value, quality, strength)
+	var can_lock := carrier_present.value and model.next_locked(locked.value, quality, strength)
+	locked.value = force_lock.value or can_lock
