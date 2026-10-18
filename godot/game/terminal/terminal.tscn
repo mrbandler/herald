@@ -5,6 +5,7 @@
 [ext_resource type="Script" path="res://scripts/core/interaction/focus_target.gd" id="3_focus"]
 [ext_resource type="Script" path="res://scripts/core/atoms/nodes/event_printer.gd" id="4_printer"]
 [ext_resource type="Script" path="res://scripts/core/atoms/nodes/event_latch.gd" id="5_latch"]
+[ext_resource type="Script" path="res://scripts/core/atoms/nodes/bool_printer.gd" id="6_bool_printer"]
 [ext_resource type="Resource" path="res://game/data/models/terminal.tres" id="10_m_terminal"]
 [ext_resource type="Resource" path="res://game/data/models/uplink.tres" id="11_m_uplink"]
 [ext_resource type="Resource" path="res://game/data/input/leave_terminal.tres" id="12_leave"]
@@ -102,6 +103,13 @@ out = ExtResource("20_stdout")
 script = ExtResource("4_printer")
 event = ExtResource("36_los")
 text = "-- LOS. CARRIER LOST --"
+out = ExtResource("20_stdout")
+
+[node name="LockPrinter" type="Node" parent="."]
+script = ExtResource("6_bool_printer")
+source = ExtResource("35_locked")
+on_text = "-- LOCK --"
+off_text = "-- LOCK LOST --"
 out = ExtResource("20_stdout")
 
 [node name="Terminal" type="Node" parent="." node_paths=PackedStringArray("screen")]

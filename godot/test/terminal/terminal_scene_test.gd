@@ -33,6 +33,9 @@ func test_terminal_scene_is_wired() -> void:
 	var turn := scene.get_node("TurnPrinter") as EventPrinter
 	assert_str(turn.event.resource_path.get_file()).is_equal("turn_started.tres")
 	assert_object(turn.out).is_same(terminal.out)
+	var lock := scene.get_node("LockPrinter") as BoolPrinter
+	assert_object(lock.source).is_same(locked)
+	assert_object(lock.out).is_same(terminal.out)
 	var crt := scene.get_node("Crt") as MeshInstance3D
 	var material := crt.material_override as StandardMaterial3D
 	assert_vector(material.albedo_texture.get_size()).is_equal(Vector2(512, 384))
