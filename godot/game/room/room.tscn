@@ -9,11 +9,13 @@
 [ext_resource type="Script" uid="uid://ctcdhqtsbys52" path="res://scripts/core/atoms/nodes/event_latch.gd" id="7_latch"]
 [ext_resource type="Script" uid="uid://0fxs33kybbm" path="res://scripts/room/lamp_chain.gd" id="8_chain"]
 [ext_resource type="Script" uid="uid://de2pjly3flbx8" path="res://scripts/room/sleep.gd" id="9_sleep"]
+[ext_resource type="Script" path="res://scripts/room/pass_label.gd" id="12_pass_label"]
 [ext_resource type="PackedScene" path="res://game/pass/pass.tscn" id="10_pass"]
 [ext_resource type="PackedScene" path="res://game/player/player.tscn" id="11_player"]
 [ext_resource type="PackedScene" path="res://game/antenna/antenna.tscn" id="12_antenna"]
 [ext_resource type="PackedScene" path="res://game/terminal/terminal.tscn" id="13_terminal"]
 [ext_resource type="Resource" path="res://game/data/passes/pass_01.tres" id="20_pass_01"]
+[ext_resource type="Resource" path="res://game/data/passes/pass_02.tres" id="25_pass_02"]
 [ext_resource type="Resource" path="res://game/data/tunables.tres" id="21_tunables"]
 [ext_resource type="Resource" path="res://game/data/atoms/campaign/window_number.tres" id="22_window_number"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/current_pass.tres" id="23_current"]
@@ -68,7 +70,7 @@ atoms = Array[ExtResource("2_value")]([ExtResource("30_time"), ExtResource("40_a
 
 [node name="PassLoader" type="Node" parent="." unique_id=824546816]
 script = ExtResource("3_loader")
-passes = Array[ExtResource("4_window")]([ExtResource("20_pass_01")])
+passes = Array[ExtResource("4_window")]([ExtResource("20_pass_01"), ExtResource("25_pass_02")])
 window_number = ExtResource("22_window_number")
 current_pass = ExtResource("23_current")
 
@@ -117,15 +119,21 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1)
 [node name="StarCard" type="Label3D" parent="." unique_id=661038256]
 transform = Transform3D(0.9986056, 0.052790955, 2.307566e-09, 0, -4.371139e-08, 1, 0.052790955, -0.9986056, -4.3650438e-08, 0.1370247, 0.752, -0.45742118)
 pixel_size = 0.0012
-text = "STAR CARD - TONIGHT
-THE VOICE   AZ 214.6   EL 38.2
-DIAL 52"
+script = ExtResource("12_pass_label")
+current_pass = ExtResource("23_current")
+fields = PackedStringArray("card_azimuth", "card_elevation", "card_tuning")
+format = "STAR CARD - TONIGHT
+THE VOICE   AZ %05.1f   EL %04.1f
+DIAL %.0f"
 font_size = 24
 
 [node name="Letter" type="Label3D" parent="." unique_id=1073506083]
 transform = Transform3D(0.9425383, -0.33409813, -1.4603892e-08, 0, -4.371139e-08, 1, -0.33409813, -0.9425383, -4.119966e-08, -0.25424606, 0.752, -0.5841208)
 pixel_size = 0.001
-text = "Seek: set the brass wheels to the numbers on the Card, then turn slowly until the Voice comes out of the hiss. Bind: turn the black dial until the green lamp stops blinking. Speak: lean to the screen, type SEQ ADD ACK, and when the Speak lamp lights, type TX. Hold the Voice until it is sent. When the Voice is gone, pull the lamp chain and rest."
+script = ExtResource("12_pass_label")
+current_pass = ExtResource("23_current")
+fields = PackedStringArray("letter")
+format = "%s"
 font_size = 20
 autowrap_mode = 3
 width = 520.0

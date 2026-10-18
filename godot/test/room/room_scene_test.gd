@@ -9,7 +9,9 @@ func test_resetter_and_loader_come_first() -> void:
 	assert_str(room.get_child(0).name).is_equal("Resetter")
 	assert_str(room.get_child(1).name).is_equal("PassLoader")
 	var loader := room.get_child(1) as PassLoader
-	assert_int(loader.passes.size()).is_equal(1)
+	assert_int(loader.passes.size()).is_equal(2)
+	assert_int(loader.passes[0].number).is_equal(1)
+	assert_int(loader.passes[1].number).is_equal(2)
 
 func test_room_holds_every_feature() -> void:
 	var room: Node = auto_free((load(ROOM) as PackedScene).instantiate())
@@ -39,3 +41,14 @@ func test_the_listener_falls_asleep_at_shift_end() -> void:
 	assert_object(sleep.top_lid).is_not_null()
 	assert_object(sleep.bottom_lid).is_not_null()
 	assert_object(sleep.model).is_not_null()
+
+func test_desk_texts_come_from_the_window() -> void:
+	var room: Node = auto_free((load(ROOM) as PackedScene).instantiate())
+	var loader := room.get_node("PassLoader") as PassLoader
+	var card := room.get_node("StarCard") as PassLabel
+	var letter := room.get_node("Letter") as PassLabel
+	assert_object(card.current_pass).is_same(loader.current_pass)
+	assert_object(letter.current_pass).is_same(loader.current_pass)
+	var card_fields := PackedStringArray(["card_azimuth", "card_elevation", "card_tuning"])
+	assert_array(card.fields).is_equal(card_fields)
+	assert_array(letter.fields).is_equal(PackedStringArray(["letter"]))
