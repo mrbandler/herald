@@ -31,3 +31,10 @@ func test_lists_full_and_partial_items() -> void:
 		" 22   TLM   1     2/32   1     1     0",
 	]
 	assert_array(_out.calls).is_equal(expected)
+
+func test_shows_a_tag_under_its_item() -> void:
+	var tlm := DownlinkFixture.stored(DownlinkFixture.item(22, "TLM", 1, 2), [0, 0])
+	tlm.tag = "FIRST TLM"
+	_store.storage.add(tlm)
+	_store.run(PackedStringArray())
+	assert_str(_out.calls[-1]).is_equal("      TAG: FIRST TLM")

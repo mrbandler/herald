@@ -24,3 +24,6 @@ func run(_args: PackedStringArray) -> void:
 		var columns := [item.id, item.type, item.size, rows]
 		var grades := [stored.clean(), stored.noisy(), stored.lost()]
 		write(" %-4d %-5s %-5d %-6s %-5d %-5d %d" % (columns + grades))
+
+		if not stored.tag.is_empty():
+			write("      TAG: %s" % stored.tag)
