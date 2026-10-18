@@ -58,3 +58,5 @@ func test_shift_end_advances_the_campaign() -> void:
 	var end := room.get_node("ShiftEnd") as ShiftEnd
 	var loader := room.get_node("PassLoader") as PassLoader
 	assert_object(end.window_number).is_same(loader.window_number)
+	var debug := room.get_node("DebugCommands") as DebugCommands
+	assert_object(debug.window_number).is_same(loader.window_number)

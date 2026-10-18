@@ -185,6 +185,7 @@ lamp = NodePath("../DeskLamp")
 script = ExtResource("6_debug")
 pass_time = ExtResource("30_time")
 force_lock = ExtResource("48_force")
+window_number = ExtResource("22_window_number")
 
 [node name="Eyelids" type="CanvasLayer" parent="." unique_id=1413141727]
 layer = 10
