@@ -53,3 +53,12 @@ func test_window_one_has_a_letter_and_window_two_none() -> void:
 	var two: PassWindow = load(PASS_02)
 	assert_str(one.letter).starts_with("Seek:")
 	assert_str(two.letter).is_empty()
+
+func test_window_two_lists_its_manifest() -> void:
+	var two: PassWindow = load(PASS_02)
+	assert_int(two.manifest.size()).is_equal(2)
+	assert_int(two.manifest[0].id).is_equal(21)
+	assert_str(two.manifest[0].type).is_equal("AUTH")
+	assert_int(two.manifest[1].rows).is_equal(32)
+	var one: PassWindow = load(PASS_01)
+	assert_int(one.manifest.size()).is_equal(0)

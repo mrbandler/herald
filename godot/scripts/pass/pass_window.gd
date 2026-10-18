@@ -51,6 +51,10 @@ const MARK_NAMES: PackedStringArray = ["AOS", "UPLINK", "LOS", "BELL"]
 ## The handover letter on the desk for this window. Empty for none.
 @export_multiline var letter := ""
 
+@export_group("Downlink")
+## HERALD's queue listing for this window, pushed at the first lock. Empty for none.
+@export var manifest: Array[ManifestItem] = []
+
 @export_group("Terminal")
 ## The commands this window offers. Every window needs one: Terminal and HELP read it.
 @export var command_set: CommandSet
