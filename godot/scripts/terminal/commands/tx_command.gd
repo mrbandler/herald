@@ -24,6 +24,6 @@ func run(args: PackedStringArray) -> void:
 	elif sequence.value.is_empty():
 		write("SEQUENCE EMPTY")
 	elif not locked.value:
-		write("NO LOCK")
+		write("NO SIGNAL LOCK")
 	else:
 		tx_requested.raise()

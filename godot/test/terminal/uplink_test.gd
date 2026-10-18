@@ -40,7 +40,7 @@ func test_losing_lock_aborts_and_keeps_the_sequence() -> void:
 	assert_bool(_uplink.transmitting.value).is_false()
 	assert_array(_uplink.sequence.value).contains_exactly(["ACK"])
 	assert_array(_sent.calls).is_empty()
-	assert_array(_spy.calls).is_equal(["TRANSMITTING...", "UPLINK FAILED. LOCK LOST"])
+	assert_array(_spy.calls).is_equal(["TRANSMITTING...", "UPLINK FAILED. SIGNAL LOCK LOST"])
 
 func test_los_aborts_and_a_retry_still_sends() -> void:
 	_uplink.tx_requested.raise()

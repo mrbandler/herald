@@ -13,7 +13,7 @@
 [resource]
 script = ExtResource("1_script")
 name = "GET"
-help = "GET <ID>          DOWNLOAD AN ITEM WHILE LOCKED"
+help = "GET <ID>          DOWNLOAD WHILE SIGNAL LOCKED"
 out = ExtResource("2_stdout")
 model = ExtResource("3_model")
 downlink_open = ExtResource("4_open")

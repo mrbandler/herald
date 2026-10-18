@@ -62,7 +62,7 @@ func _on_tx_requested(_payload: Variant) -> void:
 ## Fails a running transmission when the lock is lost.
 func _on_locked(_previous: bool, current: bool) -> void:
 	if transmitting.value and not current:
-		_fail("UPLINK FAILED. LOCK LOST")
+		_fail("UPLINK FAILED. SIGNAL LOCK LOST")
 
 ## Fails a running transmission at LOS.
 func _on_los(_payload: Variant) -> void:

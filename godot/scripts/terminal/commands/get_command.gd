@@ -36,7 +36,7 @@ func run(args: PackedStringArray) -> void:
 		return
 
 	if not locked.value:
-		write("NO LOCK")
+		write("NO SIGNAL LOCK")
 		return
 
 	if not manifest_received.value:

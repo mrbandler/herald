@@ -35,7 +35,7 @@ func test_refuses_outside_the_downlink_without_lock_or_manifest() -> void:
 	_get.run(PackedStringArray(["21"]))
 	_get.locked.value = true
 	_get.run(PackedStringArray(["21"]))
-	assert_array(_out.calls).is_equal(["DOWNLINK CLOSED", "NO LOCK", "NO MANIFEST"])
+	assert_array(_out.calls).is_equal(["DOWNLINK CLOSED", "NO SIGNAL LOCK", "NO MANIFEST"])
 
 func test_queues_several_items() -> void:
 	_ready_to_get()

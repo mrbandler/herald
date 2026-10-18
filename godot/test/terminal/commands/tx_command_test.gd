@@ -41,7 +41,7 @@ func test_no_lock() -> void:
 	_ready_to_send()
 	_tx.locked.value = false
 	_tx.run(PackedStringArray())
-	assert_array(_spy.calls).is_equal(["NO LOCK"])
+	assert_array(_spy.calls).is_equal(["NO SIGNAL LOCK"])
 	assert_array(_requests.calls).is_empty()
 
 func _ready_to_send() -> void:
