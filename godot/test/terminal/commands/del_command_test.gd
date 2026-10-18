@@ -13,7 +13,7 @@ func before_test() -> void:
 
 func test_usage_without_an_id() -> void:
 	_del.run(PackedStringArray())
-	assert_array(_out.calls).is_equal(["USAGE: DEL <ID>"])
+	assert_array(_out.calls).is_equal(["USAGE: DEL <ID>[, <ID>]"])
 
 func test_unknown_item() -> void:
 	_del.run(PackedStringArray(["99"]))
@@ -22,4 +22,10 @@ func test_unknown_item() -> void:
 func test_deletes_and_reports_the_free_space() -> void:
 	_del.run(PackedStringArray(["21"]))
 	assert_array(_out.calls).is_equal(["21 DELETED. FREE 8."])
+	assert_int(_del.storage.value.size()).is_equal(0)
+
+func test_deletes_several_items() -> void:
+	_del.storage.add(DownlinkFixture.stored(DownlinkFixture.item(22, "TLM", 1, 32), []))
+	_del.run(PackedStringArray(["21", "22"]))
+	assert_array(_out.calls).is_equal(["21 DELETED. FREE 7.", "22 DELETED. FREE 8."])
 	assert_int(_del.storage.value.size()).is_equal(0)

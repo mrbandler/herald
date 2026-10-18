@@ -8,7 +8,7 @@
 [resource]
 script = ExtResource("1_script")
 name = "DEL"
-help = "DEL <ID>          DELETE A STORED ITEM"
+help = "DEL <ID>          DELETE STORED ITEMS FOR GOOD"
 out = ExtResource("2_stdout")
 model = ExtResource("3_model")
 storage = ExtResource("4_storage")
