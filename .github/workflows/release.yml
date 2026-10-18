@@ -27,6 +27,9 @@ jobs:
           - { os: windows-latest, preset: Windows, push: build/Windows, channel: windows, butler: windows-amd64 }
           - { os: macos-latest, preset: macOS, push: build/macOS/game.zip, channel: macos, butler: darwin-arm64 }
     runs-on: ${{ matrix.os }}
+    env:
+      ITCH_TARGET: ${{ vars.ITCH_USER }}/${{ vars.ITCH_GAME }}
+      ITCH_CHANNEL: ${{ github.ref_type == 'tag' && matrix.channel || format('{0}-dev', matrix.channel) }}
     defaults:
       run:
         shell: bash
@@ -68,14 +71,29 @@ jobs:
             curl -fsSL "https://github.com/godotneers/ggg/releases/download/$GGG_VERSION/ggg-installer.sh" | sh
           fi
           echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+      # ggg queries the GitHub API without a token, so a cache hit avoids its rate limit and the template download.
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ runner.temp }}/ggg
+          key: ggg-${{ matrix.os }}-${{ hashFiles('godot/ggg.toml', 'godot/ggg.lock') }}
+          restore-keys: ggg-${{ matrix.os }}-
       - name: Godot, export templates and addons
         run: ggg sync --with-export-templates
         working-directory: godot
+        env:
+          GGG_CACHE_DIR: ${{ runner.temp }}/ggg
       - name: Native unit tests
         run: just test-rust test-cpp
+      - name: Read version
+        id: version
+        run: |
+          echo "version=$(cat version.txt)" >> "$GITHUB_OUTPUT"
+          echo "sha=${GITHUB_SHA::12}" >> "$GITHUB_OUTPUT"
       # Godot rewrites project.godot and drops release-please's annotation comments, so stamp the version here.
       - name: Stamp version from version.txt
-        run: sed -i.bak "s/^config\/version=.*/config\/version=\"$(cat version.txt)\"/" godot/project.godot && rm godot/project.godot.bak
+        run: sed -i.bak "s/^config\/version=.*/config\/version=\"$VERSION\"/" godot/project.godot && rm godot/project.godot.bak
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
       - name: Export
         run: just export "$PRESET"
         env:
@@ -84,16 +102,33 @@ jobs:
         with:
           name: ${{ matrix.preset }}
           path: build/${{ matrix.preset }}
+      - name: Install butler
+        if: ${{ vars.ITCH_USER != '' && vars.ITCH_GAME != '' }}
+        env:
+          BUTLER_OS: ${{ matrix.butler }}
+        run: |
+          curl -fsSL -o butler.zip "https://broth.itch.zone/butler/$BUTLER_OS/LATEST/archive/default"
+          unzip -q butler.zip -d butler && chmod +x butler/butler* || true
+      # The status result lists the channel only if it exists.
+      - name: Check itch.io dev channel
+        id: channel
+        if: ${{ vars.ITCH_USER != '' && vars.ITCH_GAME != '' && github.ref_type != 'tag' }}
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+        run: |
+          if ./butler/butler --json status "$ITCH_TARGET:$ITCH_CHANNEL" \
+            | jq -e 'select(.type == "result") | .value.channels | length > 0' > /dev/null; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
       - name: Push to itch.io
         if: ${{ vars.ITCH_USER != '' && vars.ITCH_GAME != '' }}
         env:
           BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
-          TARGET: ${{ vars.ITCH_USER }}/${{ vars.ITCH_GAME }}
-          CHANNEL: ${{ github.ref_type == 'tag' && matrix.channel || format('{0}-dev', matrix.channel) }}
-          VERSION: ${{ github.ref_type == 'tag' && github.ref_name || github.sha }}
-          BUTLER_OS: ${{ matrix.butler }}
           PUSH: ${{ matrix.push }}
-        run: |
-          curl -fsSL -o butler.zip "https://broth.itch.zone/butler/$BUTLER_OS/LATEST/archive/default"
-          unzip -q butler.zip -d butler && chmod +x butler/butler* || true
-          ./butler/butler push "$PUSH" "$TARGET:$CHANNEL" --userversion "${VERSION:0:12}"
+          # itch enforces semver (a.b.c-suffix); dev builds carry the short SHA as the suffix.
+          USERVERSION: ${{ github.ref_type == 'tag' && steps.version.outputs.version || format('{0}-dev-{1}', steps.version.outputs.version, steps.version.outputs.sha) }}
+          # butler only accepts --hidden when the push creates the channel, so new dev channels start hidden.
+          HIDDEN: ${{ github.ref_type != 'tag' && steps.channel.outputs.exists != 'true' && '--hidden' || '' }}
+        run: ./butler/butler push "$PUSH" "$ITCH_TARGET:$ITCH_CHANNEL" --userversion "$USERVERSION" $HIDDEN
