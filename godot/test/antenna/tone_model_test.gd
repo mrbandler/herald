@@ -35,3 +35,19 @@ func test_listening_pulse_silences_the_carrier_between_pulses() -> void:
 	# Half a pulse period after the Turn began, the envelope is at zero.
 	var half := 0.5 / model.pulse_rate
 	assert_float(model.sample(0.0123, 1.0, 1.0, half, 0.0)).is_equal_approx(0.0, 0.0001)
+
+
+func test_hiss_filter_sweeps_once_per_dial_unit() -> void:
+	var model := ToneModel.new()
+	var a := model.hiss_alpha(52.0)
+	assert_float(model.hiss_alpha(53.0)).is_equal_approx(a, 0.0001)
+	assert_bool(absf(model.hiss_alpha(52.25) - a) > 0.01).is_true()
+	for i: int in range(40):
+		var alpha := model.hiss_alpha(i * 0.05)
+		assert_float(alpha).is_between(model.hiss_alpha_min, model.hiss_alpha_max)
+
+
+func test_hiss_gain_keeps_filtered_noise_as_loud_as_white_noise() -> void:
+	var model := ToneModel.new()
+	assert_float(model.hiss_gain(1.0)).is_equal_approx(1.0, 0.0001)
+	assert_float(model.hiss_gain(0.1)).is_greater(1.0)

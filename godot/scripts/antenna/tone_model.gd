@@ -17,6 +17,23 @@ extends Resource
 @export var warble_rate := 5.0
 ## Listening pulses per second during the Turn.
 @export var pulse_rate := 0.8
+## Dial units per full sweep of the hiss colour, so every turn of the dial is heard.
+@export var hiss_sweep_units := 1.0
+## Darkest hiss: low-pass coefficient 0..1, lower is duller.
+@export var hiss_alpha_min := 0.08
+## Brightest hiss: low-pass coefficient 0..1, 1 is white noise.
+@export var hiss_alpha_max := 0.9
+
+
+## Low-pass coefficient for the hiss at dial position `tuning`, cycling every `hiss_sweep_units`.
+func hiss_alpha(tuning: float) -> float:
+	var phase := 0.5 + 0.5 * sin(TAU * tuning / hiss_sweep_units)
+	return lerpf(hiss_alpha_min, hiss_alpha_max, phase)
+
+
+## Gain that brings noise low-passed with `alpha` back to the loudness of white noise.
+func hiss_gain(alpha: float) -> float:
+	return sqrt((2.0 - alpha) / alpha)
 
 
 ## One mono sample at `t` seconds, within -1..1 for `strength` and `quality` in 0..1.

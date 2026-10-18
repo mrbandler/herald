@@ -7,6 +7,7 @@ const KEPT: PackedStringArray = [
 	"res://game/data/atoms/terminal/command_history.tres",
 	"res://game/data/atoms/pass/current_pass.tres",
 	"res://game/data/atoms/player/terminal_focus_point.tres",
+	"res://game/data/atoms/antenna/volume.tres",
 ]
 
 
