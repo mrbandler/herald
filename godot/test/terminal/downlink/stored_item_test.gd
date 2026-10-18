@@ -24,3 +24,8 @@ func test_a_partial_counts_only_what_was_sent() -> void:
 	assert_int(stored.sent()).is_equal(2)
 	assert_int(stored.arrived()).is_equal(2)
 	assert_int(stored.lost()).is_equal(0)
+
+func test_missing_counts_lost_and_unsent_rows() -> void:
+	var stored := _stored(16, [DownlinkModel.Grade.CLEAN, DownlinkModel.Grade.LOST])
+	assert_int(stored.missing()).is_equal(15)
+	assert_str(stored.tag).is_empty()

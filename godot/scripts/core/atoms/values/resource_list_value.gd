@@ -36,6 +36,17 @@ func remove(item: Resource) -> void:
 	next.erase(item)
 	value = next
 
+## Assigns a copy of the list with `old` swapped for `replacement` at the same place. Does nothing
+## when `old` is not in the list. Lets an item change without mutating the array in place.
+func replace(old: Resource, replacement: Resource) -> void:
+	var index := value.find(old)
+	if index == -1:
+		return
+
+	var next := value.duplicate()
+	next[index] = replacement
+	value = next
+
 ## Assigns an empty list.
 func clear() -> void:
 	var empty: Array[Resource] = []

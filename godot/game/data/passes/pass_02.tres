@@ -10,7 +10,8 @@ id = 21
 type = "AUTH"
 size = 1
 rows = 16
-note = "PHASE 2"
+note = "KEY TLM"
+key_for = "TLM"
 
 [sub_resource type="Resource" id="Item_22"]
 script = ExtResource("3")
@@ -19,6 +20,14 @@ type = "TLM"
 size = 1
 rows = 32
 note = "AUTO"
+content = "HERALD TELEMETRY  T+214Y 077D
+BUS      NOMINAL   BATTERY 61%
+POWER    18 / DRAW 10 / SURPLUS 8
+NAC      ON   WAC ON   SPC ON
+AMP      ON   BANK B ON   HEATERS ON
+POSITION PARKING ORBIT, PRIMA
+POINTING NEXT PASS AZ +0.6 EL -0.4
+STATUS   PHASE 2 AUTHORIZED. AWAITING ACK"
 
 [resource]
 script = ExtResource("1")

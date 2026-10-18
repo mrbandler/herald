@@ -17,3 +17,9 @@ extends Resource
 
 ## Shown in the manifest's NOTE column.
 @export var note := ""
+
+## For an AUTH item: the module it unlocks, e.g. `TLM`. Empty otherwise.
+@export var key_for := ""
+
+## For a text item: what DECODE shows, one line per line break.
+@export_multiline var content := ""

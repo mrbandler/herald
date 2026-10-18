@@ -10,6 +10,9 @@ extends Resource
 ## arrived. Shorter than `item.rows` for a partial item; the rest were never sent.
 @export var grades := PackedByteArray()
 
+## The player's label, set with TAG. Empty for none.
+@export var tag := ""
+
 ## Rows HERALD sent so far, arrived or lost.
 func sent() -> int:
 	return grades.size()
@@ -38,3 +41,7 @@ func _count(grade: int) -> int:
 			count += 1
 
 	return count
+
+## Rows that never arrived: lost ones and the ones never sent.
+func missing() -> int:
+	return item.rows - arrived()

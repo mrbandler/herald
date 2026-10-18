@@ -25,3 +25,18 @@ func test_clear_and_reset_return_to_empty() -> void:
 	atom.add(Resource.new())
 	atom.reset()
 	assert_int(atom.value.size()).is_equal(0)
+
+func test_replace_keeps_the_place_and_emits() -> void:
+	var atom := ResourceListValue.new()
+	var first := Resource.new()
+	var second := Resource.new()
+	var third := Resource.new()
+	atom.add(first)
+	atom.add(second)
+	var spy := AtomSpy.values(atom)
+	atom.replace(first, third)
+	assert_object(atom.value[0]).is_same(third)
+	assert_object(atom.value[1]).is_same(second)
+	assert_int(spy.calls.size()).is_equal(1)
+	atom.replace(Resource.new(), first)
+	assert_int(spy.calls.size()).is_equal(1)

@@ -68,3 +68,10 @@ func test_window_two_offers_the_downlink_commands() -> void:
 	var names := two.command_set.names()
 	for command: String in ["HELP", "SEQ", "TX", "CLR", "MANIFEST", "GET", "STAT", "STORE", "DEL"]:
 		assert_bool(names.has(command)).override_failure_message(command).is_true()
+
+func test_window_two_key_and_telemetry() -> void:
+	var two: PassWindow = load(PASS_02)
+	assert_str(two.manifest[0].note).is_equal("KEY TLM")
+	assert_str(two.manifest[0].key_for).is_equal("TLM")
+	assert_int(two.manifest[1].content.split("\n").size()).is_equal(8)
+	assert_str(two.manifest[1].content).starts_with("HERALD TELEMETRY")
