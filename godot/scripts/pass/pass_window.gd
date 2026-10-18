@@ -47,6 +47,10 @@ const MARK_NAMES: PackedStringArray = ["AOS", "UPLINK", "LOS", "BELL"]
 ## Dial units the card tuning is off at AOS. Negative uses the ReceiverModel formula.
 @export var card_tuning_error := -1.0
 
+@export_group("Desk")
+## The handover letter on the desk for this window. Empty for none.
+@export_multiline var letter := ""
+
 @export_group("Terminal")
 ## The commands this window offers. Every window needs one: Terminal and HELP read it.
 @export var command_set: CommandSet

@@ -15,4 +15,5 @@ card_azimuth = 214.6
 card_elevation = 38.2
 card_tuning = 52.0
 card_seed = 1
+letter = "Seek: set the brass wheels to the numbers on the Card, then turn slowly until the Voice comes out of the hiss. Bind: turn the black dial until the green lamp stops blinking. Speak: lean to the screen, type SEQ ADD ACK, and when the Speak lamp lights, type TX. Hold the Voice until it is sent. When the Voice is gone, pull the lamp chain and rest."
 command_set = ExtResource("2")
