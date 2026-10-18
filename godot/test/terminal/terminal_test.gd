@@ -64,6 +64,13 @@ func test_enter_submits_and_control_keys_do_not_type() -> void:
 	assert_array(_terminal.lines).contains_exactly(["LP4> SEQ", "SEQUENCE EMPTY"])
 
 
+func test_only_keys_the_terminal_uses_are_consumed() -> void:
+	assert_bool(_terminal.handle_key(KEY_A, 97)).is_true()
+	assert_bool(_terminal.handle_key(KEY_ENTER, 0)).is_true()
+	assert_bool(_terminal.handle_key(KEY_ESCAPE, 0)).is_false()
+	assert_bool(_terminal.handle_key(KEY_F1, 0)).is_false()
+
+
 func test_greets_once_on_first_focus() -> void:
 	_terminal.focused.value = true
 	_terminal.focused.value = false

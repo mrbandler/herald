@@ -51,15 +51,15 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		return
 	# While a file popup is open, its keys belong to the FileViewer (built with the volumes).
 	# Modifier chords (Ctrl, Alt, Meta) never type: Alt+letter would otherwise insert the letter.
+	# Keys left unused stay unhandled: GUIDE reads unhandled input, so Esc still reaches `leave`.
 	var chord := key.ctrl_pressed or key.alt_pressed or key.meta_pressed
-	if viewing.value.is_empty() and not chord:
-		handle_key(key.keycode, key.unicode)
-	get_viewport().set_input_as_handled()
+	if viewing.value.is_empty() and not chord and handle_key(key.keycode, key.unicode):
+		get_viewport().set_input_as_handled()
 
 
 ## Applies one key press: Enter submits, Up and Down recall history,
-## Page keys scroll, printable keys are typed.
-func handle_key(keycode: Key, unicode: int) -> void:
+## Page keys scroll, printable keys are typed. Returns false for keys it does not use.
+func handle_key(keycode: Key, unicode: int) -> bool:
 	match keycode:
 		KEY_ENTER, KEY_KP_ENTER:
 			submit(editor.submit())
@@ -74,9 +74,11 @@ func handle_key(keycode: Key, unicode: int) -> void:
 		KEY_PAGEDOWN:
 			editor.scroll_by(2 - model.rows, model.max_scroll(lines.size()))
 		_:
-			if unicode >= 32 and unicode < 127:
-				editor.insert(char(unicode), model.max_input())
+			if unicode < 32 or unicode >= 127:
+				return false
+			editor.insert(char(unicode), model.max_input())
 	_refresh()
+	return true
 
 
 ## Echoes the line and remembers it, then runs its command or writes UNKNOWN COMMAND.
