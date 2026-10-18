@@ -52,3 +52,9 @@ func test_desk_texts_come_from_the_window() -> void:
 	var card_fields := PackedStringArray(["card_azimuth", "card_elevation", "card_tuning"])
 	assert_array(card.fields).is_equal(card_fields)
 	assert_array(letter.fields).is_equal(PackedStringArray(["letter"]))
+
+func test_shift_end_advances_the_campaign() -> void:
+	var room: Node = auto_free((load(ROOM) as PackedScene).instantiate())
+	var end := room.get_node("ShiftEnd") as ShiftEnd
+	var loader := room.get_node("PassLoader") as PassLoader
+	assert_object(end.window_number).is_same(loader.window_number)

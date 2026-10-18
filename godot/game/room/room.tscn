@@ -177,6 +177,7 @@ morning_bell = ExtResource("31_bell")
 shift_ended = ExtResource("32_shift_ended")
 acked = ExtResource("64_acked")
 out = ExtResource("61_stdout")
+window_number = ExtResource("22_window_number")
 sleep = NodePath("../Sleep")
 lamp = NodePath("../DeskLamp")
 

@@ -2,8 +2,8 @@ class_name ShiftEnd
 extends Node
 
 ## At the morning bell (or a pull of the lamp chain): reports the ACK, ends the shift, dims the
-## lamp, lets the Listener fall asleep and reloads the room. Greybox stand-in for the tube
-## report and the next window.
+## lamp, lets the Listener fall asleep and reloads the room. It also advances the campaign to
+## the next window. Greybox stand-in for the tube report.
 
 ## Collection of global tunables.
 @export var tunables: Tunables
@@ -19,6 +19,9 @@ extends Node
 
 ## Receives the ACK report. Usually stdout.
 @export var out: StringEvent
+
+## Raised by one when the shift ends, so the next room load picks the next window.
+@export var window_number: IntValue
 
 ## Optional. Falls asleep before the reload. Tests leave it unset.
 @export var sleep: Sleep
@@ -40,6 +43,7 @@ func _on_bell(_payload: Variant) -> void:
 		return
 
 	_ended = true
+	window_number.value += 1
 
 	out.raise("HEARTBEAT ACKNOWLEDGED" if acked.value else "NO ACK SENT")
 	shift_ended.raise()
