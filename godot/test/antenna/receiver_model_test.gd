@@ -41,9 +41,11 @@ func test_strength_falls_to_zero_at_the_hearing_radius() -> void:
 	assert_float(_model.strength(3.0)).is_equal(0.0)
 
 
-func test_true_tuning_drifts() -> void:
-	var tuning := _model.true_tuning(PassFixture.window_one(), 10.0)
-	assert_float(tuning).is_equal_approx(52.2, 0.0001)
+func test_true_tuning_matches_the_card_at_aos_then_drifts() -> void:
+	var window := PassFixture.window_one()
+	assert_float(_model.true_tuning(window, 10.0)).is_equal(52.0)
+	assert_float(_model.true_tuning(window, 30.0)).is_equal(52.0)
+	assert_float(_model.true_tuning(window, 40.0)).is_equal_approx(52.2, 0.0001)
 
 
 func test_lock_quality_by_tuning_error() -> void:

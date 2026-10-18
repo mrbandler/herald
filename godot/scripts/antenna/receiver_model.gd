@@ -55,9 +55,9 @@ func strength(error_deg: float) -> float:
 	return clampf(1.0 - error_deg / hearing_radius, 0.0, 1.0)
 
 
-## The carrier's true dial position `t` seconds into the pass.
+## The carrier's true dial position `t` seconds into the pass. Matches the card until AOS.
 func true_tuning(window: PassWindow, t: float) -> float:
-	return window.card_tuning + doppler_drift * t
+	return window.card_tuning + doppler_drift * maxf(t - window.aos, 0.0)
 
 
 ## Lock quality 0..1 from the dial error: 1 on the carrier, 0 at `tuning_tolerance`.
