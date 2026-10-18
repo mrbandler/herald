@@ -4,6 +4,6 @@
 
 [resource]
 script = ExtResource("1")
-units_per_pixel = 0.02
+units_per_pixel = 0.03
 maximum = 100.0
 visual_degrees_per_unit = 18.0

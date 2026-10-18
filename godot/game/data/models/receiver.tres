@@ -4,3 +4,9 @@
 
 [resource]
 script = ExtResource("1")
+hearing_radius = 6.0
+hearing_curve = 2.0
+lock_on = 0.85
+lock_off = 0.6
+doppler_drift = 0.015
+tuning_tolerance = 2.0

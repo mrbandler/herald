@@ -99,8 +99,8 @@ rotation_degrees = Vector3(0, 25, 0)
 position = Vector3(0, 1.0, -1.0)
 
 [node name="StarCard" type="Label3D" parent="."]
-position = Vector3(0.45, 0.76, -0.5)
-rotation_degrees = Vector3(-70, 0, 0)
+position = Vector3(0.45, 0.752, -0.5)
+rotation_degrees = Vector3(-90, 0, 0)
 pixel_size = 0.0012
 font_size = 24
 text = "STAR CARD - TONIGHT
@@ -108,8 +108,8 @@ THE VOICE   AZ 214.6   EL 38.2
 DIAL 52"
 
 [node name="Letter" type="Label3D" parent="."]
-position = Vector3(-0.2, 0.76, -0.45)
-rotation_degrees = Vector3(-70, 0, 0)
+position = Vector3(-0.2, 0.752, -0.45)
+rotation_degrees = Vector3(-90, 0, 0)
 pixel_size = 0.001
 font_size = 20
 width = 520.0

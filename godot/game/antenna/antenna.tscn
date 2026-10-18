@@ -57,8 +57,15 @@ albedo_color = Color(0.1, 0.1, 0.1, 1)
 material = SubResource("Material_mark")
 size = Vector3(0.004, 0.02, 0.002)
 
+[sub_resource type="StandardMaterial3D" id="Material_pointer"]
+albedo_color = Color(0.9, 0.12, 0.08, 1)
+emission_enabled = true
+emission = Color(0.9, 0.12, 0.08, 1)
+emission_energy_multiplier = 0.6
+
 [sub_resource type="BoxMesh" id="Mesh_pointer"]
-size = Vector3(0.006, 0.09, 0.004)
+material = SubResource("Material_pointer")
+size = Vector3(0.008, 0.09, 0.004)
 
 [sub_resource type="SphereMesh" id="Mesh_lamp"]
 radius = 0.02
@@ -190,7 +197,7 @@ source = ExtResource("31_el")
 format = "EL %04.1f"
 
 [node name="TuningCounter" type="Label3D" parent="."]
-position = Vector3(0.3, 0.2, 0.205)
+position = Vector3(0.27, 0.2, 0.205)
 pixel_size = 0.001
 font_size = 28
 text = "DIAL 40.0"
@@ -262,7 +269,7 @@ position = Vector3(0, 0.045, 0)
 mesh = SubResource("Mesh_pointer")
 
 [node name="LockLamp" type="MeshInstance3D" parent="."]
-position = Vector3(0.36, 0.28, 0.2)
+position = Vector3(0.405, 0.28, 0.2)
 mesh = SubResource("Mesh_lamp")
 script = ExtResource("4_lamp")
 model = ExtResource("15_m_lamp")
@@ -271,12 +278,28 @@ blink_source = ExtResource("33_strength")
 color = Color(0.3, 1, 0.4, 1)
 
 [node name="SpeakLamp" type="MeshInstance3D" parent="."]
-position = Vector3(0.36, 0.2, 0.2)
+position = Vector3(0.405, 0.2, 0.2)
 mesh = SubResource("Mesh_lamp")
 script = ExtResource("4_lamp")
 model = ExtResource("15_m_lamp")
 source = ExtResource("39_speak_open")
 color = Color(1, 0.6, 0.1, 1)
+
+[node name="LockCaption" type="Label3D" parent="."]
+position = Vector3(0.405, 0.31, 0.206)
+pixel_size = 0.001
+modulate = Color(0.15, 0.15, 0.15, 1)
+font_size = 14
+outline_size = 0
+text = "LOCK"
+
+[node name="SpeakCaption" type="Label3D" parent="."]
+position = Vector3(0.405, 0.23, 0.206)
+pixel_size = 0.001
+modulate = Color(0.15, 0.15, 0.15, 1)
+font_size = 14
+outline_size = 0
+text = "SPEAK"
 
 [node name="Receiver" type="Node" parent="."]
 script = ExtResource("1_receiver")
