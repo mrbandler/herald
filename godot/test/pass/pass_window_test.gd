@@ -66,7 +66,22 @@ func test_window_two_lists_its_manifest() -> void:
 func test_window_two_offers_the_downlink_commands() -> void:
 	var two: PassWindow = load(PASS_02)
 	var names := two.command_set.names()
-	for command: String in ["HELP", "SEQ", "TX", "CLR", "MANIFEST", "GET", "STAT", "STORE", "DEL"]:
+	for command: String in [
+		"HELP",
+		"SEQ",
+		"TX",
+		"CLR",
+		"MANIFEST",
+		"GET",
+		"STAT",
+		"STORE",
+		"DEL",
+		"MOD",
+		"UNLOCK",
+		"DECODE",
+		"VRFY",
+		"TAG",
+	]:
 		assert_bool(names.has(command)).override_failure_message(command).is_true()
 
 func test_window_two_key_and_telemetry() -> void:

@@ -55,3 +55,18 @@ func test_downlink_is_wired() -> void:
 	assert_object(get_command.download_queue).is_same(downlink.download_queue)
 	assert_object(get_command.downlink_open).is_same(downlink.downlink_open)
 	assert_object(get_command.storage).is_same(downlink.storage)
+
+func test_module_unlock_is_wired() -> void:
+	var scene: Node = auto_free((load(TERMINAL) as PackedScene).instantiate())
+	var relay := scene.get_node("RelaySound") as EventSound
+	var bell := scene.get_node("UnlockBellSound") as EventSound
+	assert_str(relay.event.resource_path.get_file()).is_equal("module_unlocked.tres")
+	assert_object(bell.event).is_same(relay.event)
+	assert_object(relay.sound.stream).is_instanceof(ClickStream)
+	assert_float((bell.sound.stream as ChimeStream).lead_seconds).is_greater(0.0)
+	var two: PassWindow = load(PASS_02)
+	var unlock := two.command_set.find("UNLOCK") as UnlockCommand
+	assert_object(unlock.module_unlocked).is_same(relay.event)
+	var decode := two.command_set.find("DECODE") as DecodeCommand
+	assert_object(decode.unlocked_modules).is_same(unlock.unlocked_modules)
+	assert_object(decode.storage).is_same(unlock.storage)

@@ -11,7 +11,12 @@
 [ext_resource type="Resource" path="res://game/data/commands/stat.tres" id="9_stat"]
 [ext_resource type="Resource" path="res://game/data/commands/store.tres" id="10_store"]
 [ext_resource type="Resource" path="res://game/data/commands/del.tres" id="11_del"]
+[ext_resource type="Resource" path="res://game/data/commands/mod.tres" id="12_mod"]
+[ext_resource type="Resource" path="res://game/data/commands/unlock.tres" id="13_unlock"]
+[ext_resource type="Resource" path="res://game/data/commands/decode.tres" id="14_decode"]
+[ext_resource type="Resource" path="res://game/data/commands/vrfy.tres" id="15_vrfy"]
+[ext_resource type="Resource" path="res://game/data/commands/tag.tres" id="16_tag"]
 
 [resource]
 script = ExtResource("1_script")
-commands = Array[ExtResource("2_command")]([ExtResource("3_help"), ExtResource("4_seq"), ExtResource("5_tx"), ExtResource("6_clr"), ExtResource("7_manifest"), ExtResource("8_get"), ExtResource("9_stat"), ExtResource("10_store"), ExtResource("11_del")])
+commands = Array[ExtResource("2_command")]([ExtResource("3_help"), ExtResource("4_seq"), ExtResource("5_tx"), ExtResource("6_clr"), ExtResource("7_manifest"), ExtResource("8_get"), ExtResource("9_stat"), ExtResource("10_store"), ExtResource("11_del"), ExtResource("12_mod"), ExtResource("13_unlock"), ExtResource("14_decode"), ExtResource("15_vrfy"), ExtResource("16_tag")])
