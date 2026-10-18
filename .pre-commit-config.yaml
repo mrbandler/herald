@@ -2,8 +2,8 @@
 # All hooks are native: no Python or Node needed.
 default_install_hook_types: [pre-commit, commit-msg, pre-push]
 default_stages: [pre-commit]
-# Tool-generated lockfiles and third-party code (addons, submodules) are never touched.
-exclude: ^(devenv\.lock|godot/ggg\.lock|cpp/(godot-cpp|vcpkg)/.*|godot/addons/.*)$
+# Tool-generated lockfiles and third-party code (addons) are never touched.
+exclude: ^(devenv\.lock|godot/ggg\.lock|godot/addons/.*)$
 
 repos:
   - repo: builtin
@@ -61,42 +61,6 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
-      - id: cargo-fmt
-        name: cargo fmt
-        entry: cargo fmt --manifest-path rust/Cargo.toml --all
-        language: system
-        files: ^rust/.*\.rs$
-        pass_filenames: false
-      - id: cargo-clippy
-        name: cargo clippy
-        entry: cargo clippy --manifest-path rust/Cargo.toml --workspace --all-targets -- -D warnings
-        language: system
-        files: ^rust/
-        pass_filenames: false
-      - id: clang-format
-        name: clang-format
-        entry: clang-format -i
-        language: system
-        files: ^cpp/extensions/.*\.(cpp|hpp|h)$
-      - id: clang-tidy
-        name: clang-tidy
-        # Configure first so compile_commands.json exists, and generate the godot-cpp bindings
-        # (gdextension_interface.h and the class headers are build outputs). Fast after the first run.
-        # Bare clang-tidy lacks the wrapped compiler's system include paths, so pass them on.
-        entry: >-
-          bash -c 'cmake --preset debug -S cpp >/dev/null &&
-          cmake --build cpp/build/debug --target generate_bindings >/dev/null &&
-          sys=$(c++ -E -x c++ -v /dev/null 2>&1 | sed -n "/^#include <...>/,/^End of/p" | grep "^ /" | grep -v framework | sed "s/^ /--extra-arg=-isystem/") &&
-          clang-tidy -p cpp/build/debug --quiet $sys "$@"' --
-        language: system
-        files: ^cpp/extensions/.*\.cpp$
-      - id: cargo-shear
-        name: cargo shear
-        entry: bash -c 'cd rust && cargo shear'
-        language: system
-        files: ^rust/(Cargo\.toml|.*\.rs)$
-        pass_filenames: false
-        stages: [pre-push]
       - id: just-test
         name: just test
         entry: just test

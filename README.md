@@ -1,12 +1,11 @@
 # godot-template
 
-An opinionated Godot 4.7 project template with GDScript, Rust (gdext) and C++ (godot-cpp + vcpkg),
-test-driven from the first commit, with automated builds and releases to itch.io. It is built for
+An opinionated Godot 4.7 project template with GDScript, test-driven from the first commit, with automated builds and releases to itch.io. It is built for
 my own desktop games (Windows, Linux, macOS) and shared in case it is useful to you; expect strong
 defaults rather than a blank slate.
 
-- GDScript, Rust and C++ side by side, each with a sample class, unit tests and engine tests.
-- TDD: GdUnit4, `cargo test` and doctest, all behind one `just test`.
+- A GDScript sample class with unit tests and an engine test.
+- TDD: GdUnit4 behind one `just test`.
 - Static typing enforced in `godot/project.godot` (untyped and unsafe warnings are errors; `:=` is fine).
 - Addons pinned and locked with [ggg](https://github.com/godotneers/ggg) (`godot/ggg.toml`, `godot/ggg.lock`).
 - Reproducible dev environment with [devenv](https://devenv.sh) and direnv.
@@ -23,14 +22,13 @@ defaults rather than a blank slate.
 - [Testing](#testing)
 - [Assets](#assets)
 - [Addons](#addons)
-- [Native extensions](#native-extensions-rust-and-c)
 - [Releasing](#releasing)
 - [License](#license)
 
 ## Requirements
 
 Recommended: [Nix](https://nixos.org), [devenv](https://devenv.sh) and [direnv](https://direnv.net).
-The devenv shell provides everything else (Godot, ggg, just, prek, Rust, CMake, Ninja, vcpkg, git-lfs, butler, linters).
+The devenv shell provides everything else (Godot, ggg, just, prek, git-lfs, butler, linters).
 
 Also needed:
 
@@ -39,15 +37,11 @@ Also needed:
 
 ### Without Nix
 
-Install [just](https://just.systems), git-lfs, [ggg](https://github.com/godotneers/ggg),
-[rustup](https://rustup.rs), CMake, Ninja and Python 3, then:
+Install [just](https://just.systems), git-lfs, [ggg](https://github.com/godotneers/ggg) and Python 3, then:
 
 ```sh
-git submodule update --init --recursive
 git lfs install && git lfs pull
 (cd godot && ggg sync)
-cpp/vcpkg/bootstrap-vcpkg.sh
-just build
 ```
 
 Tests need devenv: `just test-gd` uses `$GODOT`, which only devenv sets.
@@ -56,8 +50,7 @@ Tests need devenv: `just test-gd` uses `$GODOT`, which only devenv sets.
 
 For a new project created from the template:
 
-1. Click **Use this template** on GitHub, then clone with `git clone --recurse-submodules`
-   (the C++ side needs both `cpp/godot-cpp` and `cpp/vcpkg`; the devenv shell also initialises them).
+1. Click **Use this template** on GitHub, then clone it.
 2. In the clone: `direnv allow` (or `devenv shell`). This installs the tools, the git hooks, pulls LFS files and runs `ggg sync` in `godot/`.
 3. `just init` (needs `gh auth login` and the `origin` remote; safe to re-run after a failure). It:
    - runs `just lfs-adopt` and commits the result (Kenney packs move into Git LFS),
@@ -94,18 +87,13 @@ Adding a feature, say `inventory`:
 
 | Recipe | What it does |
 |---|---|
-| `just import` | Import the project headless (class cache, extension list) |
-| `just build [profile]` | Build all Rust and C++ extensions (`debug` default, or `release`) |
-| `just build-rust [profile]` | Build every Rust extension into `godot/extensions/rust/bin` |
-| `just build-cpp [profile]` | Build every C++ extension into `godot/extensions/cpp/bin` |
-| `just test` | All tests: Rust, C++, then GDScript and engine tests |
-| `just test-rust` | Rust unit tests (all crates) |
-| `just test-cpp` | C++ unit tests (doctest via ctest) |
-| `just test-gd` | Build extensions, import, then GdUnit4 (extra args go to Godot) |
-| `just fmt` | Format all code (GDScript, Rust, C++) |
+| `just import` | Import the project headless (class cache) |
+| `just test` | All tests: GDScript and engine tests |
+| `just test-gd` | Import, then GdUnit4 (extra args go to Godot) |
+| `just fmt` | Format all GDScript |
 | `just lint` | Run all pre-commit hooks on every file |
 | `just check` | Everything CI runs: `lint` then `test` |
-| `just export <preset>` | Export `Linux`, `Windows` or `macOS` to `build/<preset>/` with release libraries |
+| `just export <preset>` | Export `Linux`, `Windows` or `macOS` to `build/<preset>/` |
 | `just init` | One-shot setup after "Use this template" and clone (LFS, labels); safe to re-run, never pushes |
 | `just lfs-adopt` | Move the Kenney packs into Git LFS (run by `init`) |
 | `just gh-setup` | Apply the repo ruleset and squash-only merge settings (needs a GitHub remote and gh auth) |
@@ -114,7 +102,7 @@ Adding a feature, say `inventory`:
 ## Layout
 
 The Godot project lives in `godot/` (`res://` is `godot/`), so the editor only sees the game.
-Tooling, native sources and raw assets stay at the repo root, outside `res://`.
+Tooling and raw assets stay at the repo root, outside `res://`.
 
 | Path | Content |
 |---|---|
@@ -124,11 +112,8 @@ Tooling, native sources and raw assets stay at the repo root, outside `res://`.
 | `godot/game/` | Features: scenes plus the feature's own assets (e.g. `game/main/main.tscn`) |
 | `godot/game/data/` | Shared data instances sorted by type: `atoms/`, `models/`, `passes/`, `commands/`, `input/` |
 | `godot/scripts/` | All GDScript, at the same relative path as its feature in `game/` (`game/characters/player/player.tscn` uses `scripts/characters/player/player.gd`). Scene-less reusable code goes in `scripts/components/` (sample: class `Health`), singletons in `scripts/autoloads/`, gameplay-neutral building blocks (atoms, interaction) in `scripts/core/<subdir>/` |
-| `godot/test/` | GdUnit4 tests, mirroring `scripts/` (`scripts/components/health.gd` is tested by `test/components/health_test.gd`); `test/rust/`, `test/cpp/` hold engine tests for the extensions |
+| `godot/test/` | GdUnit4 tests, mirroring `scripts/` (`scripts/components/health.gd` is tested by `test/components/health_test.gd`) |
 | `godot/assets/` | Only content shared across features (Kenney packs); a feature's own assets live next to its scene in `game/` |
-| `godot/extensions/<lang>/` | One `<name>.gdextension` per extension; built libraries in `bin/` (gitignored) |
-| `rust/` | Cargo workspace, `crates/<name>` = one extension (sample: `health`, class `RustHealth`) |
-| `cpp/` | CMake project with `godot-cpp` and `vcpkg` submodules; `extensions/<name>` = one extension (sample: `stamina`, class `CppStamina`) |
 | `raw/` | Source assets (Blender, Aseprite, Krita, audio projects), stored via Git LFS; outside `res://`, so Godot never scans it |
 | `devenv.nix`, `justfile`, `.pre-commit-config.yaml`, `tools/` | Tooling |
 | `build/`, `reports/` | Export output and GdUnit4 reports (gitignored, outside `res://`) |
@@ -143,20 +128,12 @@ keeps its third-party names as shipped, `addons/` is not checked). `.gd` and `.t
 
 ## Testing
 
-Each language has the same sample, a health value (damage, heal, clamp). Logic lives in code
-without engine types; a thin Godot class wraps it.
-
-| | Unit (no engine) | Engine (headless Godot) |
-|---|---|---|
-| GDScript | GdUnit4 `godot/test/components/health_test.gd` | GdUnit4 scene runner `godot/test/main/main_scene_test.gd` |
-| Rust | `cargo test` in `rust/crates/health/src/health.rs` | `godot/test/rust/health/rust_health_test.gd` on `RustHealth` |
-| C++ | doctest via ctest, `cpp/extensions/stamina/tests/stamina_test.cpp` | `godot/test/cpp/stamina/cpp_stamina_test.gd` on `CppStamina` |
+The sample is a health value (damage, heal, clamp): a unit test in
+`godot/test/components/health_test.gd` and a GdUnit4 scene-runner test in `godot/test/main/main_scene_test.gd`.
 
 ```sh
 just test        # everything
-just test-rust   # cargo test
-just test-cpp    # doctest via ctest
-just test-gd     # builds the extensions, then GdUnit4
+just test-gd     # import, then GdUnit4
 just check       # prek on all files, then just test (what CI runs)
 ```
 
@@ -165,8 +142,8 @@ just check       # prek on all files, then just test (what CI runs)
 | Stage | What runs |
 |---|---|
 | commit-msg | Conventional commit check |
-| pre-commit | Formatters in fix mode (commit stops, review the changes, `git add` again), linters (clippy, clang-tidy, gdscript lint, typos, zizmor) |
-| pre-push | `just test` and `cargo shear` |
+| pre-commit | Formatters in fix mode (commit stops, review the changes, `git add` again), linters (gdscript lint, typos, zizmor) |
+| pre-push | `just test` |
 
 Commits to `main` are blocked; work on a branch.
 
@@ -249,38 +226,6 @@ Not installed; add what the game needs.
 | Log.gd | Built-in `Logger` since Godot 4.5 |
 | GATE | Not needed |
 
-## Native extensions: Rust and C++
-
-`rust/` is a Cargo workspace (`crates/<name>` = one GDExtension); `cpp/` is one CMake project
-(`extensions/<name>` = one GDExtension). Libraries are built into `godot/extensions/<lang>/bin/`
-and loaded from there.
-
-### Add an extension
-
-Copy a sample (`rust/crates/health` or `cpp/extensions/stamina`) together with its
-`godot/extensions/<lang>/<name>.gdextension` and `godot/test/<lang>/<name>/`, then rename:
-
-- the crate (Rust) or CMake target (C++), and the extension name,
-- the entry symbol to `<name>_init`,
-- the Godot class (`Rust...` / `Cpp...`).
-
-Skip `.uid` files; Godot regenerates them. Names must be unique across Rust and C++: the library
-file is the extension name and exports place all libraries flat next to the executable. Shared
-Rust logic can live in plain rlib crates in the workspace.
-
-### Remove a language
-
-Delete `<lang>/`, `godot/extensions/<lang>/` and `godot/test/<lang>/`. Every just recipe and CI step skips itself when the folder is gone.
-
-### Add a C++ library
-
-```sh
-cd cpp && vcpkg add port <name>
-```
-
-Then `find_package(...)` in `cpp/CMakeLists.txt`. Pin the vcpkg baseline by updating the
-`cpp/vcpkg` submodule.
-
 ## Releasing
 
 Setup, once per repository created from the template:
@@ -303,7 +248,7 @@ Flow:
 
 - Conventional commits on `main` keep a release PR open (`CHANGELOG.md`; `version.txt` is the only
   version). Merging it tags `vX.Y.Z`.
-- `release.yml` builds on Ubuntu, Windows and macOS, runs the native unit tests, stamps the
+- `release.yml` builds on Ubuntu, Windows and macOS, stamps the
   `godot/project.godot` version from `version.txt`, exports and pushes with butler.
 - Tags push the `windows`, `linux` and `macos` channels; pushes to `main` push `windows-dev`,
   `linux-dev` and `macos-dev`.

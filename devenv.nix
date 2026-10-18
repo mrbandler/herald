@@ -1,4 +1,4 @@
-{ pkgs, lib, config, ... }:
+{ pkgs, lib, ... }:
 let
   # godot/ggg.toml is the single source for the Godot version.
   gggConfig = builtins.fromTOML (builtins.readFile ./godot/ggg.toml);
@@ -27,11 +27,6 @@ in
     }
   ];
 
-  languages.rust = {
-    enable = true;
-    toolchainFile = ./rust-toolchain.toml;
-  };
-
   packages = with pkgs; [
     godot
     ggg
@@ -40,31 +35,19 @@ in
     git-lfs
     typos
     zizmor
-    cargo-shear
     jq
     gh
     butler
     gdscript-formatter
-    cmake
-    ninja
-    python3 # godot-cpp binding generator
-    vcpkg-tool
-    clang-tools # clang-format
+    python3 # project layout hook
   ];
 
   env = {
     GODOT = godotBin;
     GGG_GODOT_EXECUTABLE = godotBin;
-    VCPKG_ROOT = "${config.devenv.root}/cpp/vcpkg";
-    VCPKG_FORCE_SYSTEM_BINARIES = "1"; # use Nix cmake/ninja, not vcpkg downloads
-    RUST_BACKTRACE = "1";
   };
 
   enterShell = ''
-    git submodule update --init --recursive --quiet || echo "warning: submodule init failed (offline?)"
-    # vcpkg.cmake only looks here; without it, it bootstraps a generic binary that needs zip and does not run on NixOS.
-    # cpp/vcpkg must stay on a commit whose scripts/vcpkg-tool-metadata.txt matches the nixpkgs vcpkg-tool version.
-    ln -sf "$(command -v vcpkg)" cpp/vcpkg/vcpkg
     # git-lfs first: prek then keeps its pre-push hook as pre-push.legacy and runs it on every push.
     if [ ! -f .git/hooks/pre-push.legacy ]; then
       rm -f .git/hooks/pre-push
