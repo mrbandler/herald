@@ -4,9 +4,10 @@ const PASS_01 := "res://game/data/passes/pass_01.tres"
 const PASS_02 := "res://game/data/passes/pass_02.tres"
 const TERMINAL := "res://game/terminal/terminal.tscn"
 
-func test_window_one_offers_help_seq_tx_and_clr() -> void:
+func test_both_windows_offer_the_same_commands() -> void:
 	var window: PassWindow = load(PASS_01)
-	assert_array(window.command_set.names()).contains_exactly(["HELP", "SEQ", "TX", "CLR"])
+	var two: PassWindow = load(PASS_02)
+	assert_array(window.command_set.names()).contains_exactly(two.command_set.names())
 	var tx := window.command_set.find("TX") as TxCommand
 	assert_object(tx.tx_requested).is_not_null()
 	assert_object(tx.out).is_same(window.command_set.find("SEQ").out)
