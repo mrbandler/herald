@@ -193,3 +193,12 @@ func test_window_eight_is_the_verdict() -> void:
 	assert_int(eight.number).is_equal(8)
 	assert_bool(eight.final).is_true()
 	assert_str(eight.manifest[0].key_for).is_equal("VERDICT")
+
+func test_the_downlink_commands_unlock_in_window_two() -> void:
+	var one: PassWindow = load(PASS_01)
+	var two: PassWindow = load(PASS_02)
+	var manifest := one.command_set.find("MANIFEST")
+	assert_bool(manifest.locked_in(one)).is_true()
+	assert_bool(manifest.locked_in(two)).is_false()
+	assert_bool(one.command_set.find("SEQ").locked_in(one)).is_false()
+	assert_bool(one.command_set.find("SHOW").locked_in(two)).is_true()

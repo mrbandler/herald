@@ -46,3 +46,12 @@ func test_hidden_commands_stay_hidden() -> void:
 	_help.run(PackedStringArray(["EXIT"]))
 	var expected := ["HELP     LIST THE COMMANDS", "HELP <COMMAND> FOR DETAILS", "UNKNOWN COMMAND"]
 	assert_array(_spy.calls).is_equal(expected)
+
+func test_a_command_of_a_later_window_shows_blacked_out_as_locked() -> void:
+	var get_command := TerminalFixture.command("GET", "GET <ID>          DOWNLOAD")
+	get_command.unlocked_in = 2
+	_help.current_pass = TerminalFixture.pass_with([_help, get_command])
+	_help.run(PackedStringArray())
+	assert_str(_spy.calls[1]).is_equal("%-18s%s" % ["▒▒▒", "LOCKED"])
+	_help.run(PackedStringArray(["GET"]))
+	assert_str(_spy.calls[-1]).is_equal("GET LOCKED")

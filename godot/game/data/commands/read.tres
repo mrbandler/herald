@@ -9,6 +9,7 @@
 
 [resource]
 script = ExtResource("1_script")
+unlocked_in = 2
 name = "READ"
 help = "READ <FILE>       OPEN A FILE. ESC CLOSES IT"
 out = ExtResource("2_stdout")

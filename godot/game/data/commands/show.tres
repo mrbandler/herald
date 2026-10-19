@@ -11,6 +11,7 @@
 
 [resource]
 script = ExtResource("1_script")
+unlocked_in = 3
 name = "SHOW"
 help = "SHOW <ID>         SHOW A DECODED IMAGE"
 out = ExtResource("2_stdout")
