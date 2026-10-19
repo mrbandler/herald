@@ -52,6 +52,19 @@ func test_a_command_of_a_later_window_shows_blacked_out_as_locked() -> void:
 	get_command.unlocked_in = 2
 	_help.current_pass = TerminalFixture.pass_with([_help, get_command])
 	_help.run(PackedStringArray())
-	assert_str(_spy.calls[1]).is_equal("%-18s%s" % ["▒▒▒", "LOCKED"])
+	assert_str(_spy.calls[0]).is_equal("%-18s%s" % ["▒▒▒", "LOCKED"])
 	_help.run(PackedStringArray(["GET"]))
 	assert_str(_spy.calls[-1]).is_equal("GET LOCKED")
+
+func test_lists_locked_commands_first_and_the_newest_open_ones_last() -> void:
+	var seq := TerminalFixture.command("SEQ", "SEQ")
+	var ls := TerminalFixture.command("LS", "LS")
+	var get_command := TerminalFixture.command("GET", "GET")
+	get_command.unlocked_in = 2
+	var show := TerminalFixture.command("SHOW", "SHOW")
+	show.unlocked_in = 3
+	var commands: Array[Command] = [seq, get_command, show, ls]
+	var window := PassFixture.window_one()
+	assert_array(_help.listing(commands, window)).is_equal([show, get_command, seq, ls])
+	window.number = 3
+	assert_array(_help.listing(commands, window)).is_equal([seq, ls, get_command, show])
