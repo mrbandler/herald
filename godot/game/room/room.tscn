@@ -59,7 +59,6 @@
 [ext_resource type="AudioStream" path="res://game/data/audio/capsule.tres" id="97_capsule_audio"]
 [ext_resource type="Resource" path="res://game/data/atoms/player/paper_raised.tres" id="98_raised"]
 [ext_resource type="Resource" path="res://game/data/atoms/player/placing.tres" id="99_placing"]
-[ext_resource type="Resource" path="res://game/data/atoms/player/pointing.tres" id="120_pointing"]
 [ext_resource type="Resource" path="res://game/data/atoms/downlink/running_item.tres" id="100_running"]
 [ext_resource type="Resource" path="res://game/data/atoms/room/capsule_waiting.tres" id="101_waiting"]
 [ext_resource type="Script" uid="uid://cf3crd0so8det" path="res://scripts/antenna/lamp.gd" id="102_lamp"]
@@ -73,22 +72,22 @@
 [ext_resource type="Resource" path="res://game/data/atoms/monitor/knob_offset.tres" id="110_offset"]
 [ext_resource type="Resource" path="res://game/data/atoms/monitor/knob_contrast.tres" id="111_contrast"]
 [ext_resource type="PackedScene" path="res://game/monitor/monitor.tscn" id="112_monitor"]
-[ext_resource type="Resource" path="res://game/data/passes/pass_03.tres" id="113_pass_03"]
+[ext_resource type="Resource" uid="uid://boast3hrf6hhu" path="res://game/data/passes/pass_03.tres" id="113_pass_03"]
 [ext_resource type="Resource" path="res://game/data/atoms/terminal/alert.tres" id="114_alert"]
 [ext_resource type="Resource" path="res://game/data/papers/window_01/letter.tres" id="115_letter"]
 [ext_resource type="Script" uid="uid://yriiq0w5gpfr" path="res://scripts/room/papers/paper.gd" id="116_paper"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/ack_heard.tres" id="117_ack_heard"]
 [ext_resource type="Resource" path="res://game/data/papers/guide/missed_ack.tres" id="118_missed_ack"]
 [ext_resource type="Resource" path="res://game/data/atoms/room/placed.tres" id="119_placed"]
-[ext_resource type="Material" path="res://game/data/materials/wall.tres" id="m_wall"]
-[ext_resource type="Material" path="res://game/data/materials/floor.tres" id="m_floor"]
-[ext_resource type="Material" path="res://game/data/materials/desk.tres" id="m_desk"]
-[ext_resource type="Material" path="res://game/data/materials/cork.tres" id="m_cork"]
-[ext_resource type="Material" path="res://game/data/materials/device_dark.tres" id="m_device"]
-[ext_resource type="Material" path="res://game/data/materials/knob.tres" id="m_knob"]
+[ext_resource type="Resource" path="res://game/data/atoms/player/pointing.tres" id="120_pointing"]
 [ext_resource type="PackedScene" path="res://game/room/bankers_lamp.tscn" id="121_bankers_lamp"]
 [ext_resource type="PackedScene" path="res://game/room/arm_lamp.tscn" id="122_arm_lamp"]
 [ext_resource type="Material" path="res://game/data/materials/tube_paint.tres" id="123_tube_paint"]
+[ext_resource type="Material" path="res://game/data/materials/cork.tres" id="m_cork"]
+[ext_resource type="Material" path="res://game/data/materials/desk.tres" id="m_desk"]
+[ext_resource type="Material" path="res://game/data/materials/floor.tres" id="m_floor"]
+[ext_resource type="Material" path="res://game/data/materials/knob.tres" id="m_knob"]
+[ext_resource type="Material" path="res://game/data/materials/wall.tres" id="m_wall"]
 
 [sub_resource type="Environment" id="Environment_room"]
 background_mode = 1
@@ -100,6 +99,18 @@ glow_enabled = true
 glow_intensity = 0.7
 glow_bloom = 0.05
 glow_hdr_threshold = 0.85
+
+[sub_resource type="SphereShape3D" id="Shape_bead"]
+radius = 0.05
+
+[sub_resource type="CylinderMesh" id="Mesh_cord"]
+top_radius = 0.002
+bottom_radius = 0.002
+height = 0.09
+
+[sub_resource type="SphereMesh" id="Mesh_bead"]
+radius = 0.012
+height = 0.024
 
 [sub_resource type="SphereMesh" id="Mesh_tube_lamp"]
 radius = 0.015
@@ -113,18 +124,6 @@ size = Vector3(1.65, 0.004, 0.31)
 
 [sub_resource type="BoxShape3D" id="Shape_pin_wall"]
 size = Vector3(2.4, 0.85, 0.004)
-
-[sub_resource type="SphereShape3D" id="Shape_bead"]
-radius = 0.05
-
-[sub_resource type="CylinderMesh" id="Mesh_cord"]
-top_radius = 0.002
-bottom_radius = 0.002
-height = 0.09
-
-[sub_resource type="SphereMesh" id="Mesh_bead"]
-radius = 0.012
-height = 0.024
 
 [node name="Room" type="Node3D" unique_id=1331904615]
 
@@ -141,18 +140,33 @@ current_pass = ExtResource("23_current")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1842271000]
 environment = SubResource("Environment_room")
 
-[node name="ArmLamp" parent="." instance=ExtResource("122_arm_lamp")]
-position = Vector3(-0.95, 0.75, -1.06)
-rotation = Vector3(0, 0.817, 0)
+[node name="ArmLamp" parent="." unique_id=1499914723 instance=ExtResource("122_arm_lamp")]
+transform = Transform3D(0.6394133, 0, 0.76886314, 0, 1, 0, -0.76886314, 0, 0.6394133, -0.84830964, 0.76005507, -1.0674804)
 
-[node name="RightLamp" parent="." instance=ExtResource("121_bankers_lamp")]
-transform = Transform3D(0.37, 0, -0.93, 0, 1, 0, 0.93, 0, 0.37, 1.0, 0.75, -0.55)
+[node name="RightLamp" parent="." unique_id=2046357203 instance=ExtResource("121_bankers_lamp")]
+transform = Transform3D(0.032480493, 0, -1.0003725, 0, 1, 0, 1.0003725, 0, 0.032480493, 0.946811, 0.75, -0.4683425)
+
+[node name="LampChain" type="Area3D" parent="RightLamp" unique_id=1402926389]
+transform = Transform3D(1, 0, 3.7252903e-09, 0, 1, 0, -3.7252903e-09, 0, 1, 0.09000003, 0.25492144, 0.09000003)
+script = ExtResource("8_chain")
+unlocked = ExtResource("70_chain_unlocked")
+pull = ExtResource("31_bell")
+
+[node name="Shape" type="CollisionShape3D" parent="RightLamp/LampChain" unique_id=468245170]
+shape = SubResource("Shape_bead")
+
+[node name="Cord" type="MeshInstance3D" parent="RightLamp/LampChain" unique_id=659290142]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.045, 0)
+mesh = SubResource("Mesh_cord")
+
+[node name="Bead" type="MeshInstance3D" parent="RightLamp/LampChain" unique_id=287848357]
+mesh = SubResource("Mesh_bead")
 
 [node name="Geometry" type="Node3D" parent="." unique_id=2038383481]
 
 [node name="Floor" type="CSGBox3D" parent="Geometry" unique_id=1707663974]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, -0.4)
-size = Vector3(3.2, 0.1, 3.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0.0017211735)
+size = Vector3(3.2, 0.1, 4.0034423)
 material = ExtResource("m_floor")
 
 [node name="BackWall" type="CSGBox3D" parent="Geometry" unique_id=2020507245]
@@ -161,18 +175,18 @@ size = Vector3(3.2, 2.6, 0.1)
 material = ExtResource("m_wall")
 
 [node name="LeftWall" type="CSGBox3D" parent="Geometry" unique_id=2065403973]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1.3, -0.4)
-size = Vector3(0.1, 2.6, 3.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1.3, 0.015576154)
+size = Vector3(0.1, 2.6, 4.0311522)
 material = ExtResource("m_wall")
 
 [node name="RightWall" type="CSGBox3D" parent="Geometry" unique_id=1414174918]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 1.3, -0.4)
-size = Vector3(0.1, 2.6, 3.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 1.3, -0.0004517138)
+size = Vector3(0.1, 2.6, 3.9990966)
 material = ExtResource("m_wall")
 
-[node name="Ceiling" type="CSGBox3D" parent="Geometry"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.65, -0.4)
-size = Vector3(3.2, 0.1, 3.2)
+[node name="Ceiling" type="CSGBox3D" parent="Geometry" unique_id=943408771]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.65, -0.00023195148)
+size = Vector3(3.2, 0.1, 3.999536)
 material = ExtResource("m_wall")
 
 [node name="Desk" type="CSGBox3D" parent="Geometry" unique_id=1352032104]
@@ -180,7 +194,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.725, -0.75)
 size = Vector3(2.2, 0.05, 0.8)
 material = ExtResource("m_desk")
 
-[node name="PinBoard" type="CSGBox3D" parent="Geometry"]
+[node name="PinBoard" type="CSGBox3D" parent="Geometry" unique_id=134011654]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.32, -1.217)
 size = Vector3(2.4, 0.85, 0.006)
 material = ExtResource("m_cork")
@@ -310,22 +324,6 @@ shape = NodePath("Shape")
 [node name="Shape" type="CollisionShape3D" parent="PinWall" unique_id=1492078458]
 shape = SubResource("Shape_pin_wall")
 disabled = true
-
-[node name="LampChain" type="Area3D" parent="RightLamp" unique_id=1402926389]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.09, 0.21, 0.09)
-script = ExtResource("8_chain")
-unlocked = ExtResource("70_chain_unlocked")
-pull = ExtResource("31_bell")
-
-[node name="Shape" type="CollisionShape3D" parent="RightLamp/LampChain" unique_id=468245170]
-shape = SubResource("Shape_bead")
-
-[node name="Cord" type="MeshInstance3D" parent="RightLamp/LampChain" unique_id=659290142]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.045, 0)
-mesh = SubResource("Mesh_cord")
-
-[node name="Bead" type="MeshInstance3D" parent="RightLamp/LampChain" unique_id=287848357]
-mesh = SubResource("Mesh_bead")
 
 [node name="ChainLatch" type="Node" parent="." unique_id=560108814]
 script = ExtResource("7_latch")
