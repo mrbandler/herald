@@ -45,6 +45,7 @@
 [ext_resource type="Resource" path="res://game/data/atoms/modules/module_unlocked.tres" id="71_unlocked"]
 [ext_resource type="AudioStream" path="res://game/data/audio/relay.tres" id="72_relay"]
 [ext_resource type="AudioStream" path="res://game/data/audio/unlock_bell.tres" id="73_unlock_bell"]
+[ext_resource type="Script" path="res://scripts/terminal/progress_label.gd" id="74_progress_label"]
 
 [sub_resource type="SystemFont" id="Font_mono"]
 font_names = PackedStringArray("monospace")
@@ -66,7 +67,7 @@ size = Vector3(0.5, 0.38, 0.05)
 [node name="Terminal" type="Node3D"]
 
 [node name="Screen" type="SubViewport" parent="."]
-size = Vector2i(512, 384)
+size = Vector2i(640, 480)
 render_target_update_mode = 4
 
 [node name="Background" type="ColorRect" parent="Screen"]
@@ -80,19 +81,20 @@ color = Color(0.02, 0.015, 0.01, 1)
 [node name="StatusBand" type="ColorRect" parent="Screen"]
 offset_left = 6.0
 offset_top = 6.0
-offset_right = 506.0
-offset_bottom = 28.0
+offset_right = 634.0
+offset_bottom = 30.0
 color = Color(1, 0.72, 0.25, 1)
 
 [node name="StatusBar" type="Label" parent="Screen"]
 offset_left = 12.0
 offset_top = 6.0
-offset_right = 500.0
-offset_bottom = 28.0
+offset_right = 628.0
+offset_bottom = 30.0
 theme_override_colors/font_color = Color(0.1, 0.07, 0.02, 1)
 theme_override_fonts/font = SubResource("Font_mono")
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 15
 text = "NO CARRIER"
+vertical_alignment = 1
 script = ExtResource("4_link_status")
 pass_time = ExtResource("42_time")
 current_pass = ExtResource("23_current")
@@ -102,25 +104,45 @@ uplink_open = ExtResource("39_speak_open")
 transmitting = ExtResource("33_transmitting")
 status_notice = ExtResource("56_notice")
 
+[node name="ProgressLine" type="Label" parent="Screen"]
+offset_left = 12.0
+offset_top = 34.0
+offset_right = 628.0
+offset_bottom = 55.0
+theme_override_fonts/font = SubResource("Font_mono")
+theme_override_font_sizes/font_size = 15
+text = "NO TRANSFER"
+script = ExtResource("74_progress_label")
+progress_line = ExtResource("55_progress")
+
 [node name="Text" type="Label" parent="Screen"]
 offset_left = 12.0
-offset_top = 32.0
-offset_right = 500.0
-offset_bottom = 354.0
+offset_top = 59.0
+offset_right = 628.0
+offset_bottom = 437.0
 theme_override_colors/font_color = Color(1, 0.72, 0.25, 1)
+theme_override_constants/line_spacing = 0
 theme_override_fonts/font = SubResource("Font_mono")
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 15
 text = "LP4> _"
+
+[node name="KeyBand" type="ColorRect" parent="Screen"]
+offset_left = 6.0
+offset_top = 450.0
+offset_right = 634.0
+offset_bottom = 474.0
+color = Color(1, 0.72, 0.25, 1)
 
 [node name="KeyHints" type="Label" parent="Screen"]
 offset_left = 12.0
-offset_top = 356.0
-offset_right = 500.0
-offset_bottom = 378.0
-theme_override_colors/font_color = Color(0.6, 0.42, 0.14, 1)
+offset_top = 450.0
+offset_right = 628.0
+offset_bottom = 474.0
+theme_override_colors/font_color = Color(0.1, 0.07, 0.02, 1)
 theme_override_fonts/font = SubResource("Font_mono")
-theme_override_font_sizes/font_size = 17
-text = "ESC LEAVE   UP/DOWN HISTORY   PGUP/PGDN SCROLL"
+theme_override_font_sizes/font_size = 15
+text = "ESC LEAVE   UP/DOWN HISTORY   PGUP/PGDN/WHEEL SCROLL"
+vertical_alignment = 1
 
 [node name="Bezel" type="CSGBox3D" parent="."]
 position = Vector3(0, 0, -0.06)
@@ -160,7 +182,6 @@ current_pass = ExtResource("23_current")
 leave = ExtResource("12_leave")
 terminal_context = ExtResource("13_context")
 clear = ExtResource("40_cleared")
-progress_line = ExtResource("55_progress")
 
 [node name="Uplink" type="Node" parent="."]
 script = ExtResource("2_uplink")

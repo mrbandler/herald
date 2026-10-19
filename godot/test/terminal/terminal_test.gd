@@ -16,7 +16,6 @@ func before_test() -> void:
 	_terminal.leave = GUIDEAction.new()
 	_terminal.terminal_context = GUIDEMappingContext.new()
 	_terminal.clear = Event.new()
-	_terminal.progress_line = StringValue.new()
 	_out = AtomSpy.events(_terminal.out)
 	_seq = SeqCommand.new()
 	_seq.name = "SEQ"
@@ -88,6 +87,24 @@ func test_escape_closes_the_popup_before_leaving() -> void:
 	_terminal.leave_pressed()
 	assert_bool(_terminal.focused.value).is_false()
 
-func test_draws_the_progress_line() -> void:
-	_terminal.progress_line.value = "RECV MANIFEST [#---------]"
-	assert_str(_terminal.screen.text).ends_with("RECV MANIFEST [#---------]")
+func test_the_wheel_scrolls_three_lines() -> void:
+	for n: int in 30:
+		_terminal.out.raise("LINE %d" % n)
+	assert_bool(_terminal.handle_wheel(MOUSE_BUTTON_WHEEL_UP)).is_true()
+	assert_int(_terminal.editor.scroll).is_equal(3)
+	assert_bool(_terminal.handle_wheel(MOUSE_BUTTON_WHEEL_DOWN)).is_true()
+	assert_int(_terminal.editor.scroll).is_equal(0)
+	assert_bool(_terminal.handle_wheel(MOUSE_BUTTON_LEFT)).is_false()
+
+func test_the_wheel_scrolls_only_while_focused() -> void:
+	for n: int in 30:
+		_terminal.out.raise("LINE %d" % n)
+	_terminal.focused.value = false
+	var wheel := InputEventMouseButton.new()
+	wheel.button_index = MOUSE_BUTTON_WHEEL_UP
+	wheel.pressed = true
+	get_viewport().push_input(wheel)
+	assert_int(_terminal.editor.scroll).is_equal(0)
+	_terminal.focused.value = true
+	get_viewport().push_input(wheel)
+	assert_int(_terminal.editor.scroll).is_equal(3)

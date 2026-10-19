@@ -2,7 +2,8 @@ class_name Terminal
 extends Node
 
 ## The CRT's keyboard side: line editing, command dispatch, and drawing stdout on the screen.
-## Keyboard only. Owns Esc: the first press closes a file popup, the next one leaves the terminal.
+## Keyboard, plus the mouse wheel for scrolling. Owns Esc: the first press closes a file popup,
+## the next one leaves the terminal.
 
 ## Printed when the pass starts.
 const GREETING := "LISTENING POST 4 - HTB MODULE - TYPE HELP"
@@ -37,9 +38,6 @@ const GREETING := "LISTENING POST 4 - HTB MODULE - TYPE HELP"
 ## Raised by CLR. Empties the screen; the history is kept.
 @export var clear: Event
 
-## Read. Drawn on the bottom line of the screen. Optional.
-@export var progress_line: StringValue
-
 ## Wrapped stdout lines, oldest first, capped at the model's scrollback.
 var lines := PackedStringArray()
 
@@ -52,8 +50,6 @@ func _ready() -> void:
 	focused.updated.connect(_on_focused)
 	leave.just_triggered.connect(leave_pressed)
 	clear.raised.connect(_on_clear)
-	if progress_line != null:
-		progress_line.updated.connect(_on_progress)
 
 	out.raise(GREETING)
 
@@ -76,6 +72,30 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if viewing.value.is_empty() and not chord and handle_key(key.keycode, key.unicode):
 		get_viewport().set_input_as_handled()
 
+## Feeds wheel steps to `handle_wheel` while focused and no file popup is open.
+func _unhandled_input(event: InputEvent) -> void:
+	var button := event as InputEventMouseButton
+	if not focused.value or button == null or not button.pressed or not viewing.value.is_empty():
+		return
+
+	if handle_wheel(button.button_index):
+		get_viewport().set_input_as_handled()
+
+## Scrolls `wheel_lines` back on wheel up and forward on wheel down.
+## Returns false for other buttons.
+func handle_wheel(button: MouseButton) -> bool:
+	match button:
+		MOUSE_BUTTON_WHEEL_UP:
+			editor.scroll_by(model.wheel_lines, model.max_scroll(lines.size()))
+		MOUSE_BUTTON_WHEEL_DOWN:
+			editor.scroll_by(-model.wheel_lines, model.max_scroll(lines.size()))
+		_:
+			return false
+
+	_refresh()
+
+	return true
+
 ## Applies one key press: Enter submits, Up and Down recall history,
 ## Page keys scroll, printable keys are typed. Returns false for keys it does not use.
 func handle_key(keycode: Key, unicode: int) -> bool:
@@ -89,9 +109,9 @@ func handle_key(keycode: Key, unicode: int) -> bool:
 		KEY_DOWN:
 			editor.history_down(history.value)
 		KEY_PAGEUP:
-			editor.scroll_by(model.rows - 2, model.max_scroll(lines.size()))
+			editor.scroll_by(model.rows - 1, model.max_scroll(lines.size()))
 		KEY_PAGEDOWN:
-			editor.scroll_by(2 - model.rows, model.max_scroll(lines.size()))
+			editor.scroll_by(1 - model.rows, model.max_scroll(lines.size()))
 		_:
 			if unicode < 32 or unicode >= 127:
 				return false
@@ -159,14 +179,9 @@ func _on_focused(_previous: bool, current: bool) -> void:
 	else:
 		GUIDE.disable_mapping_context(terminal_context)
 
-## Redraws the screen from the lines, the input line, the scroll and the progress line.
+## Redraws the screen from the lines, the input line and the scroll.
 func _refresh() -> void:
 	if screen == null:
 		return
 
-	var progress := progress_line.value if progress_line != null else ""
-	screen.text = model.compose(lines, editor.text, editor.scroll, progress)
-
-## Redraws when the progress line changes.
-func _on_progress(_previous: Variant, _current: Variant) -> void:
-	_refresh()
+	screen.text = model.compose(lines, editor.text, editor.scroll)

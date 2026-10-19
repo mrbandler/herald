@@ -6,7 +6,7 @@ extends Resource
 ## Characters per row.
 @export var columns := 48
 
-## Rows on screen, including the prompt line and the reserved bottom line.
+## Rows in the text area, the prompt line included.
 @export var rows := 18
 
 ## Shown before the input line and before each echoed command.
@@ -18,13 +18,16 @@ extends Resource
 ## Lines kept in scrollback.
 @export var scrollback := 300
 
+## Lines one mouse wheel step scrolls.
+@export var wheel_lines := 3
+
 ## The longest input that fits beside the prompt and the cursor.
 func max_input() -> int:
 	return columns - prompt.length() - 1
 
-## How far back `line_count` lines can scroll. The screen shows `rows - 2` of them.
+## How far back `line_count` lines can scroll. The screen shows `rows - 1` of them.
 func max_scroll(line_count: int) -> int:
-	return maxi(line_count - (rows - 2), 0)
+	return maxi(line_count - (rows - 1), 0)
 
 ## Splits a line into chunks that fit the screen width.
 func wrap_line(line: String) -> PackedStringArray:
@@ -37,12 +40,11 @@ func wrap_line(line: String) -> PackedStringArray:
 
 	return chunks
 
-## The screen: scrollback above, the prompt line, and the progress line at the bottom.
-func compose(lines: PackedStringArray, input: String, scroll: int, progress := "") -> String:
+## The text area: scrollback above, the prompt line last.
+func compose(lines: PackedStringArray, input: String, scroll: int) -> String:
 	var end := maxi(lines.size() - scroll, 0)
-	var shown := lines.slice(maxi(end - (rows - 2), 0), end)
+	var shown := lines.slice(maxi(end - (rows - 1), 0), end)
 
 	shown.append(prompt + input + "_")
-	shown.append(progress)
 
 	return "\n".join(shown)

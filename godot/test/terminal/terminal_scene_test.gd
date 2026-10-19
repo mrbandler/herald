@@ -39,14 +39,14 @@ func test_terminal_scene_is_wired() -> void:
 	assert_object(scene.get_node("Screen/KeyHints")).is_not_null()
 	var crt := scene.get_node("Crt") as MeshInstance3D
 	var material := crt.material_override as StandardMaterial3D
-	assert_vector(material.albedo_texture.get_size()).is_equal(Vector2(512, 384))
+	assert_vector(material.albedo_texture.get_size()).is_equal(Vector2(640, 480))
 
 func test_downlink_is_wired() -> void:
 	var scene: Node = auto_free((load(TERMINAL) as PackedScene).instantiate())
 	var downlink := scene.get_node("Downlink") as Downlink
-	var terminal := scene.get_node("Terminal") as Terminal
 	var status := scene.get_node("Screen/StatusBar") as LinkStatus
-	assert_object(terminal.progress_line).is_same(downlink.progress_line)
+	var progress := scene.get_node("Screen/ProgressLine") as ProgressLabel
+	assert_object(progress.progress_line).is_same(downlink.progress_line)
 	assert_object(status.status_notice).is_same(downlink.status_notice)
 	assert_str(downlink.storage.resource_path.get_file()).is_equal("storage.tres")
 	assert_str(downlink.speak_opened.resource_path.get_file()).is_equal("speak_opened.tres")
