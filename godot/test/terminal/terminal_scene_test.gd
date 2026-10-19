@@ -67,6 +67,14 @@ func test_downlink_is_wired() -> void:
 	assert_object(get_command.downlink_open).is_same(downlink.downlink_open)
 	assert_object(get_command.storage).is_same(downlink.storage)
 
+func test_the_drive_unit_shows_storage() -> void:
+	var scene: Node = auto_free((load(TERMINAL) as PackedScene).instantiate())
+	var lamps := scene.get_node("DriveUnit/StorageLamps") as StorageLamps
+	var downlink := scene.get_node("Downlink") as Downlink
+	assert_int(lamps.get_child_count()).is_equal(14)
+	assert_object(lamps.storage).is_same(downlink.storage)
+	assert_object(scene.get_node("Keyboard")).is_not_null()
+
 func test_module_unlock_is_wired() -> void:
 	var scene: Node = auto_free((load(TERMINAL) as PackedScene).instantiate())
 	var relay := scene.get_node("RelaySound") as EventSound

@@ -121,7 +121,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.95, -1.59)
 transform = Transform3D(0.90630776, 0, 0.42261827, 0, 1, 0, -0.42261827, 0, 0.90630776, -0.75, 0.75, -0.8)
 
 [node name="Terminal" parent="." unique_id=1433016471 instance=ExtResource("13_terminal")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.08, -1)
 
 [node name="StarCard" type="Label3D" parent="." unique_id=661038256]
 transform = Transform3D(0.9986056, 0.052790955, 2.307566e-09, 0, -4.371139e-08, 1, 0.052790955, -0.9986056, -4.3650438e-08, 0.1370247, 0.752, -0.45742118)

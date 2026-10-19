@@ -1,8 +1,9 @@
 class_name StorageLamps
 extends Node3D
 
-## A row of lamps showing how full local storage is: one lit lamp per used unit. Its children
-## are the lamps, in order.
+## A row of lamps on the drive unit showing how full local storage is: one lit lamp per used
+## unit. Its children are the lamps, in order; those past the capacity are blank sockets, waiting
+## for memory modules.
 
 ## Lit and dark emission energies.
 @export var model: LampModel
@@ -15,6 +16,9 @@ extends Node3D
 
 ## Lit colour. Unlit, the lamps show it darkened.
 @export var color := Color(0.3, 0.8, 1.0)
+
+## Colour of a blank socket past the capacity.
+@export var socket_color := Color(0.05, 0.05, 0.05)
 
 ## One material per child lamp.
 var _materials: Array[StandardMaterial3D] = []
@@ -37,11 +41,15 @@ func _ready() -> void:
 func lit() -> int:
 	return mini(downlink_model.units(storage.value), _materials.size())
 
-## Lights the first `lit()` lamps and darkens the rest.
+## Lights the first `lit()` lamps, darkens the rest up to the capacity, and blanks the sockets
+## past it.
 func _refresh() -> void:
 	var count := lit()
 	for i: int in range(_materials.size()):
+		var socket := i >= downlink_model.storage_capacity
 		var on := i < count
+		_materials[i].albedo_color = socket_color if socket else color.darkened(0.7)
+		_materials[i].emission_enabled = not socket
 		_materials[i].emission_energy_multiplier = model.on_energy if on else model.off_energy
 
 ## Redraws when storage changes.

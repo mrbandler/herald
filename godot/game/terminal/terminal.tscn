@@ -48,6 +48,8 @@
 [ext_resource type="Script" path="res://scripts/terminal/progress_label.gd" id="74_progress_label"]
 [ext_resource type="Resource" path="res://game/data/atoms/player/lean_amount.tres" id="75_lean"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/last_sent.tres" id="76_last_sent"]
+[ext_resource type="Script" path="res://scripts/terminal/storage_lamps.gd" id="77_storage_lamps"]
+[ext_resource type="Resource" path="res://game/data/models/lamp.tres" id="78_m_lamp"]
 
 [sub_resource type="SystemFont" id="Font_mono"]
 font_names = PackedStringArray("monospace")
@@ -65,6 +67,10 @@ size = Vector2(0.48, 0.36)
 
 [sub_resource type="BoxShape3D" id="Shape_crt"]
 size = Vector3(0.5, 0.38, 0.05)
+
+[sub_resource type="SphereMesh" id="Mesh_storage_lamp"]
+radius = 0.008
+height = 0.016
 
 [node name="Terminal" type="Node3D"]
 
@@ -193,6 +199,86 @@ vertical_alignment = 1
 [node name="Bezel" type="CSGBox3D" parent="."]
 position = Vector3(0, 0, -0.06)
 size = Vector3(0.6, 0.48, 0.1)
+
+[node name="DriveUnit" type="CSGBox3D" parent="."]
+position = Vector3(0, -0.29, -0.06)
+size = Vector3(0.6, 0.08, 0.24)
+
+[node name="StorageLamps" type="Node3D" parent="DriveUnit"]
+position = Vector3(0, -0.008, 0.121)
+script = ExtResource("77_storage_lamps")
+model = ExtResource("78_m_lamp")
+downlink_model = ExtResource("61_m_downlink")
+storage = ExtResource("53_storage")
+
+[node name="Lamp1" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(-0.2275, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="Lamp2" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(-0.1925, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="Lamp3" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(-0.1575, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="Lamp4" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(-0.1225, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="Lamp5" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(-0.0875, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="Lamp6" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(-0.0525, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="Lamp7" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(-0.0175, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="Lamp8" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(0.0175, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="Lamp9" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(0.0525, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="Lamp10" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(0.0875, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="Lamp11" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(0.1225, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="Lamp12" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(0.1575, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="Lamp13" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(0.1925, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="Lamp14" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(0.2275, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="StorageCaption" type="Label3D" parent="DriveUnit"]
+position = Vector3(-0.2275, 0.02, 0.121)
+pixel_size = 0.001
+modulate = Color(0.15, 0.15, 0.15, 1)
+font_size = 14
+outline_size = 0
+horizontal_alignment = 0
+text = "STORAGE"
+
+[node name="Keyboard" type="CSGBox3D" parent="."]
+position = Vector3(0, -0.315, 0.25)
+size = Vector3(0.44, 0.03, 0.15)
 
 [node name="Crt" type="MeshInstance3D" parent="."]
 position = Vector3(0, 0, 0.001)

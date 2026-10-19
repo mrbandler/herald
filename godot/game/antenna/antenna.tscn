@@ -36,11 +36,8 @@
 [ext_resource type="AudioStream" path="res://game/data/audio/uplink_close.tres" id="19_chime_close"]
 [ext_resource type="Script" path="res://scripts/core/audio/bool_sound.gd" id="9_bool_sound"]
 [ext_resource type="Script" path="res://scripts/antenna/data_lamp.gd" id="41_data_lamp"]
-[ext_resource type="Script" path="res://scripts/antenna/storage_lamps.gd" id="42_storage_lamps"]
 [ext_resource type="Script" path="res://scripts/core/audio/event_sound.gd" id="43_event_sound"]
-[ext_resource type="Resource" path="res://game/data/models/downlink.tres" id="44_m_downlink"]
 [ext_resource type="Resource" path="res://game/data/atoms/downlink/row_received.tres" id="45_row"]
-[ext_resource type="Resource" path="res://game/data/atoms/downlink/storage.tres" id="46_storage"]
 [ext_resource type="Resource" path="res://game/data/atoms/downlink/download_complete.tres" id="47_complete"]
 [ext_resource type="AudioStream" path="res://game/data/audio/download_bell.tres" id="48_bell"]
 
@@ -359,53 +356,6 @@ modulate = Color(0.15, 0.15, 0.15, 1)
 font_size = 14
 outline_size = 0
 text = "DATA"
-
-[node name="StorageLamps" type="Node3D" parent="."]
-position = Vector3(-0.38, 0.05, 0.2)
-script = ExtResource("42_storage_lamps")
-model = ExtResource("15_m_lamp")
-downlink_model = ExtResource("44_m_downlink")
-storage = ExtResource("46_storage")
-
-[node name="Lamp1" type="MeshInstance3D" parent="StorageLamps"]
-position = Vector3(0.0, 0, 0)
-mesh = SubResource("Mesh_small_lamp")
-
-[node name="Lamp2" type="MeshInstance3D" parent="StorageLamps"]
-position = Vector3(0.035, 0, 0)
-mesh = SubResource("Mesh_small_lamp")
-
-[node name="Lamp3" type="MeshInstance3D" parent="StorageLamps"]
-position = Vector3(0.07, 0, 0)
-mesh = SubResource("Mesh_small_lamp")
-
-[node name="Lamp4" type="MeshInstance3D" parent="StorageLamps"]
-position = Vector3(0.105, 0, 0)
-mesh = SubResource("Mesh_small_lamp")
-
-[node name="Lamp5" type="MeshInstance3D" parent="StorageLamps"]
-position = Vector3(0.14, 0, 0)
-mesh = SubResource("Mesh_small_lamp")
-
-[node name="Lamp6" type="MeshInstance3D" parent="StorageLamps"]
-position = Vector3(0.175, 0, 0)
-mesh = SubResource("Mesh_small_lamp")
-
-[node name="Lamp7" type="MeshInstance3D" parent="StorageLamps"]
-position = Vector3(0.21, 0, 0)
-mesh = SubResource("Mesh_small_lamp")
-
-[node name="Lamp8" type="MeshInstance3D" parent="StorageLamps"]
-position = Vector3(0.245, 0, 0)
-mesh = SubResource("Mesh_small_lamp")
-
-[node name="StorageCaption" type="Label3D" parent="."]
-position = Vector3(-0.26, 0.075, 0.206)
-pixel_size = 0.001
-modulate = Color(0.15, 0.15, 0.15, 1)
-font_size = 14
-outline_size = 0
-text = "STORAGE"
 
 [node name="Receiver" type="Node" parent="."]
 script = ExtResource("1_receiver")
