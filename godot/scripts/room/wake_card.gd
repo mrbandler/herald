@@ -2,16 +2,16 @@ class_name WakeCard
 extends CanvasLayer
 
 ## The station leaving standby before each window: a CRT card with the mission clock and the
-## tubes warming up, while the room waits paused behind it. Then it fades into the room.
+## station's power coming back, while the room waits paused behind it. Then it fades into the room.
 
-## Seconds the tubes take to warm.
+## Seconds the power takes to come back.
 @export var warm_seconds := 4.0
 
 ## Seconds the card takes to fade into the room.
 @export var fade_seconds := 0.6
 
-## Characters inside the warming bar's brackets.
-@export var bar_width := 20
+## Characters inside the power bar's brackets.
+@export var bar_width := 30
 
 ## Shown over everything while the station wakes.
 @export var panel: Control
@@ -19,7 +19,7 @@ extends CanvasLayer
 ## Shows the mission clock.
 @export var clock: Label
 
-## Shows the warming bar.
+## Shows the power bar.
 @export var bar: Label
 
 ## The wall's mission clock, read for its text.
@@ -35,11 +35,11 @@ func _ready() -> void:
 	panel.visible = true
 	tick(0.0)
 
-## Warms the tubes every frame.
+## Brings the power back every frame.
 func _process(delta: float) -> void:
 	tick(delta)
 
-## Fills the bar by `delta` seconds; once warm, fades into the room and lets it run.
+## Fills the bar by `delta` seconds; once full, fades into the room and lets it run.
 func tick(delta: float) -> void:
 	if not panel.visible:
 		return
@@ -47,7 +47,7 @@ func tick(delta: float) -> void:
 	var was_warm := _elapsed >= warm_seconds
 	_elapsed += delta
 	clock.text = wall_clock.text if wall_clock != null else ""
-	bar.text = "WARMING THE TUBES  " + DownlinkModel.draw_bar(_elapsed / warm_seconds, bar_width)
+	bar.text = DownlinkModel.draw_bar(_elapsed / warm_seconds, bar_width)
 	if was_warm or _elapsed < warm_seconds:
 		return
 

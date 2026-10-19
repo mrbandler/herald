@@ -9,7 +9,7 @@ func test_pauses_while_warming_then_lets_the_room_run() -> void:
 	assert_bool(get_tree().paused).is_true()
 	assert_str(card.clock.text).is_equal(wall.text)
 	card.tick(card.warm_seconds / 2.0)
-	assert_str(card.bar.text).contains("##########")
+	assert_str(card.bar.text).contains("###############")
 	card.tick(card.warm_seconds)
 	assert_bool(get_tree().paused).is_false()
 	card.queue_free()
