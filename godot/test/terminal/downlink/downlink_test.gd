@@ -35,6 +35,7 @@ func before_test() -> void:
 	_downlink.download_queue = ResourceListValue.new()
 	_downlink.storage = ResourceListValue.new()
 	_downlink.download_received = IntValue.new()
+	_downlink.running_item = ResourceValue.new()
 	_downlink.progress_line = StringValue.new()
 	_downlink.status_notice = StringEvent.new()
 	_downlink.row_received = Event.new()
@@ -105,6 +106,7 @@ func test_an_item_downloads_with_graded_rows() -> void:
 	_downlink.download_queue.add(_downlink.manifest.value[0])
 	_run(7.6)
 	assert_int(_downlink.download_received.value).is_equal(8)
+	assert_int((_downlink.running_item.value as StoredItem).sent()).is_equal(8)
 	assert_str(_downlink.progress_line.value).is_equal("RECV 21 AUTH [#####-----] 8/16")
 	assert_int(_downlink.download_queue.value.size()).is_equal(1)
 	_downlink.signal_strength.value = 0.1

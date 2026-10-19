@@ -43,6 +43,9 @@ extends Node
 ## Written. Local storage: StoredItem resources. Kept across windows.
 @export var storage: ResourceListValue
 
+## Written. The running item with its rows so far, null while nothing runs. STAT reads it.
+@export var running_item: ResourceValue
+
 ## Written. Rows of the running item that arrived, for STAT.
 @export var download_received: IntValue
 
@@ -142,6 +145,7 @@ func _start(item: ManifestItem) -> void:
 	_running = StoredItem.new()
 	_running.item = item
 	_item_elapsed = 0.0
+	running_item.value = _running
 
 ## Moves the running item into storage, merged into an earlier copy if there is one, then off
 ## the queue, and clears the progress. Returns the copy now in storage.
@@ -163,6 +167,7 @@ func _store_running() -> StoredItem:
 ## Forgets the running item and clears its progress.
 func _clear_running() -> void:
 	_running = null
+	running_item.value = null
 	_item_elapsed = 0.0
 	download_received.value = 0
 	progress_line.value = ""

@@ -57,14 +57,15 @@ func item_line(item: ManifestItem, sent: int, arrived: int) -> String:
 
 ## The status notice of a completed item, e.g. `21 RECEIVED 15/16. CLEAN 14 NOISY 1 LOST 1`.
 func received_notice(stored_item: StoredItem) -> String:
-	return "%d RECEIVED %s" % [stored_item.item.id, _tally(stored_item)]
+	return "%d RECEIVED %s" % [stored_item.item.id, tally(stored_item)]
 
 ## The status notice of an item cut by the uplink, e.g. `21 CUT 9/16. CLEAN 8 NOISY 1 LOST 1`.
 func cut_notice(stored_item: StoredItem) -> String:
-	return "%d CUT %s" % [stored_item.item.id, _tally(stored_item)]
+	return "%d CUT %s" % [stored_item.item.id, tally(stored_item)]
 
-## `15/16. CLEAN 14 NOISY 1 LOST 1`: arrived rows of the total, then the rows by grade.
-func _tally(stored_item: StoredItem) -> String:
+## `15/16. CLEAN 14 NOISY 1 LOST 1`: arrived rows of the total, then the rows by grade. STAT and
+## the notices share it.
+func tally(stored_item: StoredItem) -> String:
 	var counts := [stored_item.clean(), stored_item.noisy(), stored_item.lost()]
 	var arrived := "%d/%d. " % [stored_item.arrived(), stored_item.item.rows]
 	return arrived + "CLEAN %d NOISY %d LOST %d" % counts

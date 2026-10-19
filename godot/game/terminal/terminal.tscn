@@ -53,6 +53,7 @@
 [ext_resource type="Resource" path="res://game/data/atoms/modules/unlocked_modules.tres" id="81_unlocked"]
 [ext_resource type="Resource" path="res://game/data/atoms/terminal/directory.tres" id="82_directory"]
 [ext_resource type="Script" path="res://addons/markdownlabel/markdownlabel.gd" id="83_markdown"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/running_item.tres" id="84_running"]
 
 [sub_resource type="SystemFont" id="Font_mono"]
 font_names = PackedStringArray("monospace")
@@ -482,6 +483,7 @@ manifest_received = ExtResource("51_manifest_received")
 download_queue = ExtResource("52_queue")
 storage = ExtResource("53_storage")
 download_received = ExtResource("54_dl_received")
+running_item = ExtResource("84_running")
 progress_line = ExtResource("55_progress")
 status_notice = ExtResource("56_notice")
 row_received = ExtResource("57_row")
