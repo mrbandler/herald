@@ -37,6 +37,8 @@ func test_the_listener_falls_asleep_at_shift_end() -> void:
 	var end := room.get_node("ShiftEnd") as ShiftEnd
 	assert_object(end.sleep).is_same(sleep)
 	assert_object(sleep.shift_ended).is_same(end.shift_ended)
+	var look := room.get_node("Player/MouseLook") as MouseLook
+	assert_object(look.drowsiness).is_same(sleep.drowsiness)
 	assert_object(sleep.camera).is_same(room.get_node("Player/Pivot/Camera3D"))
 	assert_object(sleep.top_lid).is_not_null()
 	assert_object(sleep.bottom_lid).is_not_null()

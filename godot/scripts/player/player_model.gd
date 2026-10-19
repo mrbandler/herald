@@ -7,6 +7,9 @@ extends Resource
 ## Degrees per pixel of mouse motion.
 @export var sensitivity := 0.12
 
+## Share of the look speed lost at full drowsiness, so a sleepy Listener turns slowly.
+@export var drowsy_slowdown := 0.6
+
 ## Furthest yaw either side of forward, in degrees.
 @export var yaw_limit := 100.0
 
@@ -43,3 +46,7 @@ func turn(angles: Vector2, motion: Vector2) -> Vector2:
 ## Lean blend 0..1 for the angle in degrees between the view and the terminal.
 func lean_amount(look_away_degrees: float) -> float:
 	return 1.0 - smoothstep(lean_start, lean_full, look_away_degrees)
+
+## How fast the look turns at `drowsy` 0..1: full speed awake, slower as sleep comes.
+func look_scale(drowsy: float) -> float:
+	return 1.0 - drowsy_slowdown * drowsy

@@ -12,6 +12,7 @@ func before_test() -> void:
 	_sleep.current_pass = ResourceValue.new()
 	_sleep.current_pass.value = PassFixture.window_one()
 	_sleep.shift_ended = Event.new()
+	_sleep.drowsiness = FloatValue.new()
 	add_child(_sleep)
 
 func test_eyes_stay_open_before_the_warning() -> void:
@@ -53,3 +54,8 @@ func test_blinking_stops_once_the_shift_ends() -> void:
 	for _i: int in range(120):
 		_sleep.tick(1.0 / 60.0)
 	assert_float(_sleep.top_lid.anchor_bottom).is_equal(0.0)
+
+func test_publishes_the_drowsiness() -> void:
+	_sleep.pass_time.value = 172.0
+	_sleep.tick(1.0 / 60.0)
+	assert_float(_sleep.drowsiness.value).is_greater(0.0)
