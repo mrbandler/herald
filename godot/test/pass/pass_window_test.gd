@@ -35,11 +35,15 @@ func test_after_the_bell_stays_at_bell_zero() -> void:
 	assert_str(mark.name).is_equal("BELL")
 	assert_float(mark.remaining).is_equal(0.0)
 
-func test_station_time_runs_faster_after_los() -> void:
+func test_station_time_runs_at_real_time_all_night() -> void:
 	var window := PassFixture.window_one()
 	assert_float(window.station_time(0.0)).is_equal(9600.0)
-	assert_float(window.station_time(115.0)).is_equal(9715.0)
-	assert_float(window.station_time(175.0)).is_equal(9715.0 + 60.0 * 60.0)
+	assert_float(window.station_time(175.0)).is_equal(9775.0)
+
+func test_format_time_of_day() -> void:
+	assert_str(PassWindow.format_time(9600.0)).is_equal("02:40:00")
+	assert_str(PassWindow.format_time(9659.9)).is_equal("02:40:59")
+	assert_str(PassWindow.format_time(86400.0 + 61.0)).is_equal("00:01:01")
 
 func test_shipped_window_two_loads_with_ascending_marks() -> void:
 	var window: PassWindow = load(PASS_02)

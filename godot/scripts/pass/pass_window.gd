@@ -25,9 +25,6 @@ const MARK_NAMES: PackedStringArray = ["AOS", "UPLINK", "LOS", "BELL"]
 ## Station time of day at pass start, in seconds after midnight. The wall clock shows it after LOS.
 @export var clock_start := 0.0
 
-## How much faster station time runs than real time after LOS, so the rest of the night passes.
-@export var night_rate := 60.0
-
 @export_group("Prayer Card")
 ## Azimuth printed on the prayer card, in degrees.
 @export var card_azimuth := 0.0
@@ -59,10 +56,15 @@ const MARK_NAMES: PackedStringArray = ["AOS", "UPLINK", "LOS", "BELL"]
 ## The commands this window offers. Every window needs one: Terminal and HELP read it.
 @export var command_set: CommandSet
 
-## Station time of day in seconds after midnight, `t` seconds into the pass. Real time until
-## LOS, then `night_rate` times faster.
+## Station time of day in seconds after midnight, `t` seconds into the pass. Runs at real time
+## all night: the jump to the next window happens while the Listener sleeps.
 func station_time(t: float) -> float:
-	return clock_start + minf(t, los) + maxf(t - los, 0.0) * night_rate
+	return clock_start + t
+
+## A time of day as "HH:MM:SS" for `seconds` after midnight, wrapping at midnight.
+static func format_time(seconds: float) -> String:
+	var whole := floori(seconds)
+	return "%02d:%02d:%02d" % [floori(whole / 3600.0) % 24, floori(whole / 60.0) % 60, whole % 60]
 
 ## The four mark times in `MARK_NAMES` order, in seconds.
 func mark_times() -> PackedFloat64Array:

@@ -56,7 +56,7 @@ enum Mode {
 @export var notice_seconds := 4.0
 
 ## Shows the countdown to the next mark on the right, e.g. "UPLINK T-00:42", in the text's
-## colour. Optional.
+## colour, and the station time after LOS instead of a countdown to the bell. Optional.
 @export var countdown: Label
 
 ## The band behind the text, coloured by the mode. Optional.
@@ -130,8 +130,17 @@ func refresh() -> void:
 
 	if countdown != null:
 		var window := current_pass.value as PassWindow
-		countdown.text = "" if window == null else window.next_mark(pass_time.value).countdown()
+		countdown.text = "" if window == null else _right_text(window)
 		countdown.add_theme_color_override("font_color", get_theme_color("font_color"))
+
+## The countdown to the next mark, or the station time once LOS has passed, so nothing counts
+## down to the bell.
+func _right_text(window: PassWindow) -> String:
+	var t := pass_time.value
+	if t >= window.los:
+		return PassWindow.format_time(window.station_time(t))
+
+	return window.next_mark(t).countdown()
 
 ## Lights the band while the lock holds and darkens it otherwise. A blink swaps band and text.
 func _paint(link_mode: Mode) -> void:

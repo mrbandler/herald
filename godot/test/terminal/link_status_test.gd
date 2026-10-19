@@ -103,3 +103,9 @@ func test_counts_down_to_the_next_mark_in_the_text_colour() -> void:
 	var mark := PassFixture.window_one().next_mark(40.0)
 	assert_str(_status.countdown.text).is_equal(mark.countdown())
 	assert_object(_status.countdown.get_theme_color("font_color")).is_equal(_status.ink_color)
+
+func test_shows_the_station_time_after_los_instead_of_the_bell() -> void:
+	_status.countdown = auto_free(Label.new())
+	_status.pass_time.value = 125.0
+	_status.refresh()
+	assert_str(_status.countdown.text).is_equal("02:42:05")
