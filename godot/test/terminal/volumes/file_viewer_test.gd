@@ -65,3 +65,21 @@ func test_a_locked_file_does_not_open() -> void:
 	_viewer.volume_model.files[0].unlocked_by = "TLM"
 	_viewer.viewing.value = "USR:A.TXT"
 	assert_bool(_viewer.panel.visible).is_false()
+
+func test_a_file_already_open_shows_on_ready() -> void:
+	var fresh: FileViewer = auto_free(FileViewer.new())
+	fresh.terminal_model = _viewer.terminal_model
+	fresh.volume_model = _viewer.volume_model
+	fresh.viewing = StringValue.new()
+	fresh.viewing.value = "USR:A.TXT"
+	fresh.focused = _viewer.focused
+	fresh.lean_amount = _viewer.lean_amount
+	fresh.unlocked_modules = _viewer.unlocked_modules
+	fresh.panel = auto_free(Control.new())
+	fresh.title = auto_free(Label.new())
+	fresh.counter = auto_free(Label.new())
+	fresh.body = auto_free(Label.new())
+	fresh.hints = auto_free(Label.new())
+	add_child(fresh)
+	assert_bool(fresh.panel.visible).is_true()
+	assert_str(fresh.hints.text).is_equal(FileViewer.HINTS)

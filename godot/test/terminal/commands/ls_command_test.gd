@@ -51,4 +51,4 @@ func test_a_file_appears_with_its_module() -> void:
 	_ls.run(PackedStringArray(["SYS:"]))
 	_ls.unlocked_modules.value = PackedStringArray(["TLM"])
 	_ls.run(PackedStringArray(["SYS:"]))
-	assert_array(_out.calls).is_equal([" NO FILES", " SYS:TLM.MAN                      1 LINES"])
+	assert_array(_out.calls).is_equal([" NO FILES", " SYS:TLM.MAN                      1 LINE"])

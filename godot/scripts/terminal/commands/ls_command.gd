@@ -55,4 +55,6 @@ func _list_files(target: String) -> void:
 		return
 
 	for file: StationFile in found:
-		write(" %-30s %3d LINES" % [file.path, volume_model.lines(file).size()])
+		var count := volume_model.lines(file).size()
+		var unit := "LINE" if count == 1 else "LINES"
+		write(" %-30s %3d %s" % [file.path, count, unit])
