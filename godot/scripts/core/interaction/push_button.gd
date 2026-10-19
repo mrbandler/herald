@@ -6,6 +6,10 @@ extends Interactable
 ## Raised on every press.
 @export var pressed: Event
 
+## A button is pressed, so the crosshair points.
+func is_button() -> bool:
+	return true
+
 ## Raises `pressed`.
 func grab() -> void:
 	pressed.raise()

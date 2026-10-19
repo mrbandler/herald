@@ -24,6 +24,12 @@ extends TextureRect
 ## Read. Shows the place icon.
 @export var placing: BoolValue
 
+## Shown over a button.
+@export var point_icon: Texture2D
+
+## Read. Shows the point icon.
+@export var pointing: BoolValue
+
 ## Read. At 1, fully leaned in, the crosshair hides so it does not cover the screen's text.
 @export var lean_amount: FloatValue
 
@@ -32,19 +38,27 @@ extends TextureRect
 
 ## Picks the icon every frame, and hides it while fully leaned in or reading a raised paper.
 func _process(_delta: float) -> void:
-	texture = pick_icon(hovering.value, grabbing.value, placing.value)
+	texture = pick_icon(hovering.value, grabbing.value, placing.value, pointing.value)
 	visible = shown(lean_amount.value, paper_raised.value)
 
 ## False at a full lean or over a raised paper, so the crosshair stays off text.
 func shown(lean: float, reading_paper: bool) -> bool:
 	return lean < 1.0 and not reading_paper
 
-## Grabbing wins over placing, placing over hovering, hovering over idle.
-func pick_icon(is_hovering: bool, is_grabbing: bool, is_placing := false) -> Texture2D:
+## Grabbing wins over placing, placing over pointing, pointing over hovering, hovering over idle.
+func pick_icon(
+	is_hovering: bool,
+	is_grabbing: bool,
+	is_placing := false,
+	is_pointing := false,
+) -> Texture2D:
 	if is_grabbing:
 		return grab_icon
 
 	if is_placing:
 		return place_icon
+
+	if is_pointing:
+		return point_icon
 
 	return hover_icon if is_hovering else idle_icon
