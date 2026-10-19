@@ -70,3 +70,8 @@ func test_locked_while_transmitting() -> void:
 	_seq.run(PackedStringArray(["CLR"]))
 	assert_array(_seq.sequence.value).is_empty()
 	assert_array(_spy.calls).is_equal(["TRANSMISSION IN PROGRESS", "TRANSMISSION IN PROGRESS"])
+
+func test_lists_the_last_sequence_sent() -> void:
+	_seq.last_sent.value = PackedStringArray(["ACK"])
+	_seq.run(PackedStringArray())
+	assert_array(_spy.calls).is_equal(["SEQUENCE EMPTY", "LAST SENT:", " 1 ACK"])

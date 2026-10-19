@@ -26,6 +26,7 @@ static func seq(out: StringEvent) -> SeqCommand:
 	seq_command.sequence = StringListValue.new()
 	seq_command.transmitting = BoolValue.new()
 	seq_command.unlocked_modules = StringListValue.new()
+	seq_command.last_sent = StringListValue.new()
 	seq_command.herald_commands = [herald("ACK", "ACK"), herald("IMG", "IMG <N>", "IMG")]
 	return seq_command
 

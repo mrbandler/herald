@@ -18,6 +18,7 @@ func before_test() -> void:
 	_uplink.transmitting = BoolValue.new()
 	_uplink.out = StringEvent.new()
 	_uplink.progress_line = StringValue.new()
+	_uplink.last_sent = StringListValue.new()
 	_spy = AtomSpy.events(_uplink.out)
 	_sent = AtomSpy.events(_uplink.uplinked)
 	add_child(_uplink)
@@ -31,6 +32,7 @@ func test_sends_after_the_transmit_time() -> void:
 	_uplink.tick(1.0)
 	assert_bool(_uplink.transmitting.value).is_false()
 	assert_array(_uplink.sequence.value).is_empty()
+	assert_array(_uplink.last_sent.value).contains_exactly(["ACK"])
 	assert_int(_sent.calls.size()).is_equal(1)
 	assert_array(_spy.calls).is_equal(["TRANSMITTING...", "1 COMMANDS SENT."])
 
@@ -49,6 +51,7 @@ func test_losing_lock_aborts_and_keeps_the_sequence() -> void:
 	_uplink.tick(5.0)
 	assert_bool(_uplink.transmitting.value).is_false()
 	assert_array(_uplink.sequence.value).contains_exactly(["ACK"])
+	assert_array(_uplink.last_sent.value).is_empty()
 	assert_array(_sent.calls).is_empty()
 	assert_array(_spy.calls).is_equal(["TRANSMITTING...", "UPLINK FAILED. SIGNAL LOCK LOST"])
 	assert_str(_uplink.progress_line.value).is_empty()

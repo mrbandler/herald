@@ -6,6 +6,7 @@
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/transmitting.tres" id="4_transmitting"]
 [ext_resource type="Script" path="res://scripts/terminal/commands/herald_command.gd" id="5_herald"]
 [ext_resource type="Resource" path="res://game/data/atoms/modules/unlocked_modules.tres" id="6_unlocked"]
+[ext_resource type="Resource" path="res://game/data/atoms/uplink/last_sent.tres" id="7_last_sent"]
 
 [sub_resource type="Resource" id="Herald_ack"]
 script = ExtResource("5_herald")
@@ -88,3 +89,4 @@ sequence = ExtResource("3_sequence")
 transmitting = ExtResource("4_transmitting")
 herald_commands = Array[ExtResource("5_herald")]([SubResource("Herald_ack"), SubResource("Herald_retx"), SubResource("Herald_img"), SubResource("Herald_spc"), SubResource("Herald_insert"), SubResource("Herald_pwr"), SubResource("Herald_reset"), SubResource("Herald_erase"), SubResource("Herald_descend"), SubResource("Herald_transfer")])
 unlocked_modules = ExtResource("6_unlocked")
+last_sent = ExtResource("7_last_sent")

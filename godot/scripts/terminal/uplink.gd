@@ -30,6 +30,9 @@ extends Node
 ## Written. The transmission's progress, cleared when it ends.
 @export var progress_line: StringValue
 
+## Written. The sequence of the last completed transmission. Kept across windows.
+@export var last_sent: StringListValue
+
 ## Seconds left in the running transmission.
 var _remaining := 0.0
 
@@ -94,6 +97,7 @@ func _fail(message: String) -> void:
 func _finish() -> void:
 	# Clear the sequence before `transmitting` flips, so no handler can restart on stale commands.
 	var count := sequence.value.size()
+	last_sent.value = sequence.value
 	sequence.value = PackedStringArray()
 	transmitting.value = false
 	progress_line.value = ""

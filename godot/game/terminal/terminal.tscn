@@ -47,6 +47,7 @@
 [ext_resource type="AudioStream" path="res://game/data/audio/unlock_bell.tres" id="73_unlock_bell"]
 [ext_resource type="Script" path="res://scripts/terminal/progress_label.gd" id="74_progress_label"]
 [ext_resource type="Resource" path="res://game/data/atoms/player/lean_amount.tres" id="75_lean"]
+[ext_resource type="Resource" path="res://game/data/atoms/uplink/last_sent.tres" id="76_last_sent"]
 
 [sub_resource type="SystemFont" id="Font_mono"]
 font_names = PackedStringArray("monospace")
@@ -241,6 +242,7 @@ locked = ExtResource("35_locked")
 transmitting = ExtResource("33_transmitting")
 out = ExtResource("20_stdout")
 progress_line = ExtResource("55_progress")
+last_sent = ExtResource("76_last_sent")
 
 [node name="Downlink" type="Node" parent="."]
 script = ExtResource("60_downlink")

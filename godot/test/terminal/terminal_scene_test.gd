@@ -82,6 +82,8 @@ func test_module_unlock_is_wired() -> void:
 	assert_object(decode.unlocked_modules).is_same(unlock.unlocked_modules)
 	var seq := two.command_set.find("SEQ") as SeqCommand
 	assert_object(seq.unlocked_modules).is_same(unlock.unlocked_modules)
+	var uplink := scene.get_node("Uplink") as Uplink
+	assert_object(seq.last_sent).is_same(uplink.last_sent)
 	var herald_names := PackedStringArray()
 	for listed: HeraldCommand in seq.herald_commands:
 		herald_names.append(listed.name)

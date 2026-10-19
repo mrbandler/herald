@@ -9,6 +9,9 @@ const BLOCK := "▒"
 ## The queued HERALD commands. Written by SEQ ADD and SEQ CLR.
 @export var sequence: StringListValue
 
+## Read. The last sequence sent, listed under the current one.
+@export var last_sent: StringListValue
+
 ## Read. SEQ ADD and SEQ CLR are refused while true.
 @export var transmitting: BoolValue
 
@@ -48,14 +51,21 @@ func run(args: PackedStringArray) -> void:
 
 	_add(args.slice(1))
 
-## Writes the numbered sequence, or SEQUENCE EMPTY.
+## Writes the numbered sequence, or SEQUENCE EMPTY, then the last one sent.
 func _list() -> void:
 	if sequence.value.is_empty():
 		write("SEQUENCE EMPTY")
-		return
+	else:
+		_numbered(sequence.value)
 
-	for i: int in range(sequence.value.size()):
-		write(" %d %s" % [i + 1, sequence.value[i]])
+	if not last_sent.value.is_empty():
+		write("LAST SENT:")
+		_numbered(last_sent.value)
+
+## Writes `entries` one per line, numbered from 1.
+func _numbered(entries: PackedStringArray) -> void:
+	for i: int in range(entries.size()):
+		write(" %d %s" % [i + 1, entries[i]])
 
 ## Appends `words` as one entry, if HERALD knows the command and it is unlocked.
 func _add(words: PackedStringArray) -> void:
