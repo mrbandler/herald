@@ -35,7 +35,7 @@ enum Mode {
 @export var no_carrier_text := "NO CARRIER"
 
 ## Shown while the carrier is heard but not locked.
-@export var no_lock_text := "SIGNAL. NO LOCK"
+@export var no_lock_text := "SIGNAL ACQUIRED. NO LOCK"
 
 ## Shown while locked before the uplink opens.
 @export var downlink_text := "DOWNLINK. HERALD SPEAKING"
