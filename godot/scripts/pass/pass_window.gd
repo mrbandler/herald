@@ -64,6 +64,9 @@ const MARK_NAMES: PackedStringArray = ["AOS", "UPLINK", "LOS", "BELL"]
 ## What the end card says when `required` never arrived.
 @export_multiline var missed_text := ""
 
+## The last window: its bell ends the game on the ending its verdict earned.
+@export var final := false
+
 @export_group("Terminal")
 ## The commands this window offers. Every window needs one: Terminal and HELP read it.
 @export var command_set: CommandSet

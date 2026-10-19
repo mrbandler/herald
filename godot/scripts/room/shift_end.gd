@@ -32,6 +32,12 @@ extends Node
 ## Shown instead of the next window when the required command never arrived.
 @export var end_card: EndCard
 
+## Read. What the Listener kept, judged by the ending.
+@export var storage: ResourceListValue
+
+## Picks the ending after the final window.
+@export var ending_model: EndingModel
+
 ## The heading of the card for a missed required command.
 @export var lost_title := "HERALD IS LOST"
 
@@ -50,7 +56,7 @@ func _on_bell(_payload: Variant) -> void:
 
 	_ended = true
 	var missed := missed_command()
-	if missed.is_empty():
+	if missed.is_empty() and not _final():
 		window_number.value += 1
 
 	shift_ended.raise()
@@ -75,10 +81,25 @@ func missed_command() -> String:
 
 	return "" if last_sent.value.has(window.required) else window.required
 
-## Reloads into the next window, or shows the end card for a missed required command.
+## The heading and text of the ending the final window earned.
+func ending() -> PackedStringArray:
+	return ending_model.pick(last_sent.value, storage.value)
+
+## True on the final window.
+func _final() -> bool:
+	var window := current_pass.value as PassWindow if current_pass != null else null
+	return window != null and window.final
+
+## Reloads into the next window, or shows the end card: a missed required command, or the
+## ending after the final window.
 func _after_sleep(missed: String) -> void:
-	if missed.is_empty() or end_card == null:
+	if end_card == null or (missed.is_empty() and not _final()):
 		get_tree().reload_current_scene()
 		return
 
-	end_card.show_card(lost_title, (current_pass.value as PassWindow).missed_text, true)
+	if not missed.is_empty():
+		end_card.show_card(lost_title, (current_pass.value as PassWindow).missed_text, true)
+		return
+
+	var earned := ending()
+	end_card.show_card(earned[0], earned[1], false)

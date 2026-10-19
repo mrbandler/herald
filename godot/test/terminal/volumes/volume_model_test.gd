@@ -89,7 +89,7 @@ func test_the_game_files_fit_the_popup_and_their_volumes() -> void:
 
 	var expected := ["HTB:HEARTBEAT.LOG", "USR:OKONJO/NIGHTS.TXT", "USR:OKONJO/WAKE.TXT"]
 	expected.append_array(["SYS:BOOT.LOG", "SYS:TLM.MAN", "SYS:IMG.MAN"])
-	expected.append_array(["ARC:SOWING.TXT", "ARC:BURNING.LOG", "SYS:SPC.MAN"])
+	expected.append_array(["ARC:SOWING.TXT", "ARC:BURNING.LOG", "SYS:SPC.MAN", "ARC:PILLAR.TXT"])
 	assert_array(paths).is_equal(PackedStringArray(expected))
 	assert_object(game.find("SYS:TLM.MAN", PackedStringArray())).is_null()
 

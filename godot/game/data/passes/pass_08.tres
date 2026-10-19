@@ -1,0 +1,236 @@
+[gd_resource type="Resource" script_class="PassWindow" format=3]
+
+[ext_resource type="Script" path="res://scripts/pass/pass_window.gd" id="1"]
+[ext_resource type="Resource" path="res://game/data/commands/station.tres" id="2"]
+[ext_resource type="Script" path="res://scripts/terminal/downlink/manifest_item.gd" id="3"]
+[ext_resource type="Script" path="res://scripts/room/papers/paper.gd" id="3_paper"]
+[ext_resource type="Texture2D" path="res://assets/nasa/reffa.png" id="6_reffa"]
+[ext_resource type="Texture2D" path="res://assets/nasa/tarba.png" id="7_tarba"]
+[ext_resource type="Texture2D" path="res://assets/nasa/candra.png" id="8_candra"]
+[ext_resource type="Resource" path="res://game/data/papers/window_08/letter.tres" id="9_letter"]
+
+[sub_resource type="Resource" id="Item_81"]
+script = ExtResource("3")
+id = 81
+type = "AUTH"
+rows = 16
+note = "KEY VERDICT"
+key_for = "VERDICT"
+
+[sub_resource type="Resource" id="Item_82"]
+script = ExtResource("3")
+id = 82
+type = "TLM"
+rows = 32
+note = "AUTO"
+content = "HERALD TELEMETRY  T+214Y 124D
+BUS      NOMINAL   BATTERY 49%
+POWER    17 / DRAW 12 / SURPLUS 5
+NAC      ON   WAC ON   SPC ON
+AMP      ON   BANK B ON   HEATERS ON
+POSITION IN ORBIT AROUND CANDRA
+POINTING NEXT PASS NONE
+STATUS   PHASE 8. AWAITING THE VERDICT"
+
+[sub_resource type="Resource" id="Item_83"]
+script = ExtResource("3")
+id = 83
+type = "SPC"
+size = 2
+rows = 40
+note = "REFFA"
+content = "SPECTRUM  REFFA  NO AIR
+N2  |                              |   0
+O2  |                              |   0
+CH4 |                              |   0
+AR  |                              |   0
+H2O |                              |   0
+    +----+----+----+----+----+----+
+    0            50%           100%"
+
+[sub_resource type="Resource" id="Item_84"]
+script = ExtResource("3")
+id = 84
+type = "SPC"
+size = 2
+rows = 40
+note = "CANDRA"
+content = "SPECTRUM  CANDRA  LIMB
+N2  |#######################       |  77
+O2  |#####                         |  18
+CH4 |#                             |   3
+AR  |                              |   1
+H2O |                              |   1
+    +----+----+----+----+----+----+
+    0            50%           100%"
+
+[sub_resource type="Resource" id="Item_85"]
+script = ExtResource("3")
+id = 85
+type = "SPC"
+size = 2
+rows = 40
+note = "TARBA"
+content = "SPECTRUM  TARBA  PLUMES
+N2  |#                             |   4
+O2  |                              |   1
+CH4 |#                             |   2
+AR  |                              |   0
+H2O |############################  |  93
+    +----+----+----+----+----+----+
+    0            50%           100%"
+
+[sub_resource type="Resource" id="Item_86"]
+script = ExtResource("3")
+id = 86
+type = "IMG"
+size = 6
+rows = 160
+note = "REFFA NARROW"
+image = ExtResource("6_reffa")
+line_length = 106.2
+phase = 0.63
+
+[sub_resource type="Resource" id="Item_87"]
+script = ExtResource("3")
+id = 87
+type = "IMG"
+size = 6
+rows = 160
+note = "CANDRA NARROW"
+image = ExtResource("8_candra")
+line_length = 106.2
+phase = 0.12
+
+[sub_resource type="Resource" id="Item_88"]
+script = ExtResource("3")
+id = 88
+type = "IMG"
+size = 6
+rows = 160
+note = "TARBA NARROW"
+image = ExtResource("7_tarba")
+line_length = 106.2
+phase = 0.55
+
+[sub_resource type="Resource" id="Item_73"]
+script = ExtResource("3")
+id = 73
+type = "SPC"
+size = 2
+rows = 40
+note = "REFFA"
+content = "SPECTRUM  REFFA  NO AIR
+N2  |                              |   0
+O2  |                              |   0
+CH4 |                              |   0
+AR  |                              |   0
+H2O |                              |   0
+    +----+----+----+----+----+----+
+    0            50%           100%"
+
+[sub_resource type="Resource" id="Item_74"]
+script = ExtResource("3")
+id = 74
+type = "SPC"
+size = 2
+rows = 40
+note = "CANDRA"
+content = "SPECTRUM  CANDRA  LIMB
+N2  |#######################       |  77
+O2  |#####                         |  18
+CH4 |#                             |   3
+AR  |                              |   1
+H2O |                              |   1
+    +----+----+----+----+----+----+
+    0            50%           100%"
+
+[sub_resource type="Resource" id="Item_75"]
+script = ExtResource("3")
+id = 75
+type = "SPC"
+size = 2
+rows = 40
+note = "TARBA"
+content = "SPECTRUM  TARBA  PLUMES
+N2  |#                             |   4
+O2  |                              |   1
+CH4 |#                             |   2
+AR  |                              |   0
+H2O |############################  |  93
+    +----+----+----+----+----+----+
+    0            50%           100%"
+
+[sub_resource type="Resource" id="Item_76"]
+script = ExtResource("3")
+id = 76
+type = "IMG"
+size = 6
+rows = 160
+note = "REFFA NARROW"
+image = ExtResource("6_reffa")
+line_length = 106.2
+phase = 0.44
+
+[sub_resource type="Resource" id="Item_77"]
+script = ExtResource("3")
+id = 77
+type = "IMG"
+size = 6
+rows = 160
+note = "CANDRA NARROW"
+image = ExtResource("8_candra")
+line_length = 106.2
+phase = 0.71
+
+[sub_resource type="Resource" id="Item_78"]
+script = ExtResource("3")
+id = 78
+type = "IMG"
+size = 6
+rows = 160
+note = "TARBA NARROW"
+image = ExtResource("7_tarba")
+line_length = 106.2
+phase = 0.36
+
+[sub_resource type="Resource" id="Paper_card"]
+script = ExtResource("3_paper")
+text = "TONIGHT'S PRAYER
+SEEK THE VOICE AT
+AZ %05.1f  EL %04.1f
+BIND IT AT DIAL %.0f"
+fields = PackedStringArray("card_azimuth", "card_elevation", "card_tuning")
+size = Vector2(0.105, 0.074)
+centred = true
+
+[resource]
+script = ExtResource("1")
+number = 8
+aos = 30.0
+speak = 220.0
+los = 260.0
+bell = 320.0
+clock_start = 9600.0
+card_azimuth = 255.9
+card_elevation = 58.4
+card_tuning = 72.0
+card_seed = 8
+papers = Array[ExtResource("3_paper")]([SubResource("Paper_card"), ExtResource("9_letter")])
+manifest = Array[ExtResource("3")]([SubResource("Item_81"), SubResource("Item_82")])
+requests = Dictionary[String, Resource]({
+"IMG 2 H": SubResource("Item_86"),
+"IMG 3 H": SubResource("Item_87"),
+"IMG 4 H": SubResource("Item_88"),
+"RETX 73": SubResource("Item_73"),
+"RETX 74": SubResource("Item_74"),
+"RETX 75": SubResource("Item_75"),
+"RETX 76": SubResource("Item_76"),
+"RETX 77": SubResource("Item_77"),
+"RETX 78": SubResource("Item_78"),
+"SPC 2": SubResource("Item_83"),
+"SPC 3": SubResource("Item_84"),
+"SPC 4": SubResource("Item_85")
+})
+final = true
+command_set = ExtResource("2")

@@ -187,3 +187,9 @@ func test_window_seven_requires_the_insertion_burn() -> void:
 	assert_str((seven.requests["SPC 4"] as ManifestItem).content).contains("H2O")
 	var modules: ModuleModel = load("res://game/data/models/modules.tres")
 	assert_bool(modules.modules.has("INSERT")).is_true()
+
+func test_window_eight_is_the_verdict() -> void:
+	var eight: PassWindow = load("res://game/data/passes/pass_08.tres")
+	assert_int(eight.number).is_equal(8)
+	assert_bool(eight.final).is_true()
+	assert_str(eight.manifest[0].key_for).is_equal("VERDICT")
