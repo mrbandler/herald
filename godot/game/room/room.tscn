@@ -238,7 +238,7 @@ size = Vector3(0.16, 0.12, 0.04)
 material = ExtResource("123_tube_paint")
 
 [node name="Tray" type="Marker3D" parent="Tube" unique_id=1164226197]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.177, 0.753, 0.191)
+transform = Transform3D(0.9955536, 0, 0.09419659, 0, 1, 0, -0.09419659, 0, 0.9955536, 0.01961991, 0.753, 0.1117752)
 
 [node name="Capsule" type="CSGCylinder3D" parent="Tube" unique_id=1479166189]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0.788, 0.06)

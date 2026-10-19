@@ -101,6 +101,8 @@ func test_module_unlock_is_wired() -> void:
 	assert_object(bell.event).is_same(relay.event)
 	assert_object(relay.sound.stream).is_instanceof(ClickStream)
 	assert_float((bell.sound.stream as ChimeStream).lead_seconds).is_greater(0.0)
+	var click := scene.get_node("KeyClickSound") as EventSound
+	assert_object(click.event).is_same((scene.get_node("Terminal") as Terminal).key_typed)
 	var alarm := scene.get_node("AckAlarmSound") as EventSound
 	assert_object(alarm.event).is_same((scene.get_node("Uplink") as Uplink).ack_missed)
 	assert_bool((alarm.sound.stream as ChimeStream).square).is_true()

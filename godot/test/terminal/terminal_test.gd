@@ -179,3 +179,17 @@ func test_an_alert_keeps_the_keys_from_the_prompt() -> void:
 	_terminal.alert.value = null
 	get_tree().root.push_input(key)
 	assert_str(_terminal.editor.text).is_equal("S")
+
+func test_every_typed_key_clicks() -> void:
+	_terminal.focused.value = true
+	_terminal.key_typed = Event.new()
+	var clicks := AtomSpy.events(_terminal.key_typed)
+	var key := InputEventKey.new()
+	key.pressed = true
+	key.keycode = KEY_S
+	key.unicode = 83
+	get_tree().root.push_input(key)
+	assert_int(clicks.calls.size()).is_equal(1)
+	_terminal.alert.value = Alert.new()
+	get_tree().root.push_input(key)
+	assert_int(clicks.calls.size()).is_equal(1)
