@@ -56,6 +56,19 @@ func test_each_played_motif_takes_the_next_phrase() -> void:
 	var high := _crossings(frames.slice(cycle + 5512, cycle + 11025))
 	assert_int(high).is_greater(low * 2)
 
+func test_the_bass_duck_does_not_click() -> void:
+	# Only the bass sounds; the melody makes it duck at the motif start of cycle 2.
+	_model.pad_level = 0.0
+	_model.color_level = 0.0
+	_model.pluck_level = 0.0
+	_model.motif_level = 0.0
+	var cycle := int(_model.cycle_seconds * _model.mix_rate)
+	var frames := MusicSynth.new(_model, 1).render(cycle * 2 + 2205, 1.0, 1.0, 0.0)
+	var jump := 0.0
+	for i: int in range(cycle * 2 - 2205, frames.size()):
+		jump = maxf(jump, absf(frames[i].x - frames[i - 1].x))
+	assert_float(jump).is_less(0.01)
+
 func test_the_bed_alone_is_heard() -> void:
 	var synth := MusicSynth.new(_model, 1)
 	assert_float(_peak(synth.render(22050, 1.0, 0.0, 0.0))).is_greater(0.01)

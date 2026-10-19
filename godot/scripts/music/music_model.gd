@@ -63,6 +63,9 @@ extends Resource
 ## Seconds the bass takes to come back after each motif start.
 @export var bass_duck_seconds := 0.8
 
+## Seconds the bass takes to dip at each motif start. Above 0, so the dip never clicks.
+@export var bass_duck_attack := 0.03
+
 ## Pluck loudness, 0..1.
 @export var pluck_level := 0.15
 

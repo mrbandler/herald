@@ -146,7 +146,9 @@ func _pad_voice(t: float) -> float:
 func _bass_voice(t: float, in_cycle: float) -> float:
 	var duck := 1.0
 	if _motif_on:
-		duck = lerpf(1.0, smoothstep(0.0, _model.bass_duck_seconds, in_cycle), _melody)
+		var dip := smoothstep(0.0, _model.bass_duck_attack, in_cycle)
+		var recover := smoothstep(0.0, _model.bass_duck_seconds, in_cycle)
+		duck = lerpf(1.0, 1.0 - dip * (1.0 - recover), _melody)
 
 	var dip := _model.bass_pulse(_stress)
 	var pulse := 1.0 - dip * (0.5 + 0.5 * cos(TAU * t / _model.pulse_seconds()))
