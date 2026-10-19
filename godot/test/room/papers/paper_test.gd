@@ -12,10 +12,13 @@ func test_fields_fill_the_text_from_the_window() -> void:
 	var text := paper.text_for(PassFixture.window_one())
 	assert_str(text).is_equal("AZ 214.6  EL 38.2\nBIND IT AT DIAL 52")
 
-func test_a_sheet_starts_its_text_at_the_top_left_margin() -> void:
+func test_a_sheet_renders_its_markdown_on_a_page_sized_to_the_paper() -> void:
 	var sheet: PaperSheet = auto_free(PaperSheet.new())
-	sheet.show_paper(Vector2(0.1, 0.2), "TEXT")
-	var top_left := Vector3(PaperSheet.MARGIN - 0.05, 0.1 - PaperSheet.MARGIN, 0.0005)
-	assert_vector(sheet.label.position).is_equal_approx(top_left, Vector3.ONE * 0.00001)
-	sheet.unlit()
-	assert_bool(sheet.label.shaded).is_false()
+	sheet.show_paper(Vector2(0.1, 0.2), "# TITLE")
+	assert_str(sheet.page.markdown_text).is_equal("# TITLE")
+	assert_object(sheet.page_pixels()).is_equal(Vector2i(240, 480))
+
+func test_placeholders_become_glyphs_on_paper() -> void:
+	var paper := Paper.new()
+	paper.text = "THE {{###}} DAY"
+	assert_str(paper.text_for(null)).is_equal("THE ███ DAY")

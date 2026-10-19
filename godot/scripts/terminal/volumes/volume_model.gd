@@ -74,7 +74,7 @@ func entries(directory: String, unlocked: PackedStringArray) -> PackedStringArra
 
 ## The file's lines, without the empty one a trailing line break leaves.
 func lines(file: StationFile) -> PackedStringArray:
-	var text := file.text.rstrip("\n")
+	var text := file.body().rstrip("\n")
 	return PackedStringArray() if text.is_empty() else text.split("\n")
 
 ## One level above `directory`: a directory's volume, or the top above a volume.

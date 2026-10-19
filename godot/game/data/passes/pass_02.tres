@@ -4,6 +4,7 @@
 [ext_resource type="Resource" path="res://game/data/commands/station.tres" id="2"]
 [ext_resource type="Script" path="res://scripts/terminal/downlink/manifest_item.gd" id="3"]
 [ext_resource type="Script" path="res://scripts/room/papers/paper.gd" id="3_paper"]
+[ext_resource type="Resource" path="res://game/data/papers/window_02/insider.tres" id="4_insider"]
 
 [sub_resource type="Resource" id="Item_21"]
 script = ExtResource("3")
@@ -39,13 +40,6 @@ BIND IT AT DIAL %.0f"
 fields = PackedStringArray("card_azimuth", "card_elevation", "card_tuning")
 size = Vector2(0.105, 0.074)
 
-[sub_resource type="Resource" id="Paper_capsule"]
-script = ExtResource("3_paper")
-text = "PLACEHOLDER: COUNCIL CAPSULE.
-The Voice speaks more tonight. The old Listener left notes. Look in USR:."
-size = Vector2(0.148, 0.105)
-arrives_at = 40.0
-
 [resource]
 script = ExtResource("1")
 number = 2
@@ -60,4 +54,4 @@ card_tuning = 55.0
 card_seed = 2
 manifest = Array[ExtResource("3")]([SubResource("Item_21"), SubResource("Item_22")])
 command_set = ExtResource("2")
-papers = Array[ExtResource("3_paper")]([SubResource("Paper_card"), SubResource("Paper_capsule")])
+papers = Array[ExtResource("3_paper")]([SubResource("Paper_card"), ExtResource("4_insider")])

@@ -35,8 +35,8 @@ extends Node
 ## Shows the lines on show and the total, e.g. `1-15/24`.
 @export var counter: Label
 
-## Shows the visible lines of the file.
-@export var body: Label
+## Renders the visible lines of the file as Markdown.
+@export var body: MarkdownLabel
 
 ## The open file's lines, empty while closed.
 var _lines := PackedStringArray()
@@ -127,7 +127,7 @@ func _page() -> int:
 ## Shows the page from `_top` and its line counter.
 func _draw() -> void:
 	var last := mini(_top + _page(), _lines.size())
-	body.text = "\n".join(_lines.slice(_top, last))
+	body.markdown_text = TextGlyphs.patch("\n".join(_lines.slice(_top, last)))
 	counter.text = "%d-%d/%d" % [mini(_top + 1, last), last, _lines.size()]
 
 ## Redraws when a file opens or closes.

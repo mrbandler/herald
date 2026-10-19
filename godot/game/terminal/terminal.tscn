@@ -52,6 +52,7 @@
 [ext_resource type="Resource" path="res://game/data/models/volumes.tres" id="80_m_volumes"]
 [ext_resource type="Resource" path="res://game/data/atoms/modules/unlocked_modules.tres" id="81_unlocked"]
 [ext_resource type="Resource" path="res://game/data/atoms/terminal/directory.tres" id="82_directory"]
+[ext_resource type="Script" path="res://addons/markdownlabel/markdownlabel.gd" id="83_markdown"]
 
 [sub_resource type="SystemFont" id="Font_mono"]
 font_names = PackedStringArray("monospace")
@@ -257,15 +258,26 @@ offset_bottom = 30.0
 mouse_filter = 2
 color = Color(0.6, 0.42, 0.14, 1)
 
-[node name="Body" type="Label" parent="Screen/FilePanel"]
+[node name="Body" type="RichTextLabel" parent="Screen/FilePanel"]
 offset_left = 6.0
 offset_top = 36.0
 offset_right = 558.0
 offset_bottom = 267.0
-theme_override_colors/font_color = Color(0.8, 0.576, 0.2, 1)
-theme_override_constants/line_spacing = 0
-theme_override_fonts/font = SubResource("Font_mono")
-theme_override_font_sizes/font_size = 15
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.8, 0.576, 0.2, 1)
+theme_override_constants/line_separation = 0
+theme_override_fonts/normal_font = SubResource("Font_mono")
+theme_override_fonts/bold_font = SubResource("Font_mono")
+theme_override_fonts/italics_font = SubResource("Font_mono")
+theme_override_fonts/mono_font = SubResource("Font_mono")
+theme_override_font_sizes/normal_font_size = 15
+theme_override_font_sizes/bold_font_size = 15
+theme_override_font_sizes/italics_font_size = 15
+theme_override_font_sizes/mono_font_size = 15
+bbcode_enabled = true
+scroll_active = false
+autowrap_mode = 0
+script = ExtResource("83_markdown")
 
 [node name="KeyBand" type="ColorRect" parent="Screen/FilePanel"]
 offset_left = 1.0

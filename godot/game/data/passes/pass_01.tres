@@ -3,10 +3,7 @@
 [ext_resource type="Script" path="res://scripts/pass/pass_window.gd" id="1"]
 [ext_resource type="Resource" path="res://game/data/commands/station.tres" id="2"]
 [ext_resource type="Script" path="res://scripts/room/papers/paper.gd" id="3_paper"]
-
-[sub_resource type="Resource" id="Paper_letter"]
-script = ExtResource("3_paper")
-text = "Seek: set the brass wheels to the numbers on the Card, then turn slowly until the Voice comes out of the hiss. Bind: turn the black dial until the green lamp stops blinking. Speak: lean to the screen, type SEQ ADD ACK, and when the Speak lamp lights, type TX. Hold the Voice until it is sent. When the Voice is gone, pull the lamp chain and rest."
+[ext_resource type="Resource" path="res://game/data/papers/window_01/letter.tres" id="4_letter"]
 
 [sub_resource type="Resource" id="Paper_card"]
 script = ExtResource("3_paper")
@@ -29,5 +26,5 @@ card_azimuth = 214.6
 card_elevation = 38.2
 card_tuning = 52.0
 card_seed = 1
-papers = Array[ExtResource("3_paper")]([SubResource("Paper_letter"), SubResource("Paper_card")])
+papers = Array[ExtResource("3_paper")]([ExtResource("4_letter"), SubResource("Paper_card")])
 command_set = ExtResource("2")

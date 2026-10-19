@@ -1,0 +1,12 @@
+LISTENING POST 4, COLD START
+SOWING PROGRAMME GROUND SEGMENT, BUILD 7.2
+
+POWER ............................ GEOTHERMAL OK
+RECEIVER ......................... OK
+UPLINK AMPLIFIER ................. OK
+DECODER MODULES .................. LOCKED
+ARCHIVE .......................... SEALED BY PHASE
+HTB MODULE ....................... LISTENING
+
+LAST COLD START T+0Y 004D
+UPTIME 214Y 072D
