@@ -12,6 +12,10 @@ extends Command
 ## Probe commands SEQ ADD accepts in this window.
 @export var allowed := PackedStringArray(["ACK"])
 
+## The help, then the probe commands SEQ ADD accepts in this window.
+func help_text() -> String:
+	return help + "\nPROBE COMMANDS: " + " ".join(allowed)
+
 ## Lists the sequence, or adds to it or clears it by subcommand.
 func run(args: PackedStringArray) -> void:
 	if args.is_empty():

@@ -23,5 +23,5 @@ func run(args: PackedStringArray) -> void:
 
 		return
 
-	for line: String in command.help.split("\n"):
+	for line: String in command.help_text().split("\n"):
 		write(line)

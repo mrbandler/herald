@@ -13,6 +13,10 @@ extends Resource
 ## Written. Usually stdout.
 @export var out: StringEvent
 
+## The text HELP <NAME> prints. Subclasses append what changes per window.
+func help_text() -> String:
+	return help
+
 ## Executes with the words after the command name. Subclasses override.
 func run(_args: PackedStringArray) -> void:
 	pass
