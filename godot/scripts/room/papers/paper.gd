@@ -7,8 +7,9 @@ extends Resource
 ## next to this resource instead. With `fields`, a format string filled from the window.
 @export_multiline var text := ""
 
-## `PassWindow` property names that fill `text`, in order. Empty for plain text.
-@export var fields: PackedStringArray = []
+## `PassWindow` property names that fill `text`, in order. Empty for plain text. The default is
+## typed: with `[]`, the export's text-to-binary conversion drops the value.
+@export var fields := PackedStringArray()
 
 ## Width and height in metres. A letter is 0.148 x 0.21, the prayer card 0.105 x 0.074.
 @export var size := Vector2(0.148, 0.21)
