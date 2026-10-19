@@ -91,6 +91,13 @@ func test_los_cuts_the_send() -> void:
 	assert_bool(_uplink.transmitting.value).is_false()
 	assert_array(_uplink.sequence.value).contains_exactly(["ACK"])
 	assert_array(_notices.calls).is_equal(["SEQ CUT 0/1. LOS"])
+	assert_array(_out.calls).is_equal(["NO ACK SENT"])
+
+func test_los_after_the_ack_reports_nothing() -> void:
+	_uplink.acked.value = true
+	_uplink.los.raise()
+	assert_array(_out.calls).is_empty()
+	assert_array(_notices.calls).is_empty()
 
 func test_shows_the_progress_while_sending() -> void:
 	_uplink.sequence.value = PackedStringArray(["ACK", "ACK"])

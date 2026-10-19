@@ -35,7 +35,6 @@
 [ext_resource type="Resource" path="res://game/data/atoms/player/grabbing.tres" id="51_grabbing"]
 [ext_resource type="Resource" path="res://game/data/atoms/player/terminal_focused.tres" id="52_focused"]
 [ext_resource type="Resource" path="res://game/data/atoms/terminal/viewing.tres" id="60_viewing"]
-[ext_resource type="Resource" path="res://game/data/atoms/terminal/stdout.tres" id="61_stdout"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/sequence.tres" id="62_sequence"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/speak_open.tres" id="63_speak_open"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/acked.tres" id="64_acked"]
@@ -292,8 +291,6 @@ script = ExtResource("5_shift_end")
 tunables = ExtResource("21_tunables")
 morning_bell = ExtResource("31_bell")
 shift_ended = ExtResource("32_shift_ended")
-acked = ExtResource("64_acked")
-out = ExtResource("61_stdout")
 window_number = ExtResource("22_window_number")
 sleep = NodePath("../Sleep")
 lamp = NodePath("../DeskLamp")

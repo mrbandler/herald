@@ -29,7 +29,8 @@ extends Node
 ## Written. True while a transmission runs.
 @export var transmitting: BoolValue
 
-## Receives TRANSMISSION IN PROGRESS when TX is typed during a send. Usually stdout.
+## Receives TRANSMISSION IN PROGRESS when TX is typed during a send, and NO ACK SENT at LOS when
+## the heartbeat never arrived. Usually stdout.
 @export var out: StringEvent
 
 ## Raised with each send's result for the status bar.
@@ -119,10 +120,14 @@ func _on_locked(_previous: bool, current: bool) -> void:
 	if transmitting.value and not current:
 		_cut("SIGNAL LOCK LOST")
 
-## Cuts a running send at LOS.
+## Cuts a running send at LOS, and reports a heartbeat that never arrived while the Listener can
+## still read it.
 func _on_los(_payload: Variant) -> void:
 	if transmitting.value:
 		_cut("LOS")
+
+	if not acked.value:
+		out.raise("NO ACK SENT")
 
 ## HERALD takes the command in flight, or counts it garbled after a dip, and the next one starts.
 func _complete_command() -> void:
