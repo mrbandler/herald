@@ -11,6 +11,8 @@ const KEPT: PackedStringArray = [
 	"res://game/data/atoms/antenna/volume.tres",
 	"res://game/data/atoms/downlink/storage.tres",
 	"res://game/data/atoms/uplink/last_sent.tres",
+	"res://game/data/atoms/uplink/ack_heard.tres",
+	"res://game/data/atoms/downlink/held_keys.tres",
 ]
 
 func test_every_value_atom_is_reset_or_kept() -> void:

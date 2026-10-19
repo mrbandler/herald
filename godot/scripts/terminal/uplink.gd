@@ -45,6 +45,10 @@ extends Node
 ## Written. True once HERALD received ACK.
 @export var acked: BoolValue
 
+## Written at LOS: whether HERALD received ACK this window. Kept across windows, so the next
+## manifest knows whether to hold its AUTH keys back.
+@export var ack_heard: BoolValue
+
 ## Raised at LOS when HERALD never received ACK, for the alarm.
 @export var ack_missed: Event
 
@@ -131,6 +135,7 @@ func _on_los(_payload: Variant) -> void:
 	if transmitting.value:
 		_cut("LOS")
 
+	ack_heard.value = acked.value
 	if acked.value:
 		return
 

@@ -23,6 +23,9 @@ enum Grade {
 ## the longest line, `RECV 123 AUTH [...] 480/480`, beside the storage readout.
 @export var bar_width := 10
 
+## The manifest's extra line when HERALD holds AUTH keys back for a missed ACK.
+@export var keys_held_line := "-- HERALD HOLDS THE NEXT PHASE BACK --"
+
 ## Lost without lock, noisy below the `margin` signal strength, clean at or above it.
 func grade(locked: bool, strength: float, margin: float) -> Grade:
 	if not locked:

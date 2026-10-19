@@ -62,6 +62,8 @@
 [ext_resource type="AudioStream" path="res://game/data/audio/ack_alarm.tres" id="90_ack_alarm"]
 [ext_resource type="Resource" path="res://game/data/atoms/terminal/alert.tres" id="91_alert"]
 [ext_resource type="Script" path="res://scripts/terminal/alert_popup.gd" id="92_alert_popup"]
+[ext_resource type="Resource" path="res://game/data/atoms/uplink/ack_heard.tres" id="93_ack_heard"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/held_keys.tres" id="94_held_keys"]
 
 [sub_resource type="SystemFont" id="Font_mono"]
 font_names = PackedStringArray("monospace")
@@ -533,6 +535,7 @@ receiver_model = ExtResource("62_m_receiver")
 signal_strength = ExtResource("41_strength")
 status_notice = ExtResource("56_notice")
 acked = ExtResource("34_acked")
+ack_heard = ExtResource("93_ack_heard")
 ack_missed = ExtResource("89_ack_missed")
 alert = ExtResource("91_alert")
 
@@ -549,6 +552,8 @@ speak_opened = ExtResource("63_speak_opened")
 downlink_open = ExtResource("59_dl_open")
 manifest = ExtResource("50_manifest")
 manifest_received = ExtResource("51_manifest_received")
+ack_heard = ExtResource("93_ack_heard")
+held_keys = ExtResource("94_held_keys")
 download_queue = ExtResource("52_queue")
 storage = ExtResource("53_storage")
 download_received = ExtResource("54_dl_received")
