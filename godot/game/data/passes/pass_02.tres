@@ -1,16 +1,15 @@
-[gd_resource type="Resource" script_class="PassWindow" format=3]
+[gd_resource type="Resource" script_class="PassWindow" format=3 uid="uid://cb703ymmsb7yu"]
 
-[ext_resource type="Script" path="res://scripts/pass/pass_window.gd" id="1"]
+[ext_resource type="Script" uid="uid://c47dbxuo8d1i" path="res://scripts/pass/pass_window.gd" id="1"]
 [ext_resource type="Resource" path="res://game/data/commands/station.tres" id="2"]
-[ext_resource type="Script" path="res://scripts/terminal/downlink/manifest_item.gd" id="3"]
-[ext_resource type="Script" path="res://scripts/room/papers/paper.gd" id="3_paper"]
+[ext_resource type="Script" uid="uid://brwtsdfx0ckf0" path="res://scripts/terminal/downlink/manifest_item.gd" id="3"]
+[ext_resource type="Script" uid="uid://yriiq0w5gpfr" path="res://scripts/room/papers/paper.gd" id="3_paper"]
 [ext_resource type="Resource" path="res://game/data/papers/window_02/insider.tres" id="4_insider"]
 
 [sub_resource type="Resource" id="Item_21"]
 script = ExtResource("3")
 id = 21
 type = "AUTH"
-size = 1
 rows = 16
 note = "KEY TLM"
 key_for = "TLM"
@@ -19,7 +18,6 @@ key_for = "TLM"
 script = ExtResource("3")
 id = 22
 type = "TLM"
-size = 1
 rows = 32
 note = "AUTO"
 content = "HERALD TELEMETRY  T+214Y 077D
@@ -52,6 +50,6 @@ card_azimuth = 221.3
 card_elevation = 41.7
 card_tuning = 55.0
 card_seed = 2
+papers = Array[ExtResource("3_paper")]([SubResource("Paper_card"), ExtResource("4_insider")])
 manifest = Array[ExtResource("3")]([SubResource("Item_21"), SubResource("Item_22")])
 command_set = ExtResource("2")
-papers = Array[ExtResource("3_paper")]([SubResource("Paper_card"), ExtResource("4_insider")])

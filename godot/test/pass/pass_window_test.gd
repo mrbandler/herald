@@ -56,6 +56,7 @@ func test_window_papers_carry_the_letter_the_prayer_and_a_capsule() -> void:
 	var prayer := one.papers[1].text_for(one)
 	assert_str(prayer).contains("AZ 214.6  EL 38.2")
 	assert_str(prayer).contains("DIAL 52")
+	assert_str(two.papers[0].text_for(two)).contains("AZ 221.3  EL 41.7")
 	assert_float(two.papers[0].arrives_at).is_equal(0.0)
 	assert_float(two.papers[1].arrives_at).is_between(1.0, two.aos)
 
