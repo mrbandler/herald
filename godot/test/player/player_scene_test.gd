@@ -20,6 +20,8 @@ func test_player_scene_is_wired() -> void:
 	assert_object(crosshair.lean_amount).is_same(lean.lean_amount)
 	assert_object(crosshair.placing).is_same(picker.placing)
 	assert_object(crosshair.pointing).is_same(picker.pointing)
+	assert_object(crosshair.blocked).is_same(picker.blocked)
+	assert_object(crosshair.lock_icon).is_not_null()
 	assert_object(crosshair.point_icon).is_not_null()
 	var held := scene.get_node("Pivot/Camera3D/HeldPaper") as HeldPaper
 	assert_object(crosshair.paper_raised).is_same(held.raised)

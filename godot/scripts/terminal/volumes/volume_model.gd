@@ -42,7 +42,9 @@ func resolve(directory: String, target: String) -> String:
 		return _parent(directory)
 
 	if not upper.contains(":"):
-		return upper + ":" if directory.is_empty() else directory + upper + "/"
+		# A trailing slash, as Tab completion types it, names the same directory.
+		var name := upper.trim_suffix("/")
+		return name + ":" if directory.is_empty() else directory + name + "/"
 
 	return upper if upper.ends_with(":") or upper.ends_with("/") else upper + "/"
 
@@ -117,6 +119,21 @@ func _parent(directory: String) -> String:
 		return ""
 
 	return directory.get_slice(":", 0) + ":"
+
+
+## Other unlocked names that lift a volume's seal besides its own, e.g. VERDICT for ARC.
+@export var seal_openers: Dictionary[String, PackedStringArray] = { }
+
+## True while `volume` is sealed and no AUTH key in `unlocked` has opened it.
+func is_sealed(volume: String, unlocked: PackedStringArray) -> bool:
+	if not sealed.has(volume) or unlocked.has(volume):
+		return false
+
+	for opener: String in seal_openers.get(volume, PackedStringArray()):
+		if unlocked.has(opener):
+			return false
+
+	return true
 
 ## True when nothing unlocks `file`, or what unlocks it is in `unlocked`.
 func _unlocked(file: StationFile, unlocked: PackedStringArray) -> bool:

@@ -60,6 +60,7 @@ func test_downlink_is_wired() -> void:
 	assert_object(uplink.progress_line).is_same(downlink.progress_line)
 	assert_object(uplink.status_notice).is_same(downlink.status_notice)
 	assert_object(uplink.receiver_model).is_same(downlink.receiver_model)
+	assert_object(uplink.last_sent).is_same(downlink.last_sent)
 	assert_object(uplink.signal_strength).is_same(downlink.signal_strength)
 	assert_str(uplink.acked.resource_path.get_file()).is_equal("acked.tres")
 	assert_object(progress.storage).is_same(downlink.storage)

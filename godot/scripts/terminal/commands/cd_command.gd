@@ -24,7 +24,7 @@ func run(args: PackedStringArray) -> void:
 
 	if not target.is_empty() and not volume_model.volumes.has(volume):
 		write("%s UNKNOWN VOLUME" % volume)
-	elif volume_model.sealed.has(volume):
+	elif volume_model.is_sealed(volume, unlocked_modules.value):
 		write(" %s: SEALED" % volume)
 	elif not volume_model.exists(target, unlocked_modules.value):
 		write("%s NOT FOUND" % args[0])

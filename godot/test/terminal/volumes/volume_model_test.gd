@@ -1,5 +1,7 @@
 extends GdUnitTestSuite
 
+const VOLUMES := "res://game/data/models/volumes.tres"
+
 var _model: VolumeModel
 
 func _file(path: String, text: String, unlocked_by: String = "") -> StationFile:
@@ -76,7 +78,7 @@ func test_the_common_start_of_names() -> void:
 	assert_str(VolumeModel.common_start(PackedStringArray())).is_empty()
 
 func test_the_game_files_fit_the_popup_and_their_volumes() -> void:
-	var game: VolumeModel = load("res://game/data/models/volumes.tres")
+	var game: VolumeModel = load(VOLUMES)
 	var paths := PackedStringArray()
 	for file: StationFile in game.files:
 		paths.append(file.path)
@@ -89,5 +91,22 @@ func test_the_game_files_fit_the_popup_and_their_volumes() -> void:
 
 	var expected := ["HTB:HEARTBEAT.LOG", "USR:OKONJO/NIGHTS.TXT", "USR:OKONJO/WAKE.TXT"]
 	expected.append_array(["SYS:BOOT.LOG", "SYS:TLM.MAN", "SYS:IMG.MAN"])
+	expected.append_array(["ARC:SOWING.TXT", "ARC:BURNING.LOG", "SYS:SPC.MAN", "ARC:PILLAR.TXT"])
 	assert_array(paths).is_equal(PackedStringArray(expected))
 	assert_object(game.find("SYS:TLM.MAN", PackedStringArray())).is_null()
+
+func test_an_unlocked_archive_is_no_longer_sealed() -> void:
+	var model := VolumeModel.new()
+	assert_bool(model.is_sealed("ARC", PackedStringArray())).is_true()
+	assert_bool(model.is_sealed("ARC", PackedStringArray(["ARC"]))).is_false()
+	assert_bool(model.is_sealed("USR", PackedStringArray())).is_false()
+
+func test_a_trailing_slash_names_the_same_directory() -> void:
+	assert_str(_model.resolve("USR:", "OKONJO/")).is_equal("USR:OKONJO/")
+	assert_str(_model.resolve("", "USR/")).is_equal("USR:")
+	assert_str(_model.resolve("", "USR:OKONJO/")).is_equal("USR:OKONJO/")
+
+func test_the_verdict_also_lifts_the_archive_seal() -> void:
+	var game: VolumeModel = load(VOLUMES)
+	assert_bool(game.is_sealed("ARC", PackedStringArray(["VERDICT"]))).is_false()
+	assert_bool(game.is_sealed("ARC", PackedStringArray(["TLM"]))).is_true()

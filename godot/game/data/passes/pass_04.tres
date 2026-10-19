@@ -1,0 +1,91 @@
+[gd_resource type="Resource" script_class="PassWindow" format=3]
+
+[ext_resource type="Script" path="res://scripts/pass/pass_window.gd" id="1"]
+[ext_resource type="Resource" path="res://game/data/commands/station.tres" id="2"]
+[ext_resource type="Script" path="res://scripts/terminal/downlink/manifest_item.gd" id="3"]
+[ext_resource type="Script" path="res://scripts/room/papers/paper.gd" id="3_paper"]
+[ext_resource type="Texture2D" path="res://assets/nasa/cal_bars.png" id="5_cal"]
+[ext_resource type="Texture2D" path="res://assets/nasa/reffa.png" id="6_reffa"]
+[ext_resource type="Texture2D" path="res://assets/nasa/tarba.png" id="7_tarba"]
+[ext_resource type="Resource" path="res://game/data/papers/window_04/letter.tres" id="8_letter"]
+
+[sub_resource type="Resource" id="Item_41"]
+script = ExtResource("3")
+id = 41
+type = "AUTH"
+rows = 16
+note = "KEY ARC"
+key_for = "ARC"
+
+[sub_resource type="Resource" id="Item_42"]
+script = ExtResource("3")
+id = 42
+type = "CAL"
+rows = 60
+note = "WIDE"
+image = ExtResource("5_cal")
+line_length = 98.6
+phase = 0.58
+
+[sub_resource type="Resource" id="Item_43"]
+script = ExtResource("3")
+id = 43
+type = "IMG"
+size = 4
+rows = 120
+note = "REFFA WIDE"
+image = ExtResource("6_reffa")
+line_length = 98.6
+phase = 0.21
+
+[sub_resource type="Resource" id="Item_44"]
+script = ExtResource("3")
+id = 44
+type = "IMG"
+size = 4
+rows = 120
+note = "TARBA WIDE"
+image = ExtResource("7_tarba")
+line_length = 98.6
+phase = 0.66
+
+[sub_resource type="Resource" id="Item_45"]
+script = ExtResource("3")
+id = 45
+type = "TLM"
+rows = 32
+note = "AUTO"
+content = "HERALD TELEMETRY  T+214Y 080D
+BUS      NOMINAL   BATTERY 57%
+POWER    17 / DRAW 11 / SURPLUS 6
+NAC      READY   WAC ON   SPC ON
+AMP      ON   BANK B ON   HEATERS ON
+POSITION FALLING INWARD PAST PRIMA
+POINTING NEXT PASS AZ +0.4 EL -0.2
+STATUS   PHASE 4. AWAITING TARGETS"
+
+[sub_resource type="Resource" id="Paper_card"]
+script = ExtResource("3_paper")
+text = "TONIGHT'S PRAYER
+SEEK THE VOICE AT
+AZ %05.1f  EL %04.1f
+BIND IT AT DIAL %.0f"
+fields = PackedStringArray("card_azimuth", "card_elevation", "card_tuning")
+size = Vector2(0.105, 0.074)
+centred = true
+
+[resource]
+script = ExtResource("1")
+number = 4
+aos = 30.0
+speak = 240.0
+los = 270.0
+bell = 330.0
+clock_start = 9600.0
+card_azimuth = 233.5
+card_elevation = 49.6
+card_tuning = 61.0
+card_seed = 4
+papers = Array[ExtResource("3_paper")]([SubResource("Paper_card"), ExtResource("8_letter")])
+manifest = Array[ExtResource("3")]([SubResource("Item_41"), SubResource("Item_42"), SubResource("Item_43"), SubResource("Item_44"), SubResource("Item_45")])
+command_set = ExtResource("2")

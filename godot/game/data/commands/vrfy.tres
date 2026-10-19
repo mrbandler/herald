@@ -8,6 +8,7 @@
 
 [resource]
 script = ExtResource("1_script")
+unlocked_in = 2
 name = "VRFY"
 help = "VRFY <ID>         INTEGRITY OF A STORED ITEM"
 out = ExtResource("2_stdout")

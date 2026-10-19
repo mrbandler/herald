@@ -8,6 +8,7 @@
 
 [resource]
 script = ExtResource("1_script")
+unlocked_in = 2
 name = "STAT"
 help = "STAT              RUNNING AND QUEUED DOWNLOADS"
 out = ExtResource("2_stdout")

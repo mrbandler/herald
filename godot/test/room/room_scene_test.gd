@@ -9,7 +9,7 @@ func test_resetter_and_loader_come_first() -> void:
 	assert_str(room.get_child(0).name).is_equal("Resetter")
 	assert_str(room.get_child(1).name).is_equal("PassLoader")
 	var loader := room.get_child(1) as PassLoader
-	assert_int(loader.passes.size()).is_equal(3)
+	assert_int(loader.passes.size()).is_equal(8)
 	assert_int(loader.passes[0].number).is_equal(1)
 	assert_int(loader.passes[1].number).is_equal(2)
 
@@ -18,9 +18,11 @@ func test_room_holds_every_feature() -> void:
 	for child: String in ["Pass", "Player", "Antenna", "Terminal", "ShiftEnd", "DebugCommands"]:
 		assert_object(room.get_node_or_null(child)).is_not_null()
 
-func test_room_is_the_main_scene() -> void:
+func test_the_boot_screen_leads_into_the_room() -> void:
 	var main: String = ProjectSettings.get_setting("application/run/main_scene")
-	assert_str(main).is_equal(ROOM)
+	var boot: BootScreen = auto_free((load(main) as PackedScene).instantiate())
+	assert_str(boot.next_scene).is_equal(ROOM)
+	assert_str((boot.get_node("Column/Advice") as Label).text).contains("HEADPHONES")
 
 func test_lamp_chain_ends_the_shift_after_los() -> void:
 	var room: Node = auto_free((load(ROOM) as PackedScene).instantiate())
@@ -90,7 +92,22 @@ func test_shift_end_advances_the_campaign() -> void:
 func test_the_monitor_stands_in_the_room_with_window_three() -> void:
 	var room: Node = auto_free((load(ROOM) as PackedScene).instantiate())
 	var loader := room.get_node("PassLoader") as PassLoader
-	assert_int(loader.passes.size()).is_equal(3)
+	assert_int(loader.passes.size()).is_equal(8)
 	assert_int(loader.passes[2].number).is_equal(3)
 	var driver := room.get_node("Monitor/Driver") as Monitor
 	assert_str(driver.shown_item.resource_path.get_file()).is_equal("shown_item.tres")
+
+func test_the_checkpoint_carries_every_kept_atom_and_the_end_card_uses_it() -> void:
+	var room: Node = auto_free((load(ROOM) as PackedScene).instantiate())
+	var checkpoint := room.get_node("Checkpoint") as Checkpoint
+	var paths := PackedStringArray()
+	for atom: Value in checkpoint.atoms:
+		paths.append(atom.resource_path.get_file())
+	for kept: String in ["window_number.tres", "command_history.tres", "unlocked_modules.tres"]:
+		assert_array(paths).contains([kept])
+	for kept: String in ["storage.tres", "last_sent.tres", "ack_heard.tres", "held_keys.tres"]:
+		assert_array(paths).contains([kept])
+	assert_array(paths).contains(["placed.tres"])
+	var end := room.get_node("ShiftEnd") as ShiftEnd
+	assert_object(end.end_card).is_same(room.get_node("EndCard"))
+	assert_object((room.get_node("EndCard") as EndCard).checkpoint).is_same(checkpoint)

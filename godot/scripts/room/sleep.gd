@@ -25,18 +25,30 @@ extends Node
 ## Stops the blinking so the fall takes over.
 @export var shift_ended: Event
 
+## Darkens and blurs the view as the Listener nods off. Its material takes `amount` 0..1.
+@export var haze: CanvasItem
+
 ## Written. How sleepy the Listener is, 0..1, so the look can slow down.
 @export var drowsiness: FloatValue
 
 ## Blink cycles since the warning started; the fraction is the place in the current blink.
 var _cycle := 0.0
 
+## How soft the lids' edges are, 0..1: the drowsiness while blinking, 1 while falling asleep.
+var _softness := 0.0
+
 ## False once the shift has ended and the fall has taken over.
 var _awake := true
 
-## Listens for the end of the shift.
+## Listens for the end of the shift, clears the view, and lets the sound rise out of the muffle
+## the last shift ended in.
 func _ready() -> void:
 	shift_ended.raised.connect(_on_shift_ended)
+	_set_haze(0.0)
+	_muffle(1.0)
+	# Runs while the standby card holds the room paused, so the station's sound rises with it.
+	var rise := create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	rise.tween_method(_muffle, 1.0, 0.0, model.wake_seconds)
 
 ## Blinks every frame.
 func _process(delta: float) -> void:
@@ -53,28 +65,66 @@ func tick(delta: float) -> void:
 	if drowsy <= 0.0:
 		_cycle = 0.0
 		_pose(0.0, 0.0, Vector3.ZERO)
+		_set_haze(0.0)
 
 		return
 
+	_softness = drowsy
 	_cycle += delta / model.blink_period(drowsy)
 	var closure := model.lid_closure(fposmod(_cycle, 1.0), drowsy)
+	_set_haze(model.haze(drowsy, closure))
 
 	_pose(closure, model.sag_degrees * closure * drowsy, Vector3.ZERO)
 
 ## Poses the lids and the head at `amount` 0..1 through falling asleep.
 func fall(amount: float) -> void:
 	var drop := model.asleep_drop(amount)
+	_softness = 1.0
 
 	_pose(model.asleep_closure(amount), model.drop_degrees * drop, model.drop_offset * drop)
+	_muffle(amount)
+	_set_haze(lerpf(model.haze_at_bell, 1.0, amount))
+
+## Muffles every sound at `amount` 0..1 through falling asleep: the master bus' low-pass closes
+## and its volume sinks.
+func _muffle(amount: float) -> void:
+	for i: int in range(AudioServer.get_bus_effect_count(0)):
+		var low_pass := AudioServer.get_bus_effect(0, i) as AudioEffectLowPassFilter
+		if low_pass != null:
+			low_pass.cutoff_hz = model.muffled_cutoff(amount)
+
+	AudioServer.set_bus_volume_db(0, model.muffled_db * amount)
+
+## Darkens and blurs the view by `amount` 0..1, and hides the haze while clear.
+func _set_haze(amount: float) -> void:
+	if haze == null:
+		return
+
+	haze.visible = amount > 0.0
+	(haze.material as ShaderMaterial).set_shader_parameter("amount", amount)
 
 ## Sets the lids to `closure` 0..1 and the head to `pitch_down` degrees and `offset` metres.
 func _pose(closure: float, pitch_down: float, offset: Vector3) -> void:
-	# Slightly past half, so the lids overlap when shut.
-	top_lid.anchor_bottom = 0.52 * closure
-	bottom_lid.anchor_top = 1.0 - 0.52 * closure
+	# Slightly past half, so the lids overlap when shut. The rects reach past the edge by the
+	# feather, which the lid shader fades out; open lids draw nothing.
+	var edge := 0.52 * closure
+	var feather := model.lid_feather * _softness if closure > 0.0 else 0.0
+	top_lid.anchor_bottom = minf(edge + feather, 1.0)
+	bottom_lid.anchor_top = maxf(1.0 - edge - feather, 0.0)
+	_shade(top_lid, edge, feather)
+	_shade(bottom_lid, 1.0 - edge, feather)
 	camera.rotation_degrees.x = -pitch_down
 	camera.position = offset
 
 ## Stops the blinking.
 func _on_shift_ended(_payload: Variant) -> void:
 	_awake = false
+
+## Hands a lid's soft-edge shader its edge and feather, if the lid has one.
+func _shade(lid: Control, edge: float, feather: float) -> void:
+	var material := lid.material as ShaderMaterial
+	if material == null:
+		return
+
+	material.set_shader_parameter("edge", edge)
+	material.set_shader_parameter("feather", feather)

@@ -24,6 +24,12 @@ extends TextureRect
 ## Read. Shows the place icon.
 @export var placing: BoolValue
 
+## Shown over something that cannot be used yet.
+@export var lock_icon: Texture2D
+
+## Read. Shows the lock icon.
+@export var blocked: BoolValue
+
 ## Shown over a button.
 @export var point_icon: Texture2D
 
@@ -38,7 +44,9 @@ extends TextureRect
 
 ## Picks the icon every frame, and hides it while fully leaned in or reading a raised paper.
 func _process(_delta: float) -> void:
-	texture = pick_icon(hovering.value, grabbing.value, placing.value, pointing.value)
+	var locked := blocked != null and blocked.value
+	var icon := pick_icon(hovering.value, grabbing.value, placing.value, pointing.value)
+	texture = lock_icon if locked else icon
 	visible = shown(lean_amount.value, paper_raised.value)
 
 ## False at a full lean or over a raised paper, so the crosshair stays off text.

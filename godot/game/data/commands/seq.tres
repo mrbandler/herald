@@ -67,7 +67,7 @@ script = ExtResource("5_herald")
 name = "DESCEND"
 usage = "DESCEND"
 description = "PLUNGE INTO CANDRA. ENDS HERALD"
-unlocked_by = "DESCEND"
+unlocked_by = "VERDICT"
 hidden = true
 
 [sub_resource type="Resource" id="Herald_transfer"]
@@ -75,7 +75,7 @@ script = ExtResource("5_herald")
 name = "TRANSFER"
 usage = "TRANSFER"
 description = "BURN FOR TARBA. HERALD LIVES ON"
-unlocked_by = "TRANSFER"
+unlocked_by = "VERDICT"
 hidden = true
 
 [resource]

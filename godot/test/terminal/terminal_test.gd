@@ -193,3 +193,8 @@ func test_every_typed_key_clicks() -> void:
 	_terminal.alert.value = Alert.new()
 	get_tree().root.push_input(key)
 	assert_int(clicks.calls.size()).is_equal(1)
+
+func test_a_locked_command_answers_locked() -> void:
+	_seq.unlocked_in = 2
+	_terminal.submit("SEQ")
+	assert_array(_terminal.lines).contains_exactly(["LP4> SEQ", "SEQ LOCKED"])

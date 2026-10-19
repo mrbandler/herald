@@ -212,9 +212,15 @@ func submit(line: String) -> void:
 
 	_remember(echo)
 
-	var command := (current_pass.value as PassWindow).command_set.find(words[0])
+	var window := current_pass.value as PassWindow
+	var command := window.command_set.find(words[0])
 	if command == null:
 		out.raise("UNKNOWN COMMAND")
+
+		return
+
+	if command.locked_in(window):
+		out.raise("%s LOCKED" % command.name)
 
 		return
 

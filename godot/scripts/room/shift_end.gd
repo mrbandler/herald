@@ -23,6 +23,24 @@ extends Node
 ## Dimmed to dark while the Listener falls asleep: the desk lamps.
 @export var lamps: Array[Light3D] = []
 
+## Read. The window ending, for its required command. Optional.
+@export var current_pass: ResourceValue
+
+## Read. The commands HERALD received this window.
+@export var last_sent: StringListValue
+
+## Shown instead of the next window when the required command never arrived.
+@export var end_card: EndCard
+
+## Read. What the Listener kept, judged by the ending.
+@export var storage: ResourceListValue
+
+## Picks the ending after the final window.
+@export var ending_model: EndingModel
+
+## The heading of the card for a missed required command.
+@export var lost_title := "HERALD IS LOST"
+
 ## True once the shift has ended, so a second bell or pull does nothing.
 var _ended := false
 
@@ -37,7 +55,10 @@ func _on_bell(_payload: Variant) -> void:
 		return
 
 	_ended = true
-	window_number.value += 1
+	var missed := missed_command()
+	if missed.is_empty() and not _final():
+		window_number.value += 1
+
 	shift_ended.raise()
 
 	if sleep == null:
@@ -49,4 +70,36 @@ func _on_bell(_payload: Variant) -> void:
 	for lamp: Light3D in lamps:
 		tween.parallel().tween_property(lamp, "light_energy", 0.0, tunables.shift_fade_seconds)
 
-	tween.tween_callback(get_tree().reload_current_scene)
+	tween.tween_callback(_after_sleep.bind(missed))
+
+## The command this window required that HERALD never received; empty when none. A key held back
+## for a missed ACK makes it unsendable, and that loses too.
+func missed_command() -> String:
+	var window := current_pass.value as PassWindow if current_pass != null else null
+	if window == null or window.required.is_empty():
+		return ""
+
+	return "" if last_sent.value.has(window.required) else window.required
+
+## The heading and text of the ending the final window earned.
+func ending() -> PackedStringArray:
+	return ending_model.pick(last_sent.value, storage.value)
+
+## True on the final window.
+func _final() -> bool:
+	var window := current_pass.value as PassWindow if current_pass != null else null
+	return window != null and window.final
+
+## Reloads into the next window, or shows the end card: a missed required command, or the
+## ending after the final window.
+func _after_sleep(missed: String) -> void:
+	if end_card == null or (missed.is_empty() and not _final()):
+		get_tree().reload_current_scene()
+		return
+
+	if not missed.is_empty():
+		end_card.show_card(lost_title, (current_pass.value as PassWindow).missed_text, true)
+		return
+
+	var earned := ending()
+	end_card.show_card(earned[0], earned[1], false)

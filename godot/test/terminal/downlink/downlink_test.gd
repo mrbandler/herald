@@ -35,6 +35,7 @@ func before_test() -> void:
 	_downlink.ack_heard = BoolValue.new()
 	_downlink.ack_heard.value = true
 	_downlink.held_keys = ResourceListValue.new()
+	_downlink.last_sent = StringListValue.new()
 	_downlink.download_queue = ResourceListValue.new()
 	_downlink.storage = ResourceListValue.new()
 	_downlink.download_received = IntValue.new()
@@ -109,6 +110,17 @@ func test_a_heard_ack_releases_the_held_keys_first() -> void:
 	_receive_manifest()
 	assert_array(_downlink.manifest.value).contains_exactly([held, own])
 	assert_array(_downlink.held_keys.value).is_empty()
+
+func test_a_command_heard_last_window_adds_its_product() -> void:
+	var own := _item(41, 16)
+	var picture := _item(51, 120)
+	picture.type = "IMG"
+	var window := _window([own])
+	window.requests = { "IMG 3 H": picture }
+	_downlink.current_pass.value = window
+	_downlink.last_sent.value = PackedStringArray(["IMG 3 H", "ACK"])
+	_receive_manifest()
+	assert_array(_downlink.manifest.value).contains_exactly([own, picture])
 
 func test_a_lost_lock_restarts_the_push() -> void:
 	_open_and_lock()
@@ -260,3 +272,14 @@ func test_text_leaves_the_monitor_alone() -> void:
 	_run(1.0)
 	assert_int(_downlink.monitor_mode.value).is_equal(MonitorModel.Mode.SNOW)
 	assert_object(_downlink.shown_item.value).is_null()
+
+func test_the_key_for_a_required_command_is_never_held_back() -> void:
+	var key := _item(71, 16)
+	key.key_for = "INSERT"
+	var window := _window([key])
+	window.required = "INSERT"
+	_downlink.current_pass.value = window
+	_downlink.ack_heard.value = false
+	_receive_manifest()
+	assert_array(_downlink.manifest.value).contains_exactly([key])
+	assert_array(_downlink.held_keys.value).is_empty()

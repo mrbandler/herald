@@ -35,7 +35,7 @@ func _list_volumes() -> void:
 
 ## SEALED, or `<n> FILE(S)` for `volume`.
 func _count(volume: String) -> String:
-	if volume_model.sealed.has(volume):
+	if volume_model.is_sealed(volume, unlocked_modules.value):
 		return "SEALED"
 
 	var count := volume_model.files_under(volume + ":", unlocked_modules.value).size()
@@ -48,7 +48,7 @@ func _list_directory(target: String, typed: String) -> void:
 		write("%s UNKNOWN VOLUME" % volume)
 		return
 
-	if volume_model.sealed.has(volume):
+	if volume_model.is_sealed(volume, unlocked_modules.value):
 		write(" %s: SEALED" % volume)
 		return
 

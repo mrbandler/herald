@@ -12,6 +12,7 @@
 
 [resource]
 script = ExtResource("1_script")
+unlocked_in = 2
 name = "GET"
 help = "GET <ID>          DOWNLOAD WHILE SIGNAL LOCKED"
 out = ExtResource("2_stdout")

@@ -24,4 +24,4 @@
 
 [resource]
 script = ExtResource("1_script")
-commands = Array[ExtResource("2_command")]([ExtResource("3_help"), ExtResource("4_seq"), ExtResource("5_tx"), ExtResource("6_clr"), ExtResource("7_manifest"), ExtResource("8_get"), ExtResource("9_stat"), ExtResource("10_store"), ExtResource("11_del"), ExtResource("12_mod"), ExtResource("13_unlock"), ExtResource("14_decode"), ExtResource("15_vrfy"), ExtResource("16_tag"), ExtResource("17_ls"), ExtResource("19_cd"), ExtResource("18_read"), ExtResource("21_show"), ExtResource("20_exit")])
+commands = Array[ExtResource("2_command")]([ExtResource("4_seq"), ExtResource("5_tx"), ExtResource("17_ls"), ExtResource("19_cd"), ExtResource("18_read"), ExtResource("6_clr"), ExtResource("3_help"), ExtResource("7_manifest"), ExtResource("8_get"), ExtResource("9_stat"), ExtResource("11_del"), ExtResource("10_store"), ExtResource("16_tag"), ExtResource("13_unlock"), ExtResource("12_mod"), ExtResource("15_vrfy"), ExtResource("14_decode"), ExtResource("21_show"), ExtResource("20_exit")])

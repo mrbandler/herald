@@ -45,3 +45,10 @@ func test_prints_the_list_with_each_items_state() -> void:
 		" 24   TLM   1     STORED",
 	]
 	assert_array(_out.calls).is_equal(expected)
+
+func test_a_used_key_shows_used() -> void:
+	_manifest.manifest_received.value = true
+	_manifest.used_keys = StringListValue.new()
+	_manifest.used_keys.value = PackedStringArray(["21"])
+	_manifest.run(PackedStringArray())
+	assert_str(_out.calls[2]).is_equal(" 21   AUTH  1     USED     PHASE 2")

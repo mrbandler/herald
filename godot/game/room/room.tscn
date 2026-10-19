@@ -80,6 +80,7 @@
 [ext_resource type="Resource" path="res://game/data/papers/guide/missed_ack.tres" id="118_missed_ack"]
 [ext_resource type="Resource" path="res://game/data/atoms/room/placed.tres" id="119_placed"]
 [ext_resource type="Resource" path="res://game/data/atoms/player/pointing.tres" id="120_pointing"]
+[ext_resource type="Resource" path="res://game/data/atoms/player/blocked.tres" id="139_blocked"]
 [ext_resource type="PackedScene" path="res://game/room/bankers_lamp.tscn" id="121_bankers_lamp"]
 [ext_resource type="PackedScene" path="res://game/room/arm_lamp.tscn" id="122_arm_lamp"]
 [ext_resource type="Material" path="res://game/data/materials/tube_paint.tres" id="123_tube_paint"]
@@ -88,6 +89,24 @@
 [ext_resource type="Material" path="res://game/data/materials/floor.tres" id="m_floor"]
 [ext_resource type="Material" path="res://game/data/materials/knob.tres" id="m_knob"]
 [ext_resource type="Material" path="res://game/data/materials/wall.tres" id="m_wall"]
+[ext_resource type="Resource" path="res://game/data/passes/pass_04.tres" id="124_pass_04"]
+[ext_resource type="Resource" path="res://game/data/passes/pass_05.tres" id="125_pass_05"]
+[ext_resource type="Resource" path="res://game/data/passes/pass_06.tres" id="126_pass_06"]
+[ext_resource type="Script" path="res://scripts/room/checkpoint.gd" id="127_checkpoint"]
+[ext_resource type="PackedScene" path="res://game/room/end_card.tscn" id="128_end_card"]
+[ext_resource type="Resource" path="res://game/data/atoms/terminal/command_history.tres" id="129_history"]
+[ext_resource type="Resource" path="res://game/data/atoms/modules/unlocked_modules.tres" id="130_unlocked"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/storage.tres" id="131_storage"]
+[ext_resource type="Resource" path="res://game/data/atoms/uplink/last_sent.tres" id="132_last_sent"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/held_keys.tres" id="133_held_keys"]
+[ext_resource type="Resource" path="res://game/data/passes/pass_07.tres" id="134_pass_07"]
+[ext_resource type="Resource" path="res://game/data/passes/pass_08.tres" id="135_pass_08"]
+[ext_resource type="Resource" path="res://game/data/models/ending.tres" id="136_ending"]
+[ext_resource type="PackedScene" path="res://game/music/music.tscn" id="137_music"]
+[ext_resource type="Shader" path="res://game/room/haze.gdshader" id="138_haze"]
+[ext_resource type="PackedScene" path="res://game/room/wake_card.tscn" id="140_wake"]
+[ext_resource type="Shader" path="res://game/room/eyelid.gdshader" id="141_eyelid"]
+[ext_resource type="Resource" path="res://game/data/atoms/modules/used_keys.tres" id="142_used_keys"]
 
 [sub_resource type="Environment" id="Environment_room"]
 background_mode = 1
@@ -125,15 +144,28 @@ size = Vector3(1.65, 0.004, 0.31)
 [sub_resource type="BoxShape3D" id="Shape_pin_wall"]
 size = Vector3(2.4, 0.85, 0.004)
 
+
+[sub_resource type="ShaderMaterial" id="Material_haze"]
+shader = ExtResource("138_haze")
+
+
+[sub_resource type="ShaderMaterial" id="Material_lid_top"]
+shader = ExtResource("141_eyelid")
+
+[sub_resource type="ShaderMaterial" id="Material_lid_bottom"]
+shader = ExtResource("141_eyelid")
+shader_parameter/edge = 1.0
+shader_parameter/from_top = false
+
 [node name="Room" type="Node3D" unique_id=1331904615]
 
 [node name="Resetter" type="Node" parent="." unique_id=221681823]
 script = ExtResource("1_resetter")
-atoms = Array[ExtResource("2_value")]([ExtResource("30_time"), ExtResource("40_az"), ExtResource("41_el"), ExtResource("42_tune"), ExtResource("43_strength"), ExtResource("44_quality"), ExtResource("45_carrier"), ExtResource("46_locked"), ExtResource("48_force"), ExtResource("50_hovering"), ExtResource("51_grabbing"), ExtResource("52_focused"), ExtResource("60_viewing"), ExtResource("62_sequence"), ExtResource("63_speak_open"), ExtResource("64_acked"), ExtResource("65_transmitting"), ExtResource("70_chain_unlocked"), ExtResource("80_manifest"), ExtResource("81_manifest_received"), ExtResource("82_queue"), ExtResource("83_dl_received"), ExtResource("84_progress"), ExtResource("85_dl_open"), ExtResource("86_lean"), ExtResource("87_drowsy"), ExtResource("88_directory"), ExtResource("93_reading"), ExtResource("96_aim"), ExtResource("98_raised"), ExtResource("99_placing"), ExtResource("100_running"), ExtResource("101_waiting"), ExtResource("106_seen"), ExtResource("107_shown"), ExtResource("108_mode"), ExtResource("109_line"), ExtResource("110_offset"), ExtResource("111_contrast"), ExtResource("114_alert"), ExtResource("120_pointing")])
+atoms = Array[ExtResource("2_value")]([ExtResource("30_time"), ExtResource("43_strength"), ExtResource("44_quality"), ExtResource("45_carrier"), ExtResource("46_locked"), ExtResource("48_force"), ExtResource("50_hovering"), ExtResource("51_grabbing"), ExtResource("52_focused"), ExtResource("60_viewing"), ExtResource("62_sequence"), ExtResource("63_speak_open"), ExtResource("64_acked"), ExtResource("65_transmitting"), ExtResource("70_chain_unlocked"), ExtResource("80_manifest"), ExtResource("81_manifest_received"), ExtResource("82_queue"), ExtResource("83_dl_received"), ExtResource("84_progress"), ExtResource("85_dl_open"), ExtResource("86_lean"), ExtResource("87_drowsy"), ExtResource("88_directory"), ExtResource("93_reading"), ExtResource("96_aim"), ExtResource("98_raised"), ExtResource("99_placing"), ExtResource("100_running"), ExtResource("101_waiting"), ExtResource("106_seen"), ExtResource("107_shown"), ExtResource("108_mode"), ExtResource("114_alert"), ExtResource("120_pointing"), ExtResource("139_blocked")])
 
 [node name="PassLoader" type="Node" parent="." unique_id=824546816]
 script = ExtResource("3_loader")
-passes = Array[ExtResource("4_window")]([ExtResource("20_pass_01"), ExtResource("25_pass_02"), ExtResource("113_pass_03")])
+passes = Array[ExtResource("4_window")]([ExtResource("20_pass_01"), ExtResource("25_pass_02"), ExtResource("113_pass_03"), ExtResource("124_pass_04"), ExtResource("125_pass_05"), ExtResource("126_pass_06"), ExtResource("134_pass_07"), ExtResource("135_pass_08")])
 window_number = ExtResource("22_window_number")
 current_pass = ExtResource("23_current")
 
@@ -331,18 +363,26 @@ on = ExtResource("33_los")
 off = ExtResource("31_bell")
 target = ExtResource("70_chain_unlocked")
 
-[node name="Sleep" type="Node" parent="." unique_id=1364885553 node_paths=PackedStringArray("camera", "top_lid", "bottom_lid")]
+[node name="Sleep" type="Node" parent="." unique_id=1364885553 node_paths=PackedStringArray("camera", "top_lid", "bottom_lid", "haze")]
 script = ExtResource("9_sleep")
 model = ExtResource("24_m_sleep")
 camera = NodePath("../Player/Pivot/Camera3D")
 top_lid = NodePath("../Eyelids/Top")
 bottom_lid = NodePath("../Eyelids/Bottom")
+haze = NodePath("../Eyelids/Haze")
 pass_time = ExtResource("30_time")
 current_pass = ExtResource("23_current")
 shift_ended = ExtResource("32_shift_ended")
 drowsiness = ExtResource("87_drowsy")
 
-[node name="ShiftEnd" type="Node" parent="." unique_id=733588695 node_paths=PackedStringArray("sleep", "lamps")]
+[node name="Checkpoint" type="Node" parent="."]
+script = ExtResource("127_checkpoint")
+atoms = Array[ExtResource("2_value")]([ExtResource("22_window_number"), ExtResource("129_history"), ExtResource("130_unlocked"), ExtResource("131_storage"), ExtResource("132_last_sent"), ExtResource("117_ack_heard"), ExtResource("133_held_keys"), ExtResource("119_placed"), ExtResource("40_az"), ExtResource("41_el"), ExtResource("42_tune"), ExtResource("109_line"), ExtResource("110_offset"), ExtResource("111_contrast"), ExtResource("142_used_keys")])
+
+[node name="EndCard" parent="." node_paths=PackedStringArray("checkpoint") instance=ExtResource("128_end_card")]
+checkpoint = NodePath("../Checkpoint")
+
+[node name="ShiftEnd" type="Node" parent="." unique_id=733588695 node_paths=PackedStringArray("sleep", "lamps", "end_card")]
 script = ExtResource("5_shift_end")
 tunables = ExtResource("21_tunables")
 morning_bell = ExtResource("31_bell")
@@ -350,6 +390,11 @@ shift_ended = ExtResource("32_shift_ended")
 window_number = ExtResource("22_window_number")
 sleep = NodePath("../Sleep")
 lamps = [NodePath("../ArmLamp/Light"), NodePath("../RightLamp/Light")]
+current_pass = ExtResource("23_current")
+last_sent = ExtResource("132_last_sent")
+end_card = NodePath("../EndCard")
+storage = ExtResource("131_storage")
+ending_model = ExtResource("136_ending")
 
 [node name="DebugCommands" type="Node" parent="." unique_id=1370657304]
 script = ExtResource("6_debug")
@@ -360,16 +405,31 @@ window_number = ExtResource("22_window_number")
 [node name="Eyelids" type="CanvasLayer" parent="." unique_id=1413141727]
 layer = 10
 
+[node name="Haze" type="ColorRect" parent="Eyelids"]
+visible = false
+material = SubResource("Material_haze")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
 [node name="Top" type="ColorRect" parent="Eyelids" unique_id=1223867091]
+material = SubResource("Material_lid_top")
 anchors_preset = 10
 anchor_right = 1.0
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
 [node name="Bottom" type="ColorRect" parent="Eyelids" unique_id=442364640]
+material = SubResource("Material_lid_bottom")
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
+
+[node name="Music" parent="." instance=ExtResource("137_music")]
+
+[node name="WakeCard" parent="." node_paths=PackedStringArray("wall_clock") instance=ExtResource("140_wake")]
+wall_clock = NodePath("../Pass/WallClock")

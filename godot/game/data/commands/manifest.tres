@@ -8,9 +8,11 @@
 [ext_resource type="Resource" path="res://game/data/atoms/downlink/storage.tres" id="6_storage"]
 [ext_resource type="Resource" path="res://game/data/models/downlink.tres" id="7_model"]
 [ext_resource type="Resource" path="res://game/data/atoms/downlink/manifest_seen.tres" id="8_seen"]
+[ext_resource type="Resource" path="res://game/data/atoms/modules/used_keys.tres" id="99_used_keys"]
 
 [resource]
 script = ExtResource("1_script")
+unlocked_in = 2
 name = "MANIFEST"
 help = "MANIFEST          HERALD'S QUEUE LISTING"
 out = ExtResource("2_stdout")
@@ -20,3 +22,4 @@ download_queue = ExtResource("5_queue")
 storage = ExtResource("6_storage")
 model = ExtResource("7_model")
 manifest_seen = ExtResource("8_seen")
+used_keys = ExtResource("99_used_keys")

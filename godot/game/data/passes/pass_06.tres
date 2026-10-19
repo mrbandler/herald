@@ -1,0 +1,189 @@
+[gd_resource type="Resource" script_class="PassWindow" format=3]
+
+[ext_resource type="Script" path="res://scripts/pass/pass_window.gd" id="1"]
+[ext_resource type="Resource" path="res://game/data/commands/station.tres" id="2"]
+[ext_resource type="Script" path="res://scripts/terminal/downlink/manifest_item.gd" id="3"]
+[ext_resource type="Script" path="res://scripts/room/papers/paper.gd" id="3_paper"]
+[ext_resource type="Texture2D" path="res://assets/nasa/reffa.png" id="6_reffa"]
+[ext_resource type="Texture2D" path="res://assets/nasa/tarba.png" id="7_tarba"]
+[ext_resource type="Texture2D" path="res://assets/nasa/candra.png" id="8_candra"]
+[ext_resource type="Resource" path="res://game/data/papers/window_06/letter.tres" id="9_letter"]
+
+[sub_resource type="Resource" id="Item_61"]
+script = ExtResource("3")
+id = 61
+type = "AUTH"
+rows = 16
+note = "KEY SPC"
+key_for = "SPC"
+
+[sub_resource type="Resource" id="Item_62"]
+script = ExtResource("3")
+id = 62
+type = "SPC"
+size = 2
+rows = 40
+note = "CANDRA"
+content = "SPECTRUM  CANDRA  LIMB
+N2  |#######################       |  77
+O2  |#####                         |  18
+CH4 |#                             |   3
+AR  |                              |   1
+H2O |                              |   1
+    +----+----+----+----+----+----+
+    0            50%           100%"
+
+[sub_resource type="Resource" id="Item_63"]
+script = ExtResource("3")
+id = 63
+type = "TLM"
+rows = 32
+note = "AUTO"
+content = "HERALD TELEMETRY  T+214Y 082D
+BUS      NOMINAL   BATTERY 53%
+POWER    17 / DRAW 12 / SURPLUS 5
+NAC      ON   WAC ON   SPC ON
+AMP      ON   BANK B ON   HEATERS ON
+POSITION APPROACHING CANDRA
+POINTING NEXT PASS AZ +0.3 EL +0.1
+STATUS   PHASE 6. TASTING THE AIR"
+
+[sub_resource type="Resource" id="Item_64"]
+script = ExtResource("3")
+id = 64
+type = "IMG"
+size = 6
+rows = 160
+note = "CANDRA NARROW"
+image = ExtResource("8_candra")
+line_length = 106.2
+phase = 0.29
+
+[sub_resource type="Resource" id="Item_65"]
+script = ExtResource("3")
+id = 65
+type = "IMG"
+size = 6
+rows = 160
+note = "REFFA NARROW"
+image = ExtResource("6_reffa")
+line_length = 106.2
+phase = 0.52
+
+[sub_resource type="Resource" id="Item_66"]
+script = ExtResource("3")
+id = 66
+type = "IMG"
+size = 6
+rows = 160
+note = "TARBA NARROW"
+image = ExtResource("7_tarba")
+line_length = 106.2
+phase = 0.07
+
+[sub_resource type="Resource" id="Item_53"]
+script = ExtResource("3")
+id = 53
+type = "IMG"
+size = 4
+rows = 120
+note = "CANDRA WIDE"
+image = ExtResource("8_candra")
+line_length = 97.9
+phase = 0.45
+
+[sub_resource type="Resource" id="Item_55"]
+script = ExtResource("3")
+id = 55
+type = "IMG"
+size = 6
+rows = 160
+note = "CANDRA NARROW"
+image = ExtResource("8_candra")
+line_length = 106.2
+phase = 0.62
+
+[sub_resource type="Resource" id="Item_56"]
+script = ExtResource("3")
+id = 56
+type = "IMG"
+size = 6
+rows = 160
+note = "REFFA NARROW"
+image = ExtResource("6_reffa")
+line_length = 106.2
+phase = 0.18
+
+[sub_resource type="Resource" id="Item_57"]
+script = ExtResource("3")
+id = 57
+type = "IMG"
+size = 6
+rows = 160
+note = "TARBA NARROW"
+image = ExtResource("7_tarba")
+line_length = 106.2
+phase = 0.81
+
+[sub_resource type="Resource" id="Item_43"]
+script = ExtResource("3")
+id = 43
+type = "IMG"
+size = 4
+rows = 120
+note = "REFFA WIDE"
+image = ExtResource("6_reffa")
+line_length = 98.6
+phase = 0.21
+
+[sub_resource type="Resource" id="Item_44"]
+script = ExtResource("3")
+id = 44
+type = "IMG"
+size = 4
+rows = 120
+note = "TARBA WIDE"
+image = ExtResource("7_tarba")
+line_length = 98.6
+phase = 0.66
+
+[sub_resource type="Resource" id="Paper_card"]
+script = ExtResource("3_paper")
+text = "TONIGHT'S PRAYER
+SEEK THE VOICE AT
+AZ %05.1f  EL %04.1f
+BIND IT AT DIAL %.0f"
+fields = PackedStringArray("card_azimuth", "card_elevation", "card_tuning")
+size = Vector2(0.105, 0.074)
+centred = true
+
+[resource]
+script = ExtResource("1")
+number = 6
+aos = 30.0
+speak = 230.0
+los = 260.0
+bell = 320.0
+clock_start = 9600.0
+card_azimuth = 246.9
+card_elevation = 55.8
+card_tuning = 67.0
+card_seed = 6
+papers = Array[ExtResource("3_paper")]([SubResource("Paper_card"), ExtResource("9_letter")])
+manifest = Array[ExtResource("3")]([SubResource("Item_61"), SubResource("Item_62"), SubResource("Item_63")])
+requests = Dictionary[String, Resource]({
+"IMG 2": SubResource("Item_43"),
+"IMG 2 L": SubResource("Item_43"),
+"IMG 4": SubResource("Item_44"),
+"IMG 4 L": SubResource("Item_44"),
+"IMG 3": SubResource("Item_53"),
+"IMG 3 L": SubResource("Item_53"),
+"IMG 2 H": SubResource("Item_65"),
+"IMG 3 H": SubResource("Item_64"),
+"IMG 4 H": SubResource("Item_66"),
+"RETX 53": SubResource("Item_53"),
+"RETX 55": SubResource("Item_55"),
+"RETX 56": SubResource("Item_56"),
+"RETX 57": SubResource("Item_57")
+})
+command_set = ExtResource("2")

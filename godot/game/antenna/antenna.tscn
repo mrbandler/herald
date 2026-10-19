@@ -48,6 +48,7 @@
 [ext_resource type="Material" path="res://game/data/materials/brass.tres" id="m_brass"]
 [ext_resource type="Material" path="res://game/data/materials/gauge_face.tres" id="m_face"]
 [ext_resource type="Material" path="res://game/data/materials/plastic_dark.tres" id="m_dark"]
+[ext_resource type="Script" path="res://scripts/antenna/gauge_scale.gd" id="m_scale"]
 
 [sub_resource type="CylinderShape3D" id="Shape_wheel"]
 height = 0.04
@@ -73,6 +74,20 @@ albedo_color = Color(0.1, 0.1, 0.1, 1)
 [sub_resource type="BoxMesh" id="Mesh_mark"]
 material = SubResource("Material_mark")
 size = Vector3(0.004, 0.02, 0.002)
+
+[sub_resource type="BoxMesh" id="Mesh_scale"]
+material = SubResource("Material_mark")
+size = Vector3(0.0025, 0.012, 0.002)
+
+[sub_resource type="StandardMaterial3D" id="Material_target"]
+albedo_color = Color(0.75, 0.16, 0.1, 1)
+emission_enabled = true
+emission = Color(0.75, 0.16, 0.1, 1)
+emission_energy_multiplier = 0.25
+
+[sub_resource type="BoxMesh" id="Mesh_target"]
+material = SubResource("Material_target")
+size = Vector3(0.005, 0.026, 0.002)
 
 [sub_resource type="StandardMaterial3D" id="Material_pointer"]
 albedo_color = Color(0.5, 0.13, 0.09, 1)
@@ -277,6 +292,18 @@ font_size = 14
 outline_size = 0
 text = "TUNE"
 
+[node name="TuneScale" type="Node3D" parent="."]
+position = Vector3(0.28, 0.23, 0.2055)
+script = ExtResource("m_scale")
+needle_model = ExtResource("14_m_needle")
+mark = SubResource("Mesh_scale")
+
+[node name="SignalScale" type="Node3D" parent="."]
+position = Vector3(0.1, 0.23, 0.2055)
+script = ExtResource("m_scale")
+needle_model = ExtResource("14_m_needle")
+mark = SubResource("Mesh_scale")
+
 [node name="LockMark" type="Node3D" parent="."]
 position = Vector3(0.28, 0.23, 0.206)
 script = ExtResource("8_mark")
@@ -284,8 +311,8 @@ needle_model = ExtResource("14_m_needle")
 receiver_model = ExtResource("10_m_receiver")
 
 [node name="Tick" type="MeshInstance3D" parent="LockMark"]
-position = Vector3(0, 0.083, 0)
-mesh = SubResource("Mesh_mark")
+position = Vector3(0, 0.08, 0.001)
+mesh = SubResource("Mesh_target")
 
 [node name="MarginMark" type="Node3D" parent="."]
 position = Vector3(0.1, 0.23, 0.206)
@@ -295,8 +322,8 @@ receiver_model = ExtResource("10_m_receiver")
 threshold = "margin"
 
 [node name="Tick" type="MeshInstance3D" parent="MarginMark"]
-position = Vector3(0, 0.083, 0)
-mesh = SubResource("Mesh_mark")
+position = Vector3(0, 0.08, 0.001)
+mesh = SubResource("Mesh_target")
 
 [node name="TuneNeedle" type="Node3D" parent="."]
 position = Vector3(0.28, 0.23, 0.208)
@@ -327,9 +354,11 @@ color = Color(1, 0.6, 0.1, 1)
 
 [node name="OpenChime" type="AudioStreamPlayer3D" parent="SpeakLamp"]
 stream = ExtResource("19_chime_open")
+bus = &"Antenna"
 
 [node name="CloseChime" type="AudioStreamPlayer3D" parent="SpeakLamp"]
 stream = ExtResource("19_chime_close")
+bus = &"Antenna"
 
 [node name="UplinkChime" type="Node" parent="." node_paths=PackedStringArray("on_sound", "off_sound")]
 script = ExtResource("9_bool_sound")
@@ -362,6 +391,7 @@ row_received = ExtResource("45_row")
 
 [node name="DownloadBell" type="AudioStreamPlayer3D" parent="DataLamp"]
 stream = ExtResource("48_bell")
+bus = &"Antenna"
 
 [node name="BellSound" type="Node" parent="." node_paths=PackedStringArray("sound")]
 script = ExtResource("43_event_sound")
@@ -383,9 +413,11 @@ text = "DATA"
 
 [node name="LockRelay" type="AudioStreamPlayer3D" parent="LockLamp"]
 stream = ExtResource("19_lock_relay")
+bus = &"Antenna"
 
 [node name="LockDrop" type="AudioStreamPlayer3D" parent="LockLamp"]
 stream = ExtResource("19_lock_drop")
+bus = &"Antenna"
 
 [node name="LockSound" type="Node" parent="." node_paths=PackedStringArray("on_sound", "off_sound")]
 script = ExtResource("9_bool_sound")
@@ -409,6 +441,7 @@ locked = ExtResource("36_locked")
 
 [node name="CarrierTone" type="AudioStreamPlayer3D" parent="."]
 position = Vector3(0, 0.3, 0)
+bus = &"Antenna"
 script = ExtResource("5_tone")
 model = ExtResource("16_m_tone")
 signal_strength = ExtResource("33_strength")

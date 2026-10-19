@@ -8,7 +8,14 @@
 [ext_resource type="Resource" path="res://game/data/volumes/sys/boot.log.tres" id="6_file"]
 [ext_resource type="Resource" path="res://game/data/volumes/sys/tlm.man.tres" id="7_file"]
 [ext_resource type="Resource" path="res://game/data/volumes/sys/img.man.tres" id="8_file"]
+[ext_resource type="Resource" path="res://game/data/volumes/arc/sowing.txt.tres" id="9_file"]
+[ext_resource type="Resource" path="res://game/data/volumes/arc/burning.log.tres" id="10_file"]
+[ext_resource type="Resource" path="res://game/data/volumes/sys/spc.man.tres" id="11_file"]
+[ext_resource type="Resource" path="res://game/data/volumes/arc/pillar.txt.tres" id="12_file"]
 
 [resource]
 script = ExtResource("1")
-files = Array[ExtResource("2")]([ExtResource("3_file"), ExtResource("4_file"), ExtResource("5_file"), ExtResource("6_file"), ExtResource("7_file"), ExtResource("8_file")])
+seal_openers = Dictionary[String, PackedStringArray]({
+"ARC": PackedStringArray("VERDICT")
+})
+files = Array[ExtResource("2")]([ExtResource("3_file"), ExtResource("4_file"), ExtResource("5_file"), ExtResource("6_file"), ExtResource("7_file"), ExtResource("8_file"), ExtResource("9_file"), ExtResource("10_file"), ExtResource("11_file"), ExtResource("12_file")])

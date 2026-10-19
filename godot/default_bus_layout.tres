@@ -1,0 +1,38 @@
+[gd_resource type="AudioBusLayout" format=3 uid="uid://dj313fgf05yx7"]
+
+[sub_resource type="AudioEffectLowPassFilter" id="AudioEffectLowPassFilter_sleep"]
+resource_name = "LowPassFilter"
+cutoff_hz = 20000.0
+
+[sub_resource type="AudioEffectReverb" id="AudioEffectReverb_music"]
+resource_name = "Reverb"
+damping = 0.6
+dry = 0.8
+wet = 0.35
+
+[sub_resource type="AudioEffectCompressor" id="AudioEffectCompressor_j3pel"]
+resource_name = "Compressor"
+threshold = -24.0
+attack_us = 2000.0
+release_ms = 400.0
+sidechain = &"Antenna"
+
+[resource]
+bus/0/effect/0/effect = SubResource("AudioEffectLowPassFilter_sleep")
+bus/0/effect/0/enabled = true
+bus/1/name = &"Antenna"
+bus/1/solo = false
+bus/1/mute = false
+bus/1/bypass_fx = false
+bus/1/volume_db = 0.0
+bus/1/send = &"Master"
+bus/2/name = &"Music"
+bus/2/solo = false
+bus/2/mute = false
+bus/2/bypass_fx = false
+bus/2/volume_db = 0.0
+bus/2/send = &"Master"
+bus/2/effect/0/effect = SubResource("AudioEffectReverb_music")
+bus/2/effect/0/enabled = true
+bus/2/effect/1/effect = SubResource("AudioEffectCompressor_j3pel")
+bus/2/effect/1/enabled = true

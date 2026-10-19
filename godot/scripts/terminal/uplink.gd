@@ -39,7 +39,8 @@ extends Node
 @export var progress_line: StringValue
 
 ## Written. The commands HERALD received this window, in order. Kept across windows, so the last
-## window's stay until this window's first command arrives.
+## window's stay until this window's first command arrives; a window that sent nothing clears it
+## at LOS.
 @export var last_sent: StringListValue
 
 ## Written. True once HERALD received ACK.
@@ -136,6 +137,10 @@ func _on_los(_payload: Variant) -> void:
 		_cut("LOS")
 
 	ack_heard.value = acked.value
+	# A silent window clears what the last one sent, so the next manifest never answers it twice.
+	if _received_this_window.is_empty():
+		last_sent.value = PackedStringArray()
+
 	if acked.value:
 		return
 

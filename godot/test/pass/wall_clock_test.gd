@@ -10,14 +10,14 @@ func test_shows_mission_time_one_day_per_window() -> void:
 	clock.current_pass = ResourceValue.new()
 	clock.current_pass.value = PassFixture.window_one()
 	add_child(clock)
-	assert_str(clock.text).is_equal("T+ 214Y 117D\n02:40:00")
+	assert_str(clock.text).is_equal("T+ 214Y 077D\n02:40:00")
 	clock.pass_time.value = 125.0
-	assert_str(clock.text).is_equal("T+ 214Y 117D\n02:42:05")
+	assert_str(clock.text).is_equal("T+ 214Y 077D\n02:42:05")
 	var two := PassFixture.window_one()
 	two.number = 2
 	clock.current_pass.value = two
 	clock.pass_time.value = 0.0
-	assert_str(clock.text).is_equal("T+ 214Y 118D\n02:40:00")
+	assert_str(clock.text).is_equal("T+ 214Y 078D\n02:40:00")
 
 func test_format_mission_rolls_days_into_years() -> void:
 	var seconds := (215.0 * WallClock.YEAR_DAYS + 3.0) * WallClock.DAY + 61.0

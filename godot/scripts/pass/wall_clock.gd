@@ -2,7 +2,7 @@ class_name WallClock
 extends Label3D
 
 ## The mission clock on the wall: time since HERALD's launch, still counting, e.g.
-## "T+ 214Y 117D" over "02:47:13". One window per night; the time of day is the station's.
+## "T+ 214Y 077D" over "02:47:13". One window per night; the time of day is the station's.
 
 ## Seconds in a day.
 const DAY := 86400.0
@@ -11,7 +11,7 @@ const DAY := 86400.0
 const YEAR_DAYS := 365
 
 ## Mission days at midnight before window 1.
-@export var epoch_days := 214 * YEAR_DAYS + 117
+@export var epoch_days := 214 * YEAR_DAYS + 77
 
 ## Read only. Seconds into the pass.
 @export var pass_time: FloatValue
@@ -24,7 +24,7 @@ func _ready() -> void:
 	pass_time.updated.connect(_on_time)
 	_refresh()
 
-## The mission clock for `seconds` since launch, e.g. "T+ 214Y 117D\n02:47:13".
+## The mission clock for `seconds` since launch, e.g. "T+ 214Y 077D\n02:47:13".
 static func format_mission(seconds: float) -> String:
 	var days := floori(seconds / DAY)
 	var day_part := "T+ %dY %03dD" % [floori(days / float(YEAR_DAYS)), days % YEAR_DAYS]
@@ -37,9 +37,13 @@ func _on_time(_previous: Variant, _current: Variant) -> void:
 ## Shows the mission time, and nothing without a pass.
 func _refresh() -> void:
 	var window := current_pass.value as PassWindow
+	text = "" if window == null else WallClock.format_mission(mission_seconds())
+
+## Seconds since launch at the current pass time; one day per window. 0 without a pass.
+func mission_seconds() -> float:
+	var window := current_pass.value as PassWindow
 	if window == null:
-		text = ""
-		return
+		return 0.0
 
 	var days := epoch_days + window.number - 1
-	text = WallClock.format_mission(days * DAY + window.station_time(pass_time.value))
+	return days * DAY + window.station_time(pass_time.value)

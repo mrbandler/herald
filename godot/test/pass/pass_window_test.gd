@@ -1,5 +1,6 @@
 extends GdUnitTestSuite
 
+const PASS_04 := "res://game/data/passes/pass_04.tres"
 const PASS_01 := "res://game/data/passes/pass_01.tres"
 const PASS_02 := "res://game/data/passes/pass_02.tres"
 
@@ -138,3 +139,79 @@ func test_window_three_sends_pictures() -> void:
 	assert_str(three.papers[0].text_for(three)).contains("AZ 226.8  EL 44.1")
 	assert_int(three.papers.size()).is_equal(2)
 	assert_float(three.papers[1].arrives_at).is_greater(0.0)
+
+func test_window_four_overflows_storage_and_keys_the_archive() -> void:
+	var four: PassWindow = load(PASS_04)
+	assert_int(four.number).is_equal(4)
+	assert_str(four.manifest[0].key_for).is_equal("ARC")
+	var units := 0
+	for item: ManifestItem in four.manifest:
+		units += item.size
+	assert_int(units).is_greater(
+		(load("res://game/data/models/downlink.tres") as DownlinkModel).storage_capacity
+	)
+	assert_str(four.papers[1].body()).contains("IMG 3 H")
+
+func test_window_five_answers_requests_and_resends() -> void:
+	var five: PassWindow = load("res://game/data/passes/pass_05.tres")
+	var four: PassWindow = load(PASS_04)
+	assert_int(five.number).is_equal(5)
+	var candra := five.requests["IMG 3 H"] as ManifestItem
+	assert_str(candra.note).is_equal("CANDRA NARROW")
+	var narrow_cal := five.manifest[0]
+	assert_str(narrow_cal.note).is_equal("NARROW")
+	assert_float(narrow_cal.line_length).is_equal(candra.line_length)
+	for id: int in [43, 44]:
+		var again := five.requests["RETX %d" % id] as ManifestItem
+		var first: ManifestItem
+		for item: ManifestItem in four.manifest:
+			if item.id == id:
+				first = item
+		assert_int(again.rows).is_equal(first.rows)
+		assert_float(again.line_length).is_equal(first.line_length)
+
+func test_window_six_keys_the_spectra_and_tastes_candra() -> void:
+	var six: PassWindow = load("res://game/data/passes/pass_06.tres")
+	assert_int(six.number).is_equal(6)
+	assert_str(six.manifest[0].key_for).is_equal("SPC")
+	assert_str(six.manifest[1].type).is_equal("SPC")
+	assert_str(six.manifest[1].content).contains("O2")
+	assert_object(six.requests["IMG 3 H"]).is_not_null()
+
+func test_window_seven_requires_the_insertion_burn() -> void:
+	var seven: PassWindow = load("res://game/data/passes/pass_07.tres")
+	assert_int(seven.number).is_equal(7)
+	assert_str(seven.required).is_equal("INSERT")
+	assert_str(seven.manifest[0].key_for).is_equal("INSERT")
+	assert_str(seven.missed_text).is_not_empty()
+	assert_str((seven.requests["SPC 4"] as ManifestItem).content).contains("H2O")
+	var modules: ModuleModel = load("res://game/data/models/modules.tres")
+	assert_bool(modules.modules.has("INSERT")).is_true()
+
+func test_window_eight_is_the_verdict() -> void:
+	var eight: PassWindow = load("res://game/data/passes/pass_08.tres")
+	assert_int(eight.number).is_equal(8)
+	assert_bool(eight.final).is_true()
+	assert_str(eight.manifest[0].key_for).is_equal("VERDICT")
+
+func test_the_downlink_commands_unlock_in_window_two() -> void:
+	var one: PassWindow = load(PASS_01)
+	var two: PassWindow = load(PASS_02)
+	var manifest := one.command_set.find("MANIFEST")
+	assert_bool(manifest.locked_in(one)).is_true()
+	assert_bool(manifest.locked_in(two)).is_false()
+	assert_bool(one.command_set.find("SEQ").locked_in(one)).is_false()
+	assert_bool(one.command_set.find("SHOW").locked_in(two)).is_true()
+
+func test_the_file_commands_are_open_from_the_start() -> void:
+	var one: PassWindow = load(PASS_01)
+	for name: String in ["LS", "CD", "READ"]:
+		assert_bool(one.command_set.find(name).locked_in(one)).is_false()
+
+func test_plain_and_wide_picture_requests_are_answered() -> void:
+	for n: int in range(5, 9):
+		var window: PassWindow = load("res://game/data/passes/pass_0%d.tres" % n)
+		for request: String in ["IMG 2", "IMG 3 L", "IMG 4"]:
+			var item: ManifestItem = window.requests.get(request)
+			assert_object(item).override_failure_message("%d %s" % [n, request]).is_not_null()
+			assert_str(item.note).ends_with("WIDE")

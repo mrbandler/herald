@@ -52,6 +52,21 @@ const MARK_NAMES: PackedStringArray = ["AOS", "UPLINK", "LOS", "BELL"]
 ## HERALD's queue listing for this window, pushed at the first lock. Empty for none.
 @export var manifest: Array[ManifestItem] = []
 
+## ManifestItems HERALD adds to this manifest when it received the command last window, keyed
+## by the command as sent, e.g. `IMG 3 H`. List each spelling a player may send.
+@export var requests: Dictionary[String, Resource] = { }
+
+@export_group("Fail")
+## A HERALD command that must reach HERALD this window, e.g. INSERT. Missing it loses the game.
+## Empty for none.
+@export var required := ""
+
+## What the end card says when `required` never arrived.
+@export_multiline var missed_text := ""
+
+## The last window: its bell ends the game on the ending its verdict earned.
+@export var final := false
+
 @export_group("Terminal")
 ## The commands this window offers. Every window needs one: Terminal and HELP read it.
 @export var command_set: CommandSet
