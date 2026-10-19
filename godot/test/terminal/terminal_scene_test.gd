@@ -70,6 +70,9 @@ func test_downlink_is_wired() -> void:
 	assert_object(get_command.download_queue).is_same(downlink.download_queue)
 	assert_object(get_command.downlink_open).is_same(downlink.downlink_open)
 	assert_object(get_command.storage).is_same(downlink.storage)
+	var manifest := two.command_set.find("MANIFEST") as ManifestCommand
+	assert_object(manifest.storage).is_same(downlink.storage)
+	assert_object(manifest.download_queue).is_same(downlink.download_queue)
 
 func test_the_drive_unit_shows_storage() -> void:
 	var scene: Node = auto_free((load(TERMINAL) as PackedScene).instantiate())

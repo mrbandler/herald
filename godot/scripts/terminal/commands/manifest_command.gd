@@ -1,13 +1,23 @@
 class_name ManifestCommand
 extends Command
 
-## MANIFEST prints HERALD's queue listing, once it has been pushed. Works any time after that.
+## MANIFEST prints HERALD's queue listing, once it has been pushed, with each item's state at
+## the station: queued, stored, or stored but damaged. Works any time after that.
 
 ## Read. True once the manifest push completed.
 @export var manifest_received: BoolValue
 
 ## Read. The listing: ManifestItem resources.
 @export var manifest: ResourceListValue
+
+## Read. Items waiting for or in download.
+@export var download_queue: ResourceListValue
+
+## Read. What is stored: StoredItem resources.
+@export var storage: ResourceListValue
+
+## Finds stored copies by id.
+@export var model: DownlinkModel
 
 ## Prints the listing, or NO MANIFEST before the push.
 func run(_args: PackedStringArray) -> void:
@@ -16,8 +26,21 @@ func run(_args: PackedStringArray) -> void:
 		return
 
 	write(" HERALD QUEUE - %d ITEMS" % manifest.value.size())
-	write(" ID   TYPE  SIZE  NOTE")
+	write(" ID   TYPE  SIZE  STATE    NOTE")
 
 	for resource: Resource in manifest.value:
 		var item := resource as ManifestItem
-		write(" %-4d %-5s %-5d %s" % [item.id, item.type, item.size, item.note])
+		var columns := [item.id, item.type, item.size, _state(item), item.note]
+		write((" %-4d %-5s %-5d %-8s %s" % columns).rstrip(" "))
+
+## QUEUED while waiting or downloading, STORED for a clean copy, DAMAGED for one GET can fetch
+## again, and empty otherwise.
+func _state(item: ManifestItem) -> String:
+	if download_queue.value.has(item):
+		return "QUEUED"
+
+	var kept := model.stored(storage.value, str(item.id))
+	if kept == null:
+		return ""
+
+	return "STORED" if kept.clean() == item.rows else "DAMAGED"
