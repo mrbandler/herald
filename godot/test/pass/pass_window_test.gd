@@ -202,3 +202,8 @@ func test_the_downlink_commands_unlock_in_window_two() -> void:
 	assert_bool(manifest.locked_in(two)).is_false()
 	assert_bool(one.command_set.find("SEQ").locked_in(one)).is_false()
 	assert_bool(one.command_set.find("SHOW").locked_in(two)).is_true()
+
+func test_the_file_commands_are_open_from_the_start() -> void:
+	var one: PassWindow = load(PASS_01)
+	for name: String in ["LS", "CD", "READ"]:
+		assert_bool(one.command_set.find(name).locked_in(one)).is_false()

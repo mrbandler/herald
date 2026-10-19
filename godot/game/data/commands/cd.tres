@@ -8,7 +8,6 @@
 
 [resource]
 script = ExtResource("1_script")
-unlocked_in = 2
 name = "CD"
 help = "CD [<DIR>]        CHANGE DIRECTORY. CD .. GOES UP"
 out = ExtResource("2_stdout")
