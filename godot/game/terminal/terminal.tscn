@@ -116,16 +116,32 @@ text = "NO TRANSFER"
 script = ExtResource("74_progress_label")
 progress_line = ExtResource("55_progress")
 
+[node name="HeaderRule" type="ColorRect" parent="Screen"]
+offset_left = 12.0
+offset_top = 58.0
+offset_right = 628.0
+offset_bottom = 59.0
+color = Color(0.6, 0.42, 0.14, 1)
+
 [node name="Text" type="Label" parent="Screen"]
 offset_left = 12.0
-offset_top = 59.0
+offset_top = 62.0
 offset_right = 628.0
-offset_bottom = 437.0
+offset_bottom = 419.0
 theme_override_colors/font_color = Color(1, 0.72, 0.25, 1)
 theme_override_constants/line_spacing = 0
 theme_override_fonts/font = SubResource("Font_mono")
 theme_override_font_sizes/font_size = 15
 text = "LP4> _"
+
+[node name="ScrollRule" type="Label" parent="Screen"]
+offset_left = 12.0
+offset_top = 425.0
+offset_right = 628.0
+offset_bottom = 446.0
+theme_override_colors/font_color = Color(0.6, 0.42, 0.14, 1)
+theme_override_fonts/font = SubResource("Font_mono")
+theme_override_font_sizes/font_size = 15
 
 [node name="KeyBand" type="ColorRect" parent="Screen"]
 offset_left = 6.0
@@ -171,10 +187,11 @@ shape = SubResource("Shape_crt")
 
 [node name="Anchor" type="Node3D" parent="FocusTarget"]
 
-[node name="Terminal" type="Node" parent="." node_paths=PackedStringArray("screen")]
+[node name="Terminal" type="Node" parent="." node_paths=PackedStringArray("screen", "scroll_rule")]
 script = ExtResource("1_terminal")
 model = ExtResource("10_m_terminal")
 screen = NodePath("../Screen/Text")
+scroll_rule = NodePath("../Screen/ScrollRule")
 out = ExtResource("20_stdout")
 history = ExtResource("21_history")
 focused = ExtResource("24_focused")

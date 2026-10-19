@@ -17,6 +17,7 @@ func before_test() -> void:
 	_terminal.terminal_context = GUIDEMappingContext.new()
 	_terminal.clear = Event.new()
 	_terminal.lean_amount = FloatValue.new()
+	_terminal.scroll_rule = auto_free(Label.new())
 	_out = AtomSpy.events(_terminal.out)
 	_seq = SeqCommand.new()
 	_seq.name = "SEQ"
@@ -93,6 +94,7 @@ func test_the_wheel_scrolls_three_lines() -> void:
 		_terminal.out.raise("LINE %d" % n)
 	assert_bool(_terminal.handle_wheel(MOUSE_BUTTON_WHEEL_UP)).is_true()
 	assert_int(_terminal.editor.scroll).is_equal(3)
+	assert_str(_terminal.scroll_rule.text).contains(" +3 BELOW ")
 	assert_bool(_terminal.handle_wheel(MOUSE_BUTTON_WHEEL_DOWN)).is_true()
 	assert_int(_terminal.editor.scroll).is_equal(0)
 	assert_bool(_terminal.handle_wheel(MOUSE_BUTTON_LEFT)).is_false()

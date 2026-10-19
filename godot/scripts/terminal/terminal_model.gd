@@ -29,6 +29,17 @@ func max_input() -> int:
 func max_scroll(line_count: int) -> int:
 	return maxi(line_count - (rows - 1), 0)
 
+## The rule under the text area: a plain line, or ` +12 BELOW ` in its middle while scrolled
+## `scroll` lines back.
+func rule(scroll: int) -> String:
+	var line := "─".repeat(columns)
+	if scroll == 0:
+		return line
+
+	var marker := " +%d BELOW " % scroll
+	var start := floori((columns - marker.length()) / 2.0)
+	return line.left(start) + marker + line.substr(start + marker.length())
+
 ## Splits a line into chunks that fit the screen width.
 func wrap_line(line: String) -> PackedStringArray:
 	if line.is_empty():

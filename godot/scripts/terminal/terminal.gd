@@ -14,6 +14,10 @@ const GREETING := "LISTENING POST 4 - HTB MODULE - TYPE HELP"
 ## Shows the composed screen text.
 @export var screen: Label
 
+## Shows the model's rule under the text area, marking lines below while scrolled back.
+## Optional.
+@export var scroll_rule: Label
+
 ## stdout. Every line raised here is drawn. Also gets the echo and errors.
 @export var out: StringEvent
 
@@ -189,3 +193,5 @@ func _refresh() -> void:
 		return
 
 	screen.text = model.compose(lines, editor.text, editor.scroll)
+	if scroll_rule != null:
+		scroll_rule.text = model.rule(editor.scroll)

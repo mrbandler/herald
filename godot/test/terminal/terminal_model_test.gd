@@ -19,6 +19,12 @@ func test_scroll_moves_the_window_up() -> void:
 	assert_str(screen).is_equal("ONE\nTWO\nLP4> _")
 	assert_int(model.max_scroll(3)).is_equal(1)
 
+func test_the_rule_marks_lines_below_while_scrolled_back() -> void:
+	var model := TerminalModel.new()
+	model.columns = 20
+	assert_str(model.rule(0)).is_equal("─".repeat(20))
+	assert_str(model.rule(12)).is_equal("──── +12 BELOW ─────")
+
 func test_max_input_leaves_room_for_prompt_and_cursor() -> void:
 	var model := TerminalModel.new()
 	assert_int(model.max_input()).is_equal(model.columns - model.prompt.length() - 1)
