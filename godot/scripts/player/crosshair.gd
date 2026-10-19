@@ -18,9 +18,17 @@ extends TextureRect
 ## Shown while holding something.
 @export var grab_icon: Texture2D
 
-## Picks the icon every frame.
+## Read. At 1, fully leaned in, the crosshair hides so it does not cover the screen's text.
+@export var lean_amount: FloatValue
+
+## Picks the icon every frame, and hides it while fully leaned in.
 func _process(_delta: float) -> void:
 	texture = pick_icon(hovering.value, grabbing.value)
+	visible = shown(lean_amount.value)
+
+## False at a full lean, so the crosshair stays off the terminal's text.
+func shown(lean: float) -> bool:
+	return lean < 1.0
 
 ## Grabbing wins over hovering, hovering over idle.
 func pick_icon(is_hovering: bool, is_grabbing: bool) -> Texture2D:

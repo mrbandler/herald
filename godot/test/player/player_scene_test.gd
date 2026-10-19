@@ -17,6 +17,7 @@ func test_player_scene_is_wired() -> void:
 	assert_object(crosshair.grabbing).is_same(picker.grabbing)
 	assert_object(picker.hovering).is_not_null()
 	assert_object(crosshair.hovering).is_same(picker.hovering)
+	assert_object(crosshair.lean_amount).is_same(lean.lean_amount)
 	assert_object(picker.fine).is_not_null()
 	assert_object(lean.focused).is_not_null()
 	assert_object(lean.focus_point).is_not_null()
