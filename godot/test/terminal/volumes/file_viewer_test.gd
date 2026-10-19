@@ -5,7 +5,7 @@ var _viewer: FileViewer
 func before_test() -> void:
 	_viewer = auto_free(FileViewer.new())
 	_viewer.terminal_model = TerminalModel.new()
-	_viewer.terminal_model.rows = 4
+	_viewer.page_lines = 3
 	_viewer.volume_model = VolumeModel.new()
 	var file := StationFile.new()
 	file.path = "USR:A.TXT"
@@ -69,6 +69,7 @@ func test_a_locked_file_does_not_open() -> void:
 func test_a_file_already_open_shows_on_ready() -> void:
 	var fresh: FileViewer = auto_free(FileViewer.new())
 	fresh.terminal_model = _viewer.terminal_model
+	fresh.page_lines = 3
 	fresh.volume_model = _viewer.volume_model
 	fresh.viewing = StringValue.new()
 	fresh.viewing.value = "USR:A.TXT"

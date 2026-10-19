@@ -6,7 +6,7 @@ extends Resource
 ## The full path with its volume, e.g. `USR:OKONJO/WAKE.TXT`.
 @export var path := ""
 
-## The file's text, authored at 64 columns or less so the popup never wraps it.
+## The file's text, authored at 60 columns or less so the popup never wraps it.
 @export_multiline var text := ""
 
 ## The module that makes the file exist, e.g. `TLM`. Empty for always.

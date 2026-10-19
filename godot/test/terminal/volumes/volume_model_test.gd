@@ -44,7 +44,7 @@ func test_the_game_files_fit_the_popup_and_their_volumes() -> void:
 		assert_bool(game.volumes.has(file.volume())).override_failure_message(file.path).is_true()
 		for line: String in game.lines(file):
 			var message := "%s: %s" % [file.path, line]
-			assert_int(line.length()).override_failure_message(message).is_less_equal(64)
+			assert_int(line.length()).override_failure_message(message).is_less_equal(60)
 
 	var expected := ["HTB:HEARTBEAT.LOG", "USR:OKONJO/NIGHTS.TXT", "USR:OKONJO/WAKE.TXT"]
 	expected.append_array(["SYS:BOOT.LOG", "SYS:TLM.MAN"])

@@ -8,8 +8,11 @@ extends Node
 ## The keybindings band's text while a file is open.
 const HINTS := "ESC CLOSE   UP/DOWN/PGUP/PGDN/WHEEL SCROLL"
 
-## Supplies the page height (`rows - 1`) and the wheel step.
+## Supplies the wheel step.
 @export var terminal_model: TerminalModel
+
+## Body lines on one page. Matches the Body label's height in the scene.
+@export var page_lines := 13
 
 ## Turns `viewing` back into a file.
 @export var volume_model: VolumeModel
@@ -128,9 +131,9 @@ func refresh() -> void:
 
 	_draw()
 
-## Body lines per page: the text area without its title row.
+## Body lines per page.
 func _page() -> int:
-	return terminal_model.rows - 1
+	return page_lines
 
 ## Shows the page from `_top` and its line counter.
 func _draw() -> void:
