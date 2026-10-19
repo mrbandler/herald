@@ -1,7 +1,6 @@
 // The terminal's glass: the screen viewport bent like a CRT face, with scanlines, a little
 // phosphor bleed and darker corners.
 shader_type spatial;
-#include "res://game/ui/roll_bar.gdshaderinc"
 render_mode unshaded;
 
 // The terminal's SubViewport.
@@ -22,20 +21,28 @@ uniform float vignette = 0.1;
 // The faint glow of the phosphor even where the screen is black, so the scanlines show.
 uniform vec3 phosphor : source_color = vec3(0.045, 0.03, 0.012);
 
-// The roll bar: how dark its stripe gets, 0..1.
-uniform float roll_darkness = 0.45;
+// The hum bar: a soft brighter band rolling up the picture, as on old sets. It lifts the picture
+// by this share and adds its own glow, so it shows over black too.
+uniform float hum_strength = 0.1;
 
-// The glow of the roll bar's bright leading edge.
-uniform vec3 roll_glow : source_color = vec3(0.09, 0.065, 0.025);
+// The hum bar's own glow, added where it passes.
+uniform vec3 hum_glow : source_color = vec3(0.035, 0.025, 0.01);
 
-// Seconds the roll bar takes to roll once over the picture.
-uniform float roll_seconds = 7.0;
+// Seconds the hum bar takes to roll once over the picture.
+uniform float hum_seconds = 7.0;
 
-// Height of the roll bar's stripe as a share of the picture.
-uniform float roll_width = 0.02;
+// Height of the hum bar as a share of the picture.
+uniform float hum_width = 0.035;
 
 // Overall brightness of the phosphor.
 uniform float glow = 1.3;
+
+// 0..1 where the rolling hum bar lies over `y`, softly faded at its edges.
+float hum_bar(float y, float time, float seconds, float width) {
+	float centre = 1.0 - fract(time / seconds);
+	float distance = abs(fract(y - centre + 0.5) - 0.5);
+	return smoothstep(width, 0.0, distance);
+}
 
 void fragment() {
 	vec2 centred = UV * 2.0 - 1.0;
@@ -53,9 +60,7 @@ void fragment() {
 		float scan = 1.0 - scanline_strength * (0.5 + 0.5 * cos(uv.y * scanlines * TAU));
 		vec2 edge = uv * (1.0 - uv);
 		float shade = pow(clamp(edge.x * edge.y * 16.0, 0.0, 1.0), vignette);
-		float dark = roll_dark(uv.y, TIME, roll_seconds, roll_width);
-		float lead = roll_edge(uv.y, TIME, roll_seconds, roll_width);
-		colour = colour * (1.0 - roll_darkness * dark) + roll_glow * lead;
-		ALBEDO = colour * scan * shade * glow;
+		float band = hum_bar(uv.y, TIME, hum_seconds, hum_width);
+		ALBEDO = (colour * (1.0 + hum_strength * band) + hum_glow * band) * scan * shade * glow;
 	}
 }
