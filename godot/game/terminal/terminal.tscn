@@ -66,6 +66,7 @@
 [ext_resource type="Resource" path="res://game/data/atoms/downlink/held_keys.tres" id="94_held_keys"]
 [ext_resource type="Material" path="res://game/data/materials/plastic_grey.tres" id="m_grey"]
 [ext_resource type="Shader" path="res://game/terminal/crt.gdshader" id="m_crt"]
+[ext_resource type="Script" path="res://scripts/terminal/screen_glow.gd" id="95_screen_glow"]
 
 [sub_resource type="SystemFont" id="Font_mono"]
 font_names = PackedStringArray("monospace")
@@ -600,3 +601,11 @@ body = NodePath("../Screen/AlertPanel/Body")
 script = ExtResource("70_event_sound")
 event = ExtResource("89_ack_missed")
 sound = NodePath("../Crt/AckAlarmPlayer")
+
+[node name="ScreenGlow" type="OmniLight3D" parent="." node_paths=PackedStringArray("viewport")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0.3)
+light_color = Color(1, 0.72, 0.25, 1)
+light_energy = 0.2
+omni_range = 1.4
+script = ExtResource("95_screen_glow")
+viewport = NodePath("../Screen")

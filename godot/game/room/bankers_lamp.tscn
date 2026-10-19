@@ -1,0 +1,63 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://game/data/materials/brass.tres" id="1_brass"]
+[ext_resource type="Material" path="res://game/data/materials/green_glass.tres" id="2_glass"]
+[ext_resource type="Material" path="res://game/data/materials/shade_inner.tres" id="3_inner"]
+[ext_resource type="Material" path="res://game/data/materials/bulb.tres" id="4_bulb"]
+
+[sub_resource type="SphereMesh" id="Mesh_bulb"]
+radius = 0.018
+height = 0.036
+
+[node name="BankersLamp" type="Node3D"]
+
+[node name="Base" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
+radius = 0.075
+height = 0.02
+sides = 24
+material = ExtResource("1_brass")
+
+[node name="Stem" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.16, 0)
+radius = 0.008
+height = 0.3
+sides = 8
+material = ExtResource("1_brass")
+
+[node name="Shade" type="CSGCombiner3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.33, 0.02)
+
+[node name="Glass" type="CSGCylinder3D" parent="Shade"]
+transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0)
+radius = 0.075
+height = 0.3
+sides = 24
+material = ExtResource("2_glass")
+
+[node name="Hollow" type="CSGCylinder3D" parent="Shade"]
+transform = Transform3D(0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0)
+operation = 2
+radius = 0.068
+height = 0.286
+sides = 24
+material = ExtResource("3_inner")
+
+[node name="Opening" type="CSGBox3D" parent="Shade"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.04, 0)
+operation = 2
+size = Vector3(0.34, 0.08, 0.2)
+material = ExtResource("3_inner")
+
+[node name="Bulb" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.32, 0.02)
+cast_shadow = 0
+mesh = SubResource("Mesh_bulb")
+surface_material_override/0 = ExtResource("4_bulb")
+
+[node name="Light" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.29, 0.02)
+light_color = Color(1, 0.82, 0.55, 1)
+light_energy = 1.6
+shadow_enabled = true
+omni_range = 2.2

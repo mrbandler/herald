@@ -24,7 +24,7 @@ func test_room_is_the_main_scene() -> void:
 
 func test_lamp_chain_ends_the_shift_after_los() -> void:
 	var room: Node = auto_free((load(ROOM) as PackedScene).instantiate())
-	var chain := room.get_node("LampChain") as LampChain
+	var chain := room.get_node("RightLamp/LampChain") as LampChain
 	var latch := room.get_node("ChainLatch") as EventLatch
 	assert_object(chain.pull).is_same((room.get_node("ShiftEnd") as ShiftEnd).morning_bell)
 	assert_object(latch.target).is_same(chain.unlocked)

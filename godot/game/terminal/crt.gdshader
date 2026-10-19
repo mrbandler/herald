@@ -7,7 +7,7 @@ render_mode unshaded;
 uniform sampler2D display : source_color, filter_linear, repeat_disable;
 
 // How far the picture bows away from the corners. 0 is flat.
-uniform float curvature = 0.05;
+uniform float curvature = 0.025;
 
 // How dark the gaps between scanlines get, 0..1.
 uniform float scanline_strength = 0.15;
@@ -16,7 +16,7 @@ uniform float scanline_strength = 0.15;
 uniform float scanlines = 480.0;
 
 // How strongly the corners darken.
-uniform float vignette = 0.25;
+uniform float vignette = 0.1;
 
 // Overall brightness of the phosphor.
 uniform float glow = 1.3;

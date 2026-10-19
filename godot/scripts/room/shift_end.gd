@@ -20,8 +20,8 @@ extends Node
 ## Optional. Falls asleep before the reload. Tests leave it unset.
 @export var sleep: Sleep
 
-## Optional. Dimmed to dark while the Listener falls asleep.
-@export var lamp: Light3D
+## Dimmed to dark while the Listener falls asleep: the desk lamps.
+@export var lamps: Array[Light3D] = []
 
 ## True once the shift has ended, so a second bell or pull does nothing.
 var _ended := false
@@ -46,7 +46,7 @@ func _on_bell(_payload: Variant) -> void:
 	var tween := create_tween()
 	tween.tween_method(sleep.fall, 0.0, 1.0, tunables.shift_fade_seconds)
 
-	if lamp != null:
+	for lamp: Light3D in lamps:
 		tween.parallel().tween_property(lamp, "light_energy", 0.0, tunables.shift_fade_seconds)
 
 	tween.tween_callback(get_tree().reload_current_scene)
