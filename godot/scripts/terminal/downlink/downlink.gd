@@ -40,6 +40,10 @@ extends Node
 ## Read. False when HERALD never heard last window's ACK: this window's AUTH keys are held back.
 @export var ack_heard: BoolValue
 
+## Read. The commands HERALD received last window; the ones this window's `requests` name add
+## their products to the manifest.
+@export var last_sent: StringListValue
+
 ## Read and written. AUTH ManifestItems held back for a missed ACK, released with the next
 ## manifest after an ACK. Kept across windows.
 @export var held_keys: ResourceListValue
@@ -141,18 +145,23 @@ func _advance_push(window: PassWindow, delta: float) -> void:
 
 ## The items HERALD lists this window. After a heard ACK: the held keys first, then the window's
 ## manifest. After a missed one: the manifest without its AUTH keys, which join the held ones.
+## Either way, the products of last window's commands come last.
 func _released(window: PassWindow) -> Array[Resource]:
 	var items: Array[Resource] = []
 	if ack_heard.value:
 		items.assign(held_keys.value + window.manifest)
 		held_keys.clear()
-		return items
+	else:
+		for item: ManifestItem in window.manifest:
+			if item.type != "AUTH":
+				items.append(item)
+			elif not held_keys.value.has(item):
+				held_keys.add(item)
 
-	for item: ManifestItem in window.manifest:
-		if item.type != "AUTH":
-			items.append(item)
-		elif not held_keys.value.has(item):
-			held_keys.add(item)
+	for command: String in last_sent.value:
+		var product: Resource = window.requests.get(command)
+		if product != null and not items.has(product):
+			items.append(product)
 
 	return items
 

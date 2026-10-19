@@ -52,6 +52,10 @@ const MARK_NAMES: PackedStringArray = ["AOS", "UPLINK", "LOS", "BELL"]
 ## HERALD's queue listing for this window, pushed at the first lock. Empty for none.
 @export var manifest: Array[ManifestItem] = []
 
+## ManifestItems HERALD adds to this manifest when it received the command last window, keyed
+## by the command as sent, e.g. `IMG 3 H`. List each spelling a player may send.
+@export var requests: Dictionary[String, Resource] = { }
+
 @export_group("Terminal")
 ## The commands this window offers. Every window needs one: Terminal and HELP read it.
 @export var command_set: CommandSet

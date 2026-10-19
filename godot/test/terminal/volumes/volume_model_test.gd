@@ -91,3 +91,9 @@ func test_the_game_files_fit_the_popup_and_their_volumes() -> void:
 	expected.append_array(["SYS:BOOT.LOG", "SYS:TLM.MAN", "SYS:IMG.MAN"])
 	assert_array(paths).is_equal(PackedStringArray(expected))
 	assert_object(game.find("SYS:TLM.MAN", PackedStringArray())).is_null()
+
+func test_an_unlocked_archive_is_no_longer_sealed() -> void:
+	var model := VolumeModel.new()
+	assert_bool(model.is_sealed("ARC", PackedStringArray())).is_true()
+	assert_bool(model.is_sealed("ARC", PackedStringArray(["ARC"]))).is_false()
+	assert_bool(model.is_sealed("USR", PackedStringArray())).is_false()

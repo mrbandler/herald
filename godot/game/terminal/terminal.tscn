@@ -594,6 +594,7 @@ out = ExtResource("20_stdout")
 manifest_arrived = ExtResource("85_manifest_arrived")
 shown_item = ExtResource("87_shown")
 monitor_mode = ExtResource("88_mode")
+last_sent = ExtResource("76_last_sent")
 
 [node name="RelaySound" type="Node" parent="." node_paths=PackedStringArray("sound")]
 script = ExtResource("70_event_sound")

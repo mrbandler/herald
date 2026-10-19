@@ -118,6 +118,10 @@ func _parent(directory: String) -> String:
 
 	return directory.get_slice(":", 0) + ":"
 
+## True while `volume` is sealed and no AUTH key in `unlocked` has opened it.
+func is_sealed(volume: String, unlocked: PackedStringArray) -> bool:
+	return sealed.has(volume) and not unlocked.has(volume)
+
 ## True when nothing unlocks `file`, or what unlocks it is in `unlocked`.
 func _unlocked(file: StationFile, unlocked: PackedStringArray) -> bool:
 	return file.unlocked_by.is_empty() or unlocked.has(file.unlocked_by)
