@@ -16,6 +16,9 @@ extends Command
 ## Read. What is stored: StoredItem resources.
 @export var storage: ResourceListValue
 
+## Read. The ids of keys used up by UNLOCK. Optional.
+@export var used_keys: StringListValue
+
 ## Finds stored copies by id.
 @export var model: DownlinkModel
 
@@ -38,10 +41,13 @@ func run(_args: PackedStringArray) -> void:
 		write((" %-4d %-5s %-5d %-8s %s" % columns).rstrip(" "))
 
 ## QUEUED while waiting or downloading, STORED for a clean copy, DAMAGED for one GET can fetch
-## again, and NONE before any of that.
+## again, USED for a key UNLOCK spent, and NONE before any of that.
 func _state(item: ManifestItem) -> String:
 	if download_queue.value.has(item):
 		return "QUEUED"
+
+	if used_keys != null and used_keys.value.has(str(item.id)):
+		return "USED"
 
 	var kept := model.stored(storage.value, str(item.id))
 	if kept == null:

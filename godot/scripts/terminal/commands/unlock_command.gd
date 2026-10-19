@@ -8,6 +8,9 @@ extends Command
 ## Supplies the modules, their banners and key validity.
 @export var module_model: ModuleModel
 
+## Written. The ids of every key used up, kept across windows, so MANIFEST can show them USED.
+@export var used_keys: StringListValue
+
 ## Looks the key up in storage.
 @export var downlink_model: DownlinkModel
 
@@ -34,6 +37,9 @@ func run(args: PackedStringArray) -> void:
 
 	unlocked_modules.value = unlocked_modules.value + PackedStringArray([module])
 	storage.remove(stored)
+	if used_keys != null:
+		used_keys.value = used_keys.value + PackedStringArray([str(stored.item.id)])
+
 	module_unlocked.raise(module)
 
 	write(" -- %s UNLOCKED --" % module)

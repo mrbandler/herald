@@ -14,6 +14,7 @@ func before_test() -> void:
 	_unlock.storage = ResourceListValue.new()
 	_unlock.unlocked_modules = StringListValue.new()
 	_unlock.module_unlocked = Event.new()
+	_unlock.used_keys = StringListValue.new()
 	_out = AtomSpy.events(_unlock.out)
 	_unlocked = AtomSpy.events(_unlock.module_unlocked)
 
@@ -34,6 +35,7 @@ func test_unlocks_with_a_valid_key_and_uses_it_up() -> void:
 	assert_bool(_unlock.unlocked_modules.value.has("TLM")).is_true()
 	assert_int(_unlock.storage.value.size()).is_equal(0)
 	assert_array(_unlocked.calls).is_equal(["TLM"])
+	assert_array(_unlock.used_keys.value).is_equal(PackedStringArray(["21"]))
 
 func test_refusals_in_order() -> void:
 	_key(21, "TLM", [0, 2])

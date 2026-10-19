@@ -7,6 +7,7 @@
 [ext_resource type="Resource" path="res://game/data/atoms/downlink/storage.tres" id="5_storage"]
 [ext_resource type="Resource" path="res://game/data/atoms/modules/unlocked_modules.tres" id="6_unlocked_modules"]
 [ext_resource type="Resource" path="res://game/data/atoms/modules/module_unlocked.tres" id="7_module_unlocked"]
+[ext_resource type="Resource" path="res://game/data/atoms/modules/used_keys.tres" id="99_used_keys"]
 
 [resource]
 script = ExtResource("1_script")
@@ -19,3 +20,4 @@ downlink_model = ExtResource("4_downlink_model")
 storage = ExtResource("5_storage")
 unlocked_modules = ExtResource("6_unlocked_modules")
 module_unlocked = ExtResource("7_module_unlocked")
+used_keys = ExtResource("99_used_keys")

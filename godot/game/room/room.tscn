@@ -106,6 +106,7 @@
 [ext_resource type="Shader" path="res://game/room/haze.gdshader" id="138_haze"]
 [ext_resource type="PackedScene" path="res://game/room/wake_card.tscn" id="140_wake"]
 [ext_resource type="Shader" path="res://game/room/eyelid.gdshader" id="141_eyelid"]
+[ext_resource type="Resource" path="res://game/data/atoms/modules/used_keys.tres" id="142_used_keys"]
 
 [sub_resource type="Environment" id="Environment_room"]
 background_mode = 1
@@ -160,7 +161,7 @@ shader_parameter/from_top = false
 
 [node name="Resetter" type="Node" parent="." unique_id=221681823]
 script = ExtResource("1_resetter")
-atoms = Array[ExtResource("2_value")]([ExtResource("30_time"), ExtResource("40_az"), ExtResource("41_el"), ExtResource("42_tune"), ExtResource("43_strength"), ExtResource("44_quality"), ExtResource("45_carrier"), ExtResource("46_locked"), ExtResource("48_force"), ExtResource("50_hovering"), ExtResource("51_grabbing"), ExtResource("52_focused"), ExtResource("60_viewing"), ExtResource("62_sequence"), ExtResource("63_speak_open"), ExtResource("64_acked"), ExtResource("65_transmitting"), ExtResource("70_chain_unlocked"), ExtResource("80_manifest"), ExtResource("81_manifest_received"), ExtResource("82_queue"), ExtResource("83_dl_received"), ExtResource("84_progress"), ExtResource("85_dl_open"), ExtResource("86_lean"), ExtResource("87_drowsy"), ExtResource("88_directory"), ExtResource("93_reading"), ExtResource("96_aim"), ExtResource("98_raised"), ExtResource("99_placing"), ExtResource("100_running"), ExtResource("101_waiting"), ExtResource("106_seen"), ExtResource("107_shown"), ExtResource("108_mode"), ExtResource("109_line"), ExtResource("110_offset"), ExtResource("111_contrast"), ExtResource("114_alert"), ExtResource("120_pointing"), ExtResource("139_blocked")])
+atoms = Array[ExtResource("2_value")]([ExtResource("30_time"), ExtResource("43_strength"), ExtResource("44_quality"), ExtResource("45_carrier"), ExtResource("46_locked"), ExtResource("48_force"), ExtResource("50_hovering"), ExtResource("51_grabbing"), ExtResource("52_focused"), ExtResource("60_viewing"), ExtResource("62_sequence"), ExtResource("63_speak_open"), ExtResource("64_acked"), ExtResource("65_transmitting"), ExtResource("70_chain_unlocked"), ExtResource("80_manifest"), ExtResource("81_manifest_received"), ExtResource("82_queue"), ExtResource("83_dl_received"), ExtResource("84_progress"), ExtResource("85_dl_open"), ExtResource("86_lean"), ExtResource("87_drowsy"), ExtResource("88_directory"), ExtResource("93_reading"), ExtResource("96_aim"), ExtResource("98_raised"), ExtResource("99_placing"), ExtResource("100_running"), ExtResource("101_waiting"), ExtResource("106_seen"), ExtResource("107_shown"), ExtResource("108_mode"), ExtResource("114_alert"), ExtResource("120_pointing"), ExtResource("139_blocked")])
 
 [node name="PassLoader" type="Node" parent="." unique_id=824546816]
 script = ExtResource("3_loader")
@@ -376,7 +377,7 @@ drowsiness = ExtResource("87_drowsy")
 
 [node name="Checkpoint" type="Node" parent="."]
 script = ExtResource("127_checkpoint")
-atoms = Array[ExtResource("2_value")]([ExtResource("22_window_number"), ExtResource("129_history"), ExtResource("130_unlocked"), ExtResource("131_storage"), ExtResource("132_last_sent"), ExtResource("117_ack_heard"), ExtResource("133_held_keys"), ExtResource("119_placed")])
+atoms = Array[ExtResource("2_value")]([ExtResource("22_window_number"), ExtResource("129_history"), ExtResource("130_unlocked"), ExtResource("131_storage"), ExtResource("132_last_sent"), ExtResource("117_ack_heard"), ExtResource("133_held_keys"), ExtResource("119_placed"), ExtResource("40_az"), ExtResource("41_el"), ExtResource("42_tune"), ExtResource("109_line"), ExtResource("110_offset"), ExtResource("111_contrast"), ExtResource("142_used_keys")])
 
 [node name="EndCard" parent="." node_paths=PackedStringArray("checkpoint") instance=ExtResource("128_end_card")]
 checkpoint = NodePath("../Checkpoint")
