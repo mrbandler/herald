@@ -87,6 +87,7 @@ func test_window_two_offers_the_downlink_commands() -> void:
 		"LS",
 		"CD",
 		"READ",
+		"SHOW",
 		"DECODE",
 		"VRFY",
 		"TAG",
@@ -103,3 +104,16 @@ func test_window_two_key_and_telemetry() -> void:
 	var stored := DownlinkFixture.stored(two.manifest[1], clean)
 	assert_int(ModuleModel.new().decode_lines(stored).size()).is_equal(8)
 	assert_str(two.manifest[1].content).starts_with("HERALD TELEMETRY")
+
+func test_window_three_sends_pictures() -> void:
+	var three: PassWindow = load("res://game/data/passes/pass_03.tres")
+	assert_int(three.number).is_equal(3)
+	var types := PackedStringArray()
+	for item: ManifestItem in three.manifest:
+		types.append(item.type)
+	assert_array(types).is_equal(PackedStringArray(["AUTH", "CAL", "IMG", "TLM"]))
+	assert_str(three.manifest[0].key_for).is_equal("IMG")
+	assert_object(three.manifest[2].image).is_not_null()
+	assert_str(three.papers[0].text_for(three)).contains("AZ 226.8  EL 44.1")
+	assert_int(three.papers[1].slot).is_equal(3)
+	assert_float(three.papers[2].arrives_at).is_greater(0.0)

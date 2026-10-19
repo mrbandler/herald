@@ -26,9 +26,6 @@ enum RowState {
 ## CONTRAST that leaves the picture as sent.
 @export var neutral_contrast := 0.5
 
-## How far LINE may be from the truth and still count as upright, in knob units.
-@export var upright_tolerance := 0.08
-
 ## How much snow a noisy row mixes into the picture, 0..1.
 @export var noise := 0.6
 

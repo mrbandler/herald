@@ -154,3 +154,16 @@ func test_exit_is_a_hidden_easter_egg() -> void:
 	var exit := two.command_set.find("EXIT") as TextCommand
 	assert_bool(exit.hidden).is_true()
 	assert_str(exit.text).is_not_empty()
+
+func test_decode_and_show_drive_the_monitor() -> void:
+	var two: PassWindow = load(PASS_02)
+	var decode := two.command_set.find("DECODE") as DecodeCommand
+	var show := two.command_set.find("SHOW") as ShowCommand
+	var monitor: Node = auto_free(
+		(load("res://game/monitor/monitor.tscn") as PackedScene).instantiate()
+	)
+	var driver := monitor.get_node("Driver") as Monitor
+	assert_object(decode.shown_item).is_same(driver.shown_item)
+	assert_object(decode.knob_line).is_same(driver.knob_line)
+	assert_object(show.monitor_mode).is_same(driver.monitor_mode)
+	assert_str(decode.monitor_model.resource_path.get_file()).is_equal("monitor.tres")

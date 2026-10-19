@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="KnobModel" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/interaction/knob_model.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+units_per_pixel = 0.05
+fine_factor = 0.2
+minimum = 80.0
+maximum = 125.0
+visual_degrees_per_unit = 6.0

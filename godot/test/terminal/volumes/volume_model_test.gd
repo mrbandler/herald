@@ -88,6 +88,6 @@ func test_the_game_files_fit_the_popup_and_their_volumes() -> void:
 			assert_int(line.length()).override_failure_message(message).is_less_equal(60)
 
 	var expected := ["HTB:HEARTBEAT.LOG", "USR:OKONJO/NIGHTS.TXT", "USR:OKONJO/WAKE.TXT"]
-	expected.append_array(["SYS:BOOT.LOG", "SYS:TLM.MAN"])
+	expected.append_array(["SYS:BOOT.LOG", "SYS:TLM.MAN", "SYS:IMG.MAN"])
 	assert_array(paths).is_equal(PackedStringArray(expected))
 	assert_object(game.find("SYS:TLM.MAN", PackedStringArray())).is_null()

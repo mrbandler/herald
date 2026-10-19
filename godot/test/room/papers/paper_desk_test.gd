@@ -76,3 +76,12 @@ func test_the_tube_lamp_waits_for_the_paper_to_be_picked_up() -> void:
 	assert_float(_desk.capsule_waiting.value).is_equal(1.0)
 	_desk.reading.value = _sheets()[1].paper
 	assert_float(_desk.capsule_waiting.value).is_equal(0.0)
+
+func test_a_paper_with_a_slot_lands_on_it_and_the_rest_fill_around() -> void:
+	var noted := _paper(0.0)
+	noted.slot = 1
+	_build([_paper(0.0), noted], 2)
+	var sheets := _sheets()
+	assert_object(sheets[0].paper).is_same(noted)
+	assert_vector(sheets[0].global_position).is_equal(Vector3(1.0, 0.0, 0.0))
+	assert_vector(sheets[1].global_position).is_equal(Vector3(0.0, 0.0, 0.0))

@@ -44,15 +44,25 @@ func _ready() -> void:
 	if window == null:
 		return
 
-	var slot := 0
+	var taken: Array[int] = []
+	var loose: Array[Paper] = []
 	for paper: Paper in window.papers:
 		if paper.arrives_at > 0.0:
 			_waiting.append(paper)
-		elif slot < desk_slots.size():
-			_place(paper, desk_slots[slot].global_transform)
-			slot += 1
+		elif paper.slot >= 0 and paper.slot < desk_slots.size() and not taken.has(paper.slot):
+			_place(paper, desk_slots[paper.slot].global_transform)
+			taken.append(paper.slot)
 		else:
+			loose.append(paper)
+
+	for paper: Paper in loose:
+		var free := _free_slot(taken)
+		if free < 0:
 			push_warning("No desk slot left for a paper of window %d" % window.number)
+			continue
+
+		_place(paper, desk_slots[free].global_transform)
+		taken.append(free)
 
 	_waiting.sort_custom(_earlier)
 	reading.updated.connect(_on_reading)
@@ -86,6 +96,14 @@ func _on_reading(_previous: Variant, _current: Variant) -> void:
 	var paper := reading.value as Paper
 	if paper != null and _waiting.has(paper):
 		capsule_waiting.value = 0.0
+
+## The first desk slot not in `taken`, or -1 when all are.
+func _free_slot(taken: Array[int]) -> int:
+	for index: int in range(desk_slots.size()):
+		if not taken.has(index):
+			return index
+
+	return -1
 
 ## True when `first` arrives before `second`.
 func _earlier(first: Paper, second: Paper) -> bool:

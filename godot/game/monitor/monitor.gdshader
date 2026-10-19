@@ -40,7 +40,7 @@ void fragment() {
 				shade = mix(lum, snow, noise);
 			}
 		}
-		float gain = mix(0.5, 2.0, contrast);
+		float gain = exp2((contrast - 0.5) * 2.0);
 		shade = clamp((shade - 0.5) * gain + 0.5 + (contrast - 0.5) * 0.3, 0.0, 1.0);
 		vec3 colour = tint * shade;
 		if (newest_row >= 0) {

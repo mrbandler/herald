@@ -16,6 +16,9 @@ extends Resource
 ## Seconds into the pass it arrives by tube. 0 lies on the desk from the start.
 @export var arrives_at := 0.0
 
+## The desk slot it lies on from the start, or -1 for the next free one.
+@export var slot := -1
+
 ## The paper's text: `text`, or the sibling `.md` of a saved resource, e.g. `letter.md` next to
 ## `letter.tres`.
 func body() -> String:

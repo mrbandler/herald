@@ -6,6 +6,12 @@
 [ext_resource type="Resource" path="res://game/data/models/downlink.tres" id="4_downlink_model"]
 [ext_resource type="Resource" path="res://game/data/atoms/downlink/storage.tres" id="5_storage"]
 [ext_resource type="Resource" path="res://game/data/atoms/modules/unlocked_modules.tres" id="6_unlocked_modules"]
+[ext_resource type="Resource" path="res://game/data/models/monitor.tres" id="7_m_monitor"]
+[ext_resource type="Resource" path="res://game/data/atoms/monitor/shown_item.tres" id="8_shown"]
+[ext_resource type="Resource" path="res://game/data/atoms/monitor/monitor_mode.tres" id="9_mode"]
+[ext_resource type="Resource" path="res://game/data/atoms/monitor/knob_line.tres" id="10_line"]
+[ext_resource type="Resource" path="res://game/data/atoms/monitor/knob_offset.tres" id="11_offset"]
+[ext_resource type="Resource" path="res://game/data/atoms/monitor/knob_contrast.tres" id="12_contrast"]
 
 [resource]
 script = ExtResource("1_script")
@@ -16,3 +22,9 @@ module_model = ExtResource("3_module_model")
 downlink_model = ExtResource("4_downlink_model")
 storage = ExtResource("5_storage")
 unlocked_modules = ExtResource("6_unlocked_modules")
+monitor_model = ExtResource("7_m_monitor")
+shown_item = ExtResource("8_shown")
+monitor_mode = ExtResource("9_mode")
+knob_line = ExtResource("10_line")
+knob_offset = ExtResource("11_offset")
+knob_contrast = ExtResource("12_contrast")

@@ -65,6 +65,11 @@
 [ext_resource type="Resource" path="res://game/data/atoms/downlink/manifest_seen.tres" id="106_seen"]
 [ext_resource type="Resource" path="res://game/data/atoms/monitor/shown_item.tres" id="107_shown"]
 [ext_resource type="Resource" path="res://game/data/atoms/monitor/monitor_mode.tres" id="108_mode"]
+[ext_resource type="Resource" path="res://game/data/atoms/monitor/knob_line.tres" id="109_line"]
+[ext_resource type="Resource" path="res://game/data/atoms/monitor/knob_offset.tres" id="110_offset"]
+[ext_resource type="Resource" path="res://game/data/atoms/monitor/knob_contrast.tres" id="111_contrast"]
+[ext_resource type="PackedScene" path="res://game/monitor/monitor.tscn" id="112_monitor"]
+[ext_resource type="Resource" path="res://game/data/passes/pass_03.tres" id="113_pass_03"]
 [ext_resource type="Script" uid="uid://cf3crd0so8det" path="res://scripts/antenna/lamp.gd" id="102_lamp"]
 [ext_resource type="Resource" path="res://game/data/models/lamp.tres" id="103_m_lamp"]
 [ext_resource type="Script" uid="uid://chfphy4xlrc4o" path="res://scripts/core/atoms/values/bool_value.gd" id="104_bool"]
@@ -103,11 +108,11 @@ height = 0.04
 
 [node name="Resetter" type="Node" parent="." unique_id=221681823]
 script = ExtResource("1_resetter")
-atoms = Array[ExtResource("2_value")]([ExtResource("30_time"), ExtResource("40_az"), ExtResource("41_el"), ExtResource("42_tune"), ExtResource("43_strength"), ExtResource("44_quality"), ExtResource("45_carrier"), ExtResource("46_locked"), ExtResource("48_force"), ExtResource("50_hovering"), ExtResource("51_grabbing"), ExtResource("52_focused"), ExtResource("60_viewing"), ExtResource("62_sequence"), ExtResource("63_speak_open"), ExtResource("64_acked"), ExtResource("65_transmitting"), ExtResource("70_chain_unlocked"), ExtResource("80_manifest"), ExtResource("81_manifest_received"), ExtResource("82_queue"), ExtResource("83_dl_received"), ExtResource("84_progress"), ExtResource("85_dl_open"), ExtResource("86_lean"), ExtResource("87_drowsy"), ExtResource("88_directory"), ExtResource("93_reading"), ExtResource("96_aim"), ExtResource("98_raised"), ExtResource("99_placing"), ExtResource("100_running"), ExtResource("101_waiting"), ExtResource("106_seen"), ExtResource("107_shown"), ExtResource("108_mode")])
+atoms = Array[ExtResource("2_value")]([ExtResource("30_time"), ExtResource("40_az"), ExtResource("41_el"), ExtResource("42_tune"), ExtResource("43_strength"), ExtResource("44_quality"), ExtResource("45_carrier"), ExtResource("46_locked"), ExtResource("48_force"), ExtResource("50_hovering"), ExtResource("51_grabbing"), ExtResource("52_focused"), ExtResource("60_viewing"), ExtResource("62_sequence"), ExtResource("63_speak_open"), ExtResource("64_acked"), ExtResource("65_transmitting"), ExtResource("70_chain_unlocked"), ExtResource("80_manifest"), ExtResource("81_manifest_received"), ExtResource("82_queue"), ExtResource("83_dl_received"), ExtResource("84_progress"), ExtResource("85_dl_open"), ExtResource("86_lean"), ExtResource("87_drowsy"), ExtResource("88_directory"), ExtResource("93_reading"), ExtResource("96_aim"), ExtResource("98_raised"), ExtResource("99_placing"), ExtResource("100_running"), ExtResource("101_waiting"), ExtResource("106_seen"), ExtResource("107_shown"), ExtResource("108_mode"), ExtResource("109_line"), ExtResource("110_offset"), ExtResource("111_contrast")])
 
 [node name="PassLoader" type="Node" parent="." unique_id=824546816]
 script = ExtResource("3_loader")
-passes = Array[ExtResource("4_window")]([ExtResource("20_pass_01"), ExtResource("25_pass_02")])
+passes = Array[ExtResource("4_window")]([ExtResource("20_pass_01"), ExtResource("25_pass_02"), ExtResource("113_pass_03")])
 window_number = ExtResource("22_window_number")
 current_pass = ExtResource("23_current")
 
@@ -165,6 +170,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.137, 0.753, -0.457)
 [node name="Note" type="Marker3D" parent="PaperSlots" unique_id=459254378]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.33, 0.753, -0.5)
 
+[node name="Monitor" type="Marker3D" parent="PaperSlots"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.72, 0.753, -0.7)
+
 [node name="Tube" type="Node3D" parent="." unique_id=1291727052]
 transform = Transform3D(0.8560807, 0, -0.5168421, 0, 1, 0, 0.5168421, 0, 0.8560807, 0.38654506, 0, -0.9400423)
 
@@ -214,6 +222,9 @@ script = ExtResource("105_visibility")
 source = ExtResource("101_waiting")
 target = NodePath("../Capsule")
 
+[node name="Monitor" parent="." instance=ExtResource("112_monitor")]
+transform = Transform3D(0.669, 0, -0.743, 0, 1, 0, 0.743, 0, 0.669, 0.85, 0.75, -0.9)
+
 [node name="CapsuleSound" type="Node" parent="." unique_id=365854206 node_paths=PackedStringArray("sound")]
 script = ExtResource("92_event_sound")
 event = ExtResource("95_capsule")
@@ -227,7 +238,7 @@ reading = ExtResource("93_reading")
 put_down = ExtResource("94_put_down")
 capsule_arrived = ExtResource("95_capsule")
 capsule_waiting = ExtResource("101_waiting")
-desk_slots = [NodePath("../PaperSlots/Letter"), NodePath("../PaperSlots/Card"), NodePath("../PaperSlots/Note")]
+desk_slots = [NodePath("../PaperSlots/Letter"), NodePath("../PaperSlots/Card"), NodePath("../PaperSlots/Note"), NodePath("../PaperSlots/Monitor")]
 tray = NodePath("../Tube/Tray")
 
 [node name="DeskSurface" type="Area3D" parent="." unique_id=539147498 node_paths=PackedStringArray("shape")]
