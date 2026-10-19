@@ -22,3 +22,15 @@ func test_placeholders_become_glyphs_on_paper() -> void:
 	var paper := Paper.new()
 	paper.text = "THE {{###}} DAY"
 	assert_str(paper.text_for(null)).is_equal("THE ███ DAY")
+
+func test_a_long_text_shrinks_until_it_fits() -> void:
+	var sheet: PaperSheet = auto_free(PaperSheet.new())
+	add_child(sheet)
+	sheet.show_paper(Vector2(0.1, 0.05), "LINE\n".repeat(30))
+	for _i: int in range(12):
+		await get_tree().process_frame
+	assert_int(sheet.font_size).is_less(PaperSheet.FONT_SIZE)
+	sheet.show_paper(Vector2(0.1, 0.2), "SHORT")
+	for _i: int in range(4):
+		await get_tree().process_frame
+	assert_int(sheet.font_size).is_equal(PaperSheet.FONT_SIZE)
