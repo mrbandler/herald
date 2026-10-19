@@ -3,7 +3,7 @@ class_name ChimeStream
 extends AudioStreamWAV
 
 ## A console chime, generated from its settings: one short sine peep per note, each followed by
-## a gap of silence.
+## a gap of silence. With `square`, a harsh buzz instead of a peep, e.g. for an alarm.
 
 ## Samples per second.
 @export var rate := 22050:
@@ -41,6 +41,12 @@ extends AudioStreamWAV
 		lead_seconds = value
 		_build()
 
+## Buzzes with a square wave instead of a sine.
+@export var square := false:
+	set(value):
+		square = value
+		_build()
+
 ## Builds the samples from the defaults.
 func _init() -> void:
 	_build()
@@ -59,7 +65,8 @@ func _build() -> void:
 			var t := float(i) / rate
 			# Fast attack and a fade to the end, so the peep starts and stops without a click.
 			var envelope := minf(t / 0.004, 1.0) * (1.0 - float(i) / note_frames)
-			var s := sin(TAU * notes[n] * t) * envelope * level
+			var wave := sin(TAU * notes[n] * t)
+			var s := (signf(wave) if square else wave) * envelope * level
 
 			bytes.encode_s16(
 				(lead_frames + n * step_frames + i) * 2,

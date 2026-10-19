@@ -99,6 +99,9 @@ func test_module_unlock_is_wired() -> void:
 	assert_object(bell.event).is_same(relay.event)
 	assert_object(relay.sound.stream).is_instanceof(ClickStream)
 	assert_float((bell.sound.stream as ChimeStream).lead_seconds).is_greater(0.0)
+	var alarm := scene.get_node("AckAlarmSound") as EventSound
+	assert_object(alarm.event).is_same((scene.get_node("Uplink") as Uplink).ack_missed)
+	assert_bool((alarm.sound.stream as ChimeStream).square).is_true()
 	var two: PassWindow = load(PASS_02)
 	var unlock := two.command_set.find("UNLOCK") as UnlockCommand
 	assert_object(unlock.module_unlocked).is_same(relay.event)

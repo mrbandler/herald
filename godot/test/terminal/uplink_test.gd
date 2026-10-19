@@ -23,6 +23,7 @@ func before_test() -> void:
 	_uplink.progress_line = StringValue.new()
 	_uplink.last_sent = StringListValue.new()
 	_uplink.acked = BoolValue.new()
+	_uplink.ack_missed = Event.new()
 	_out = AtomSpy.events(_uplink.out)
 	_notices = AtomSpy.events(_uplink.status_notice)
 	add_child(_uplink)
@@ -90,14 +91,22 @@ func test_los_cuts_the_send() -> void:
 	_uplink.los.raise()
 	assert_bool(_uplink.transmitting.value).is_false()
 	assert_array(_uplink.sequence.value).contains_exactly(["ACK"])
-	assert_array(_notices.calls).is_equal(["SEQ CUT 0/1. LOS"])
-	assert_array(_out.calls).is_equal(["NO ACK SENT"])
+	assert_array(_notices.calls).is_equal(["SEQ CUT 0/1. LOS", "!! NO ACK SENT !!"])
+
+func test_a_missed_ack_sounds_the_alarm_at_los() -> void:
+	var alarm := AtomSpy.events(_uplink.ack_missed)
+	_uplink.los.raise()
+	assert_array(_out.calls).is_empty()
+	assert_array(_notices.calls).is_equal(["!! NO ACK SENT !!"])
+	assert_int(alarm.calls.size()).is_equal(1)
 
 func test_los_after_the_ack_reports_nothing() -> void:
+	var alarm := AtomSpy.events(_uplink.ack_missed)
 	_uplink.acked.value = true
 	_uplink.los.raise()
 	assert_array(_out.calls).is_empty()
 	assert_array(_notices.calls).is_empty()
+	assert_array(alarm.calls).is_empty()
 
 func test_shows_the_progress_while_sending() -> void:
 	_uplink.sequence.value = PackedStringArray(["ACK", "ACK"])

@@ -1,0 +1,11 @@
+[gd_resource type="AudioStreamWAV" script_class="ChimeStream" format=3]
+
+[ext_resource type="Script" path="res://scripts/core/audio/chime_stream.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+notes = PackedFloat32Array(330, 247, 330, 247, 330, 247)
+note_seconds = 0.24
+gap_seconds = 0.04
+level = 0.3
+square = true

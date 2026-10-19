@@ -6,6 +6,9 @@ extends Resource
 ## Transmission time per queued command, in seconds.
 @export var seconds_per_command := 3.0
 
+## What the status bar shows at LOS when HERALD never received ACK.
+@export var ack_missed_notice := "!! NO ACK SENT !!"
+
 ## Characters inside the progress bar's brackets. The game's matches the downlink's.
 @export var bar_width := 10
 
