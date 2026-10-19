@@ -56,6 +56,14 @@ const MARK_NAMES: PackedStringArray = ["AOS", "UPLINK", "LOS", "BELL"]
 ## by the command as sent, e.g. `IMG 3 H`. List each spelling a player may send.
 @export var requests: Dictionary[String, Resource] = { }
 
+@export_group("Fail")
+## A HERALD command that must reach HERALD this window, e.g. INSERT. Missing it loses the game.
+## Empty for none.
+@export var required := ""
+
+## What the end card says when `required` never arrived.
+@export_multiline var missed_text := ""
+
 @export_group("Terminal")
 ## The commands this window offers. Every window needs one: Terminal and HELP read it.
 @export var command_set: CommandSet

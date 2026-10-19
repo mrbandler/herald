@@ -23,6 +23,18 @@ extends Node
 ## Dimmed to dark while the Listener falls asleep: the desk lamps.
 @export var lamps: Array[Light3D] = []
 
+## Read. The window ending, for its required command. Optional.
+@export var current_pass: ResourceValue
+
+## Read. The commands HERALD received this window.
+@export var last_sent: StringListValue
+
+## Shown instead of the next window when the required command never arrived.
+@export var end_card: EndCard
+
+## The heading of the card for a missed required command.
+@export var lost_title := "HERALD IS LOST"
+
 ## True once the shift has ended, so a second bell or pull does nothing.
 var _ended := false
 
@@ -37,7 +49,10 @@ func _on_bell(_payload: Variant) -> void:
 		return
 
 	_ended = true
-	window_number.value += 1
+	var missed := missed_command()
+	if missed.is_empty():
+		window_number.value += 1
+
 	shift_ended.raise()
 
 	if sleep == null:
@@ -49,4 +64,21 @@ func _on_bell(_payload: Variant) -> void:
 	for lamp: Light3D in lamps:
 		tween.parallel().tween_property(lamp, "light_energy", 0.0, tunables.shift_fade_seconds)
 
-	tween.tween_callback(get_tree().reload_current_scene)
+	tween.tween_callback(_after_sleep.bind(missed))
+
+## The command this window required that HERALD never received; empty when none. A key held back
+## for a missed ACK makes it unsendable, and that loses too.
+func missed_command() -> String:
+	var window := current_pass.value as PassWindow if current_pass != null else null
+	if window == null or window.required.is_empty():
+		return ""
+
+	return "" if last_sent.value.has(window.required) else window.required
+
+## Reloads into the next window, or shows the end card for a missed required command.
+func _after_sleep(missed: String) -> void:
+	if missed.is_empty() or end_card == null:
+		get_tree().reload_current_scene()
+		return
+
+	end_card.show_card(lost_title, (current_pass.value as PassWindow).missed_text, true)

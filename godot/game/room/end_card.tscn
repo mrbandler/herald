@@ -1,0 +1,51 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/room/end_card.gd" id="1_card"]
+
+[node name="EndCard" type="CanvasLayer" node_paths=PackedStringArray("panel", "title", "body", "keys")]
+layer = 20
+script = ExtResource("1_card")
+panel = NodePath("Panel")
+title = NodePath("Panel/Column/Title")
+body = NodePath("Panel/Column/Body")
+keys = NodePath("Panel/Column/Keys")
+
+[node name="Panel" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.015, 0.01, 1)
+
+[node name="Column" type="VBoxContainer" parent="Panel"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -360.0
+offset_top = -160.0
+offset_right = 360.0
+offset_bottom = 160.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 28
+alignment = 1
+
+[node name="Title" type="Label" parent="Panel/Column"]
+theme_override_colors/font_color = Color(1, 0.72, 0.25, 1)
+theme_override_font_sizes/font_size = 40
+horizontal_alignment = 1
+
+[node name="Body" type="Label" parent="Panel/Column"]
+custom_minimum_size = Vector2(720, 0)
+theme_override_colors/font_color = Color(0.85, 0.8, 0.7, 1)
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Keys" type="Label" parent="Panel/Column"]
+theme_override_colors/font_color = Color(0.6, 0.42, 0.14, 1)
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
