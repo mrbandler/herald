@@ -19,7 +19,7 @@ uniform float hum_strength = 0.5;
 uniform float hum_seconds = 7.0;
 
 // Height of the hum bar as a share of the screen.
-uniform float hum_width = 0.035;
+uniform float hum_width = 0.06;
 
 void fragment() {
 	float scan = 0.5 + 0.5 * cos(SCREEN_UV.y * scanlines * TAU);
@@ -27,7 +27,7 @@ void fragment() {
 	float corners = pow(clamp(edge.x * edge.y * 16.0, 0.0, 1.0), vignette);
 	float centre = 1.0 - fract(TIME / hum_seconds);
 	float distance = abs(fract(SCREEN_UV.y - centre + 0.5) - 0.5);
-	float band = smoothstep(hum_width, 0.0, distance);
+	float band = exp(-pow(distance / (hum_width * 0.5), 2.0));
 	float light = (1.0 - scanline_strength * scan) * corners;
 	light = mix(light, 1.0, hum_strength * band);
 	COLOR = vec4(0.0, 0.0, 0.0, 1.0 - light);

@@ -30,16 +30,16 @@ uniform float hum_strength = 0.15;
 uniform float hum_seconds = 7.0;
 
 // Height of the hum bar as a share of the picture.
-uniform float hum_width = 0.035;
+uniform float hum_width = 0.06;
 
 // Overall brightness of the phosphor.
 uniform float glow = 1.3;
 
-// 0..1 where the rolling hum bar lies over `y`, softly faded at its edges.
+// 0..1 where the rolling hum bar lies over `y`: brightest at its centre, falling off softly.
 float hum_bar(float y, float time, float seconds, float width) {
 	float centre = 1.0 - fract(time / seconds);
 	float distance = abs(fract(y - centre + 0.5) - 0.5);
-	return smoothstep(width, 0.0, distance);
+	return exp(-pow(distance / (width * 0.5), 2.0));
 }
 
 void fragment() {
