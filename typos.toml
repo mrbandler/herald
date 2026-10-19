@@ -5,3 +5,4 @@ extend-exclude = ["*.lock", "LICENSE", "addons", "*.tscn", "*.tres", "*.import",
 [default.extend-words]
 # Project-specific words that typos flags wrongly, e.g. `ratatui = "ratatui"`.
 als = "als" # Ableton Live Set extension in .gitattributes
+Lod = "Lod" # GLSL textureLod in shaders
