@@ -1,0 +1,13 @@
+[gd_resource type="Theme" format=3]
+
+[sub_resource type="SystemFont" id="Font_mono"]
+font_names = PackedStringArray("monospace")
+
+[resource]
+default_font = SubResource("Font_mono")
+default_font_size = 18
+Label/colors/font_color = Color(1, 0.72, 0.25, 1)
+Label/colors/font_shadow_color = Color(1, 0.55, 0.12, 0.35)
+Label/constants/shadow_offset_x = 0
+Label/constants/shadow_offset_y = 0
+Label/constants/shadow_outline_size = 8

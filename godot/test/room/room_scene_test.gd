@@ -18,9 +18,11 @@ func test_room_holds_every_feature() -> void:
 	for child: String in ["Pass", "Player", "Antenna", "Terminal", "ShiftEnd", "DebugCommands"]:
 		assert_object(room.get_node_or_null(child)).is_not_null()
 
-func test_room_is_the_main_scene() -> void:
+func test_the_boot_screen_leads_into_the_room() -> void:
 	var main: String = ProjectSettings.get_setting("application/run/main_scene")
-	assert_str(main).is_equal(ROOM)
+	var boot: BootScreen = auto_free((load(main) as PackedScene).instantiate())
+	assert_str(boot.next_scene).is_equal(ROOM)
+	assert_str((boot.get_node("Column/Advice") as Label).text).contains("HEADPHONES")
 
 func test_lamp_chain_ends_the_shift_after_los() -> void:
 	var room: Node = auto_free((load(ROOM) as PackedScene).instantiate())
