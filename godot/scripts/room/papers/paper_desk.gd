@@ -38,7 +38,8 @@ const STACK := 0.003
 ## the heartbeat out.
 @export var missed_ack: Paper
 
-## Read and written. PinnedPaper entries on the pin wall. Kept across windows.
+## Read and written. PinnedPaper entries on the pin wall. Kept across windows, except another
+## window's prayer card, which comes down.
 @export var pinned: ResourceListValue
 
 ## Where a centred paper lies, in front of the keyboard.
@@ -64,6 +65,11 @@ func _ready() -> void:
 
 	var on_wall: Array[Paper] = []
 	for entry: PinnedPaper in pinned.value:
+		# An old prayer card would send the Listener to last night's coordinates.
+		if entry.paper.centred and not window.papers.has(entry.paper):
+			pinned.remove(entry)
+			continue
+
 		_place(entry.paper, entry.at)
 		on_wall.append(entry.paper)
 

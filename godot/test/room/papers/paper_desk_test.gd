@@ -136,3 +136,12 @@ func test_a_pinned_paper_hangs_where_it_was_and_leaves_the_stack() -> void:
 	var sheets := _sheets()
 	assert_int(sheets.size()).is_equal(1)
 	assert_vector(sheets[0].global_position).is_equal(Vector3(0.0, 2.0, 0.0))
+
+func test_last_windows_pinned_prayer_card_comes_down() -> void:
+	var card := _paper(0.0)
+	card.centred = true
+	var entry := PinnedPaper.new()
+	entry.paper = card
+	_build([], [], true, [entry])
+	assert_int(_sheets().size()).is_equal(0)
+	assert_array(_desk.pinned.value).is_empty()
