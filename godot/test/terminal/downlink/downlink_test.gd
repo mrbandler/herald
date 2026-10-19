@@ -272,3 +272,14 @@ func test_text_leaves_the_monitor_alone() -> void:
 	_run(1.0)
 	assert_int(_downlink.monitor_mode.value).is_equal(MonitorModel.Mode.SNOW)
 	assert_object(_downlink.shown_item.value).is_null()
+
+func test_the_key_for_a_required_command_is_never_held_back() -> void:
+	var key := _item(71, 16)
+	key.key_for = "INSERT"
+	var window := _window([key])
+	window.required = "INSERT"
+	_downlink.current_pass.value = window
+	_downlink.ack_heard.value = false
+	_receive_manifest()
+	assert_array(_downlink.manifest.value).contains_exactly([key])
+	assert_array(_downlink.held_keys.value).is_empty()

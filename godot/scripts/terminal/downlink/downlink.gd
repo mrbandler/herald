@@ -144,7 +144,8 @@ func _advance_push(window: PassWindow, delta: float) -> void:
 	manifest_arrived.raise()
 
 ## The items HERALD lists this window. After a heard ACK: the held keys first, then the window's
-## manifest. After a missed one: the manifest without its AUTH keys, which join the held ones.
+## manifest. After a missed one: the manifest without its AUTH keys, which join the held ones,
+## except the key for the window's required command: holding it would lose a game no retry saves.
 ## Either way, the products of last window's commands come last.
 func _released(window: PassWindow) -> Array[Resource]:
 	var items: Array[Resource] = []
@@ -153,7 +154,8 @@ func _released(window: PassWindow) -> Array[Resource]:
 		held_keys.clear()
 	else:
 		for item: ManifestItem in window.manifest:
-			if item.type != "AUTH":
+			var needed := not window.required.is_empty() and item.key_for == window.required
+			if item.type != "AUTH" or needed:
 				items.append(item)
 			elif not held_keys.value.has(item):
 				held_keys.add(item)
