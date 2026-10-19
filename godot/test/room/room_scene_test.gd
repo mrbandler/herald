@@ -9,7 +9,7 @@ func test_resetter_and_loader_come_first() -> void:
 	assert_str(room.get_child(0).name).is_equal("Resetter")
 	assert_str(room.get_child(1).name).is_equal("PassLoader")
 	var loader := room.get_child(1) as PassLoader
-	assert_int(loader.passes.size()).is_equal(3)
+	assert_int(loader.passes.size()).is_equal(4)
 	assert_int(loader.passes[0].number).is_equal(1)
 	assert_int(loader.passes[1].number).is_equal(2)
 
@@ -90,7 +90,7 @@ func test_shift_end_advances_the_campaign() -> void:
 func test_the_monitor_stands_in_the_room_with_window_three() -> void:
 	var room: Node = auto_free((load(ROOM) as PackedScene).instantiate())
 	var loader := room.get_node("PassLoader") as PassLoader
-	assert_int(loader.passes.size()).is_equal(3)
+	assert_int(loader.passes.size()).is_equal(4)
 	assert_int(loader.passes[2].number).is_equal(3)
 	var driver := room.get_node("Monitor/Driver") as Monitor
 	assert_str(driver.shown_item.resource_path.get_file()).is_equal("shown_item.tres")

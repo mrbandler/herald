@@ -138,3 +138,15 @@ func test_window_three_sends_pictures() -> void:
 	assert_str(three.papers[0].text_for(three)).contains("AZ 226.8  EL 44.1")
 	assert_int(three.papers.size()).is_equal(2)
 	assert_float(three.papers[1].arrives_at).is_greater(0.0)
+
+func test_window_four_overflows_storage_and_keys_the_archive() -> void:
+	var four: PassWindow = load("res://game/data/passes/pass_04.tres")
+	assert_int(four.number).is_equal(4)
+	assert_str(four.manifest[0].key_for).is_equal("ARC")
+	var units := 0
+	for item: ManifestItem in four.manifest:
+		units += item.size
+	assert_int(units).is_greater(
+		(load("res://game/data/models/downlink.tres") as DownlinkModel).storage_capacity
+	)
+	assert_str(four.papers[1].body()).contains("IMG 3 H")
