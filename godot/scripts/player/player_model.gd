@@ -32,7 +32,7 @@ extends Resource
 @export var yaw_limit := 100.0
 
 ## Lowest pitch in degrees. Negative looks down.
-@export var pitch_min := -45.0
+@export var pitch_min := -65.0
 
 ## Highest pitch in degrees.
 @export var pitch_max := 35.0

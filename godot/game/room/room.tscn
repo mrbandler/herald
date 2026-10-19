@@ -130,6 +130,7 @@ size = Vector3(2.2, 0.05, 0.8)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.95, -1.59)
 
 [node name="Player" parent="." unique_id=2125880003 instance=ExtResource("11_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.15)
 
 [node name="Antenna" parent="." unique_id=690363022 instance=ExtResource("12_antenna")]
 transform = Transform3D(0.90630776, 0, 0.42261827, 0, 1, 0, -0.42261827, 0, 0.90630776, -0.75, 0.75, -0.8)
@@ -187,6 +188,7 @@ script = ExtResource("91_desk_surface")
 reading = ExtResource("93_reading")
 aim_point = ExtResource("96_aim")
 put_down = ExtResource("94_put_down")
+chair = Vector3(0, 0, -0.15)
 shape = NodePath("Shape")
 
 [node name="Shape" type="CollisionShape3D" parent="DeskSurface"]

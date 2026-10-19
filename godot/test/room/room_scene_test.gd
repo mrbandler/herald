@@ -62,6 +62,8 @@ func test_papers_desk_and_tube_are_wired() -> void:
 	assert_object(held.reading).is_same(papers.reading)
 	assert_object(held.current_pass).is_same(loader.current_pass)
 	assert_bool(papers.get_index() > loader.get_index()).is_true()
+	var player := room.get_node("Player") as Node3D
+	assert_vector(surface.chair).is_equal(player.position)
 
 func test_shift_end_advances_the_campaign() -> void:
 	var room: Node = auto_free((load(ROOM) as PackedScene).instantiate())
