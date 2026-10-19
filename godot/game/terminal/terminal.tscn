@@ -60,6 +60,8 @@
 [ext_resource type="Resource" path="res://game/data/atoms/monitor/monitor_mode.tres" id="88_mode"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/ack_missed.tres" id="89_ack_missed"]
 [ext_resource type="AudioStream" path="res://game/data/audio/ack_alarm.tres" id="90_ack_alarm"]
+[ext_resource type="Resource" path="res://game/data/atoms/terminal/alert.tres" id="91_alert"]
+[ext_resource type="Script" path="res://scripts/terminal/alert_popup.gd" id="92_alert_popup"]
 
 [sub_resource type="SystemFont" id="Font_mono"]
 font_names = PackedStringArray("monospace")
@@ -322,6 +324,56 @@ theme_override_font_sizes/font_size = 15
 text = "ESC CLOSE   UP/DOWN/PGUP/PGDN/WHEEL SCROLL"
 vertical_alignment = 1
 
+[node name="AlertPanel" type="ColorRect" parent="Screen"]
+visible = false
+offset_left = 110.0
+offset_top = 60.0
+offset_right = 530.0
+offset_bottom = 420.0
+mouse_filter = 2
+color = Color(1, 0.72, 0.25, 1)
+
+[node name="Dim" type="ColorRect" parent="Screen/AlertPanel"]
+show_behind_parent = true
+offset_left = -110.0
+offset_top = -60.0
+offset_right = 530.0
+offset_bottom = 420.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0.7)
+
+[node name="Body" type="Label" parent="Screen/AlertPanel"]
+offset_left = 6.0
+offset_top = 6.0
+offset_right = 414.0
+offset_bottom = 330.0
+theme_override_colors/font_color = Color(0.1, 0.07, 0.02, 1)
+theme_override_constants/line_spacing = 0
+theme_override_fonts/font = SubResource("Font_mono")
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="KeyBand" type="ColorRect" parent="Screen/AlertPanel"]
+offset_left = 2.0
+offset_top = 334.0
+offset_right = 418.0
+offset_bottom = 358.0
+mouse_filter = 2
+color = Color(0.02, 0.015, 0.01, 1)
+
+[node name="Keys" type="Label" parent="Screen/AlertPanel"]
+offset_left = 2.0
+offset_top = 334.0
+offset_right = 418.0
+offset_bottom = 358.0
+theme_override_colors/font_color = Color(1, 0.72, 0.25, 1)
+theme_override_fonts/font = SubResource("Font_mono")
+theme_override_font_sizes/font_size = 15
+text = "ENTER ACKNOWLEDGE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="Bezel" type="CSGBox3D" parent="."]
 position = Vector3(0, 0, -0.06)
 size = Vector3(0.6, 0.48, 0.1)
@@ -441,6 +493,7 @@ out = ExtResource("20_stdout")
 history = ExtResource("21_history")
 focused = ExtResource("24_focused")
 viewing = ExtResource("22_viewing")
+alert = ExtResource("91_alert")
 current_pass = ExtResource("23_current")
 leave = ExtResource("12_leave")
 terminal_context = ExtResource("13_context")
@@ -481,6 +534,7 @@ signal_strength = ExtResource("41_strength")
 status_notice = ExtResource("56_notice")
 acked = ExtResource("34_acked")
 ack_missed = ExtResource("89_ack_missed")
+alert = ExtResource("91_alert")
 
 [node name="Downlink" type="Node" parent="."]
 script = ExtResource("60_downlink")
@@ -517,6 +571,13 @@ sound = NodePath("../Crt/RelayPlayer")
 script = ExtResource("70_event_sound")
 event = ExtResource("71_unlocked")
 sound = NodePath("../Crt/UnlockBellPlayer")
+
+[node name="AlertPopup" type="Node" parent="." node_paths=PackedStringArray("panel", "body")]
+script = ExtResource("92_alert_popup")
+alert = ExtResource("91_alert")
+focused = ExtResource("24_focused")
+panel = NodePath("../Screen/AlertPanel")
+body = NodePath("../Screen/AlertPanel/Body")
 
 [node name="AckAlarmSound" type="Node" parent="." node_paths=PackedStringArray("sound")]
 script = ExtResource("70_event_sound")

@@ -48,6 +48,9 @@ extends Node
 ## Raised at LOS when HERALD never received ACK, for the alarm.
 @export var ack_missed: Event
 
+## Written. Takes the alert box at LOS when HERALD never received ACK.
+@export var alert: StringValue
+
 ## The commands of the running send, in order.
 var _sending := PackedStringArray()
 
@@ -132,6 +135,7 @@ func _on_los(_payload: Variant) -> void:
 		return
 
 	status_notice.raise(model.ack_missed_notice)
+	alert.value = model.ack_missed_alert
 	ack_missed.raise()
 
 ## HERALD takes the command in flight, or counts it garbled after a dip, and the next one starts.

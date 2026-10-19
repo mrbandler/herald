@@ -102,6 +102,10 @@ func test_module_unlock_is_wired() -> void:
 	var alarm := scene.get_node("AckAlarmSound") as EventSound
 	assert_object(alarm.event).is_same((scene.get_node("Uplink") as Uplink).ack_missed)
 	assert_bool((alarm.sound.stream as ChimeStream).square).is_true()
+	var popup := scene.get_node("AlertPopup") as AlertPopup
+	assert_object(popup.alert).is_same((scene.get_node("Uplink") as Uplink).alert)
+	assert_object(popup.alert).is_same((scene.get_node("Terminal") as Terminal).alert)
+	assert_object(popup.panel).is_same(scene.get_node("Screen/AlertPanel"))
 	var two: PassWindow = load(PASS_02)
 	var unlock := two.command_set.find("UNLOCK") as UnlockCommand
 	assert_object(unlock.module_unlocked).is_same(relay.event)
