@@ -4,6 +4,9 @@
 
 [resource]
 script = ExtResource("1")
+decoders = Dictionary[String, String]({
+"CAL": "IMG"
+})
 descriptions = Dictionary[String, String]({
 "IMG": "SLOW-SCAN IMAGES ON THE MONITOR",
 "SPC": "SPECTRA AS A CHARACTER CHART",
