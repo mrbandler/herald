@@ -17,3 +17,8 @@ func test_lean_amount_by_look_away_angle() -> void:
 	assert_float(_model.lean_amount(_model.lean_start)).is_equal(1.0)
 	assert_float(_model.lean_amount(30.0)).is_between(0.01, 0.99)
 	assert_float(_model.lean_amount(_model.lean_full)).is_equal(0.0)
+
+func test_drowsiness_slows_the_look() -> void:
+	var model := PlayerModel.new()
+	assert_float(model.look_scale(0.0)).is_equal(1.0)
+	assert_float(model.look_scale(1.0)).is_equal_approx(1.0 - model.drowsy_slowdown, 0.0001)

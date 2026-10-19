@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="VrfyCommand" format=3]
+
+[ext_resource type="Script" path="res://scripts/terminal/commands/vrfy_command.gd" id="1_script"]
+[ext_resource type="Resource" path="res://game/data/atoms/terminal/stdout.tres" id="2_stdout"]
+[ext_resource type="Resource" path="res://game/data/models/modules.tres" id="3_module_model"]
+[ext_resource type="Resource" path="res://game/data/models/downlink.tres" id="4_downlink_model"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/storage.tres" id="5_storage"]
+
+[resource]
+script = ExtResource("1_script")
+name = "VRFY"
+help = "VRFY <ID>         INTEGRITY OF A STORED ITEM"
+out = ExtResource("2_stdout")
+module_model = ExtResource("3_module_model")
+downlink_model = ExtResource("4_downlink_model")
+storage = ExtResource("5_storage")

@@ -28,14 +28,14 @@ const MARK_NAMES: PackedStringArray = ["AOS", "UPLINK", "LOS", "BELL"]
 ## How much faster station time runs than real time after LOS, so the rest of the night passes.
 @export var night_rate := 60.0
 
-@export_group("Star Card")
-## Azimuth printed on the star card, in degrees.
+@export_group("Prayer Card")
+## Azimuth printed on the prayer card, in degrees.
 @export var card_azimuth := 0.0
 
-## Elevation printed on the star card, in degrees.
+## Elevation printed on the prayer card, in degrees.
 @export var card_elevation := 0.0
 
-## Tuning printed on the star card, in dial units.
+## Tuning printed on the prayer card, in dial units.
 @export var card_tuning := 0.0
 
 ## Picks the direction of the card error and the sign of the tuning error.
@@ -46,6 +46,14 @@ const MARK_NAMES: PackedStringArray = ["AOS", "UPLINK", "LOS", "BELL"]
 
 ## Dial units the card tuning is off at AOS. Negative uses the ReceiverModel formula.
 @export var card_tuning_error := -1.0
+
+@export_group("Desk")
+## The papers of this window: on the desk from the start, or by tube at their time.
+@export var papers: Array[Paper] = []
+
+@export_group("Downlink")
+## HERALD's queue listing for this window, pushed at the first lock. Empty for none.
+@export var manifest: Array[ManifestItem] = []
 
 @export_group("Terminal")
 ## The commands this window offers. Every window needs one: Terminal and HELP read it.

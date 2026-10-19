@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="TextCommand" format=3]
+
+[ext_resource type="Script" path="res://scripts/terminal/commands/text_command.gd" id="1_script"]
+[ext_resource type="Resource" path="res://game/data/atoms/terminal/stdout.tres" id="2_stdout"]
+
+[resource]
+script = ExtResource("1_script")
+name = "EXIT"
+hidden = true
+out = ExtResource("2_stdout")
+text = "EXIT NOT PERMITTED.
+THE WELL HAS ONE DOOR, AND IT FACES UP."

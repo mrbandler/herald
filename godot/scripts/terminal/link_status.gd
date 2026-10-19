@@ -49,13 +49,112 @@ enum Mode {
 ## Shown after LOS.
 @export var los_text := "LOS"
 
-## Refreshes the bar every frame; its inputs change continuously.
-func _process(_delta: float) -> void:
+## Raised with short notices that replace the mode text for `notice_seconds`. Optional.
+@export var status_notice: StringEvent
+
+## Seconds a notice stays before the mode text returns.
+@export var notice_seconds := 4.0
+
+## Shows the countdown to the next mark on the right, e.g. "UPLINK T-00:42", in the text's
+## colour. Optional.
+@export var countdown: Label
+
+## The band behind the text, coloured by the mode. Optional.
+@export var band: ColorRect
+
+## Band colour while the lock holds, and text colour on the dark band without lock.
+@export var lit_color := Color(1, 0.72, 0.25)
+
+## Band colour without lock: the screen's background.
+@export var dark_color := Color(0.02, 0.015, 0.01)
+
+## Text colour on the lit band.
+@export var ink_color := Color(0.1, 0.07, 0.02)
+
+## Text colour while nothing is heard and after LOS.
+@export var dim_color := Color(0.6, 0.42, 0.14)
+
+## How long the band blinks after the mode changes, in seconds.
+@export var blink_seconds := 0.9
+
+## One blink, on then off, in seconds.
+@export var blink_period := 0.3
+
+## The notice on show, or empty for none.
+var _notice := ""
+
+## Seconds left on the notice.
+var _notice_left := 0.0
+
+## The mode drawn last, compared to start a blink.
+var _last_mode := Mode.NO_CARRIER
+
+## False until the first draw, so the first mode does not blink.
+var _drawn := false
+
+## Seconds since the last mode change.
+var _blink_elapsed := INF
+
+## Listens for notices.
+func _ready() -> void:
+	if status_notice != null:
+		status_notice.raised.connect(_on_notice)
+
+## Advances the notice timer and refreshes every frame; the inputs change continuously.
+func _process(delta: float) -> void:
+	tick(delta)
+
+## Counts the notice and the blink on by `delta` seconds, then shows the notice or the
+## current mode.
+func tick(delta: float) -> void:
+	_blink_elapsed += delta
+	if _notice_left > 0.0:
+		_notice_left -= delta
+		if _notice_left <= 0.0:
+			_notice = ""
+
 	refresh()
 
-## Shows the text of the current mode.
+## Shows the notice if one is on show, otherwise the text of the current mode, and colours
+## the band. A mode change starts a blink.
 func refresh() -> void:
-	text = _text_for(mode())
+	var current := mode()
+	if _drawn and current != _last_mode:
+		_blink_elapsed = 0.0
+
+	_last_mode = current
+	_drawn = true
+
+	text = _notice if not _notice.is_empty() else _text_for(current)
+	_paint(current)
+
+	if countdown != null:
+		var window := current_pass.value as PassWindow
+		countdown.text = "" if window == null else window.next_mark(pass_time.value).countdown()
+		countdown.add_theme_color_override("font_color", get_theme_color("font_color"))
+
+## Lights the band while the lock holds and darkens it otherwise. A blink swaps band and text.
+func _paint(link_mode: Mode) -> void:
+	var held := link_mode in [Mode.DOWNLINK, Mode.UPLINK, Mode.TRANSMITTING]
+	var quiet := link_mode in [Mode.NO_CARRIER, Mode.LOS]
+	var band_color := lit_color if held else dark_color
+	var text_color := ink_color if held else (dim_color if quiet else lit_color)
+
+	var blinking := _blink_elapsed < blink_seconds
+	if blinking and fmod(_blink_elapsed, blink_period) < blink_period / 2.0:
+		var swapped := band_color
+		band_color = text_color
+		text_color = swapped
+
+	add_theme_color_override("font_color", text_color)
+	if band != null:
+		band.color = band_color
+
+## Shows `line` for `notice_seconds`, over any mode, LOS included.
+func _on_notice(line: String) -> void:
+	_notice = line
+	_notice_left = notice_seconds
+	refresh()
 
 ## The current mode. LOS wins, then a held lock by uplink state, then whether anything is heard.
 func mode() -> Mode:

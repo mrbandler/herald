@@ -6,19 +6,64 @@ func test_long_lines_wrap_at_the_column_count() -> void:
 	assert_array(model.wrap_line("ABCDEFGHIJ")).contains_exactly(["ABCD", "EFGH", "IJ"])
 	assert_array(model.wrap_line("")).contains_exactly([""])
 
-func test_compose_shows_the_tail_then_prompt_then_reserved_line() -> void:
+func test_compose_shows_the_tail_then_the_prompt() -> void:
 	var model := TerminalModel.new()
-	model.rows = 4
+	model.rows = 3
 	var screen := model.compose(PackedStringArray(["ONE", "TWO", "THREE"]), "TX", 0)
-	assert_str(screen).is_equal("TWO\nTHREE\nLP4> TX_\n")
+	assert_str(screen).is_equal("TWO\nTHREE\n" + _command(model, "LP4> TX" + _block(model, " ")))
 
 func test_scroll_moves_the_window_up() -> void:
 	var model := TerminalModel.new()
-	model.rows = 4
+	model.rows = 3
 	var screen := model.compose(PackedStringArray(["ONE", "TWO", "THREE"]), "", 1)
-	assert_str(screen).is_equal("ONE\nTWO\nLP4> _\n")
+	assert_str(screen).is_equal("ONE\nTWO\n" + _command(model, "LP4> " + _block(model, " ")))
 	assert_int(model.max_scroll(3)).is_equal(1)
+
+func test_compose_colours_commands_and_escapes_brackets() -> void:
+	var model := TerminalModel.new()
+	var lines := PackedStringArray(["LP4> GET 21", "RECV [##--] 1/2"])
+	var screen := model.compose(lines, "", 0)
+	var expected := [
+		_command(model, "LP4> GET 21"),
+		"RECV [lb]##--] 1/2",
+		_command(model, "LP4> " + _block(model, " ")),
+	]
+	assert_str(screen).is_equal("\n".join(expected))
+
+func _block(model: TerminalModel, under: String) -> String:
+	var colour := model.command_color.to_html(false)
+	return "[bgcolor=#%s][color=#000000]%s[/color][/bgcolor]" % [colour, under]
+
+func _command(model: TerminalModel, line: String) -> String:
+	return "[color=#%s]%s[/color]" % [model.command_color.to_html(false), line]
+
+func test_the_rules_mark_lines_below_and_above() -> void:
+	var model := TerminalModel.new()
+	model.columns = 20
+	model.rows = 4
+	assert_str(model.rule_below(0)).is_equal("─".repeat(20))
+	assert_str(model.rule_below(12)).is_equal("──── +12 BELOW ─────")
+	assert_str(model.rule_above(0)).is_equal("─".repeat(20))
+	assert_str(model.rule_above(40)).is_equal("──── +40 ABOVE ─────")
+	assert_int(model.lines_above(10, 2)).is_equal(5)
+	assert_int(model.lines_above(2, 0)).is_equal(0)
+
+func test_the_prompt_shows_the_directory_and_commands_keep_their_colour() -> void:
+	var model := TerminalModel.new()
+	assert_str(model.prompt_in("")).is_equal("LP4> ")
+	assert_str(model.prompt_in("USR:OKONJO/")).is_equal("LP4 USR:OKONJO> ")
+	assert_int(model.max_input("USR:")).is_equal(model.columns - "LP4 USR:> ".length() - 1)
+	var screen := model.compose(PackedStringArray(["LP4 USR:> LS"]), "", 0, "USR:")
+	assert_str(screen).starts_with("[color=")
+	assert_str(screen).ends_with("LP4 USR:> " + _block(model, " ") + "[/color]")
 
 func test_max_input_leaves_room_for_prompt_and_cursor() -> void:
 	var model := TerminalModel.new()
 	assert_int(model.max_input()).is_equal(model.columns - model.prompt.length() - 1)
+
+func test_the_cursor_shows_inside_the_input() -> void:
+	var model := TerminalModel.new()
+	model.rows = 1
+	var screen := model.compose(PackedStringArray(), "LS", 0, "", 0)
+	assert_str(screen).contains("LP4> [bgcolor=")
+	assert_str(screen).contains("]L[/color][/bgcolor]S[/color]")

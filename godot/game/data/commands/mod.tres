@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ModCommand" format=3]
+
+[ext_resource type="Script" path="res://scripts/terminal/commands/mod_command.gd" id="1_script"]
+[ext_resource type="Resource" path="res://game/data/atoms/terminal/stdout.tres" id="2_stdout"]
+[ext_resource type="Resource" path="res://game/data/models/modules.tres" id="3_module_model"]
+[ext_resource type="Resource" path="res://game/data/atoms/modules/unlocked_modules.tres" id="4_unlocked_modules"]
+
+[resource]
+script = ExtResource("1_script")
+name = "MOD"
+help = "MOD               MODULE STATES"
+out = ExtResource("2_stdout")
+module_model = ExtResource("3_module_model")
+unlocked_modules = ExtResource("4_unlocked_modules")

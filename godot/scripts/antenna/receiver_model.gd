@@ -20,6 +20,9 @@ extends Resource
 ## Dial units off the true carrier at which lock quality reaches zero.
 @export_range(0.01, 20.0) var tuning_tolerance := 2.0
 
+## Signal strength (0..1) at or above which downlink rows arrive clean. Below it they are noisy.
+@export var margin := 0.6
+
 @export_group("Set")
 ## Seconds after LOS the carrier takes to fade out. It rises over the whole prep.
 @export_range(0.1, 120.0) var set_seconds := 15.0

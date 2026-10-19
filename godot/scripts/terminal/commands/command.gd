@@ -10,8 +10,15 @@ extends Resource
 ## Shown by HELP <NAME>, one output line per line break.
 @export_multiline var help := ""
 
+## Left out of HELP, and HELP <NAME> treats it as unknown. For commands players find.
+@export var hidden := false
+
 ## Written. Usually stdout.
 @export var out: StringEvent
+
+## The text HELP <NAME> prints. Subclasses append what changes per window.
+func help_text() -> String:
+	return help
 
 ## Executes with the words after the command name. Subclasses override.
 func run(_args: PackedStringArray) -> void:

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="LsCommand" format=3]
+
+[ext_resource type="Script" path="res://scripts/terminal/commands/ls_command.gd" id="1_script"]
+[ext_resource type="Resource" path="res://game/data/atoms/terminal/stdout.tres" id="2_stdout"]
+[ext_resource type="Resource" path="res://game/data/models/volumes.tres" id="3_volumes"]
+[ext_resource type="Resource" path="res://game/data/atoms/modules/unlocked_modules.tres" id="4_unlocked"]
+[ext_resource type="Resource" path="res://game/data/atoms/terminal/directory.tres" id="9_directory"]
+
+[resource]
+script = ExtResource("1_script")
+name = "LS"
+help = "LS [<DIR>]        LIST A DIRECTORY"
+out = ExtResource("2_stdout")
+volume_model = ExtResource("3_volumes")
+unlocked_modules = ExtResource("4_unlocked")
+directory = ExtResource("9_directory")

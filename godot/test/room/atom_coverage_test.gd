@@ -5,9 +5,12 @@ extends GdUnitTestSuite
 const KEPT: PackedStringArray = [
 	"res://game/data/atoms/campaign/window_number.tres",
 	"res://game/data/atoms/terminal/command_history.tres",
+	"res://game/data/atoms/modules/unlocked_modules.tres",
 	"res://game/data/atoms/pass/current_pass.tres",
 	"res://game/data/atoms/player/terminal_focus_point.tres",
 	"res://game/data/atoms/antenna/volume.tres",
+	"res://game/data/atoms/downlink/storage.tres",
+	"res://game/data/atoms/uplink/last_sent.tres",
 ]
 
 func test_every_value_atom_is_reset_or_kept() -> void:

@@ -4,4 +4,5 @@
 
 [resource]
 script = ExtResource("1")
+columns = 68
 rows = 16

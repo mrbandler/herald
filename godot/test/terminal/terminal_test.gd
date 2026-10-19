@@ -8,7 +8,7 @@ func before_test() -> void:
 	_terminal = auto_free(Terminal.new())
 	_terminal.model = TerminalModel.new()
 	_terminal.model.history_cap = 2
-	_terminal.screen = auto_free(Label.new())
+	_terminal.screen = auto_free(RichTextLabel.new())
 	_terminal.out = StringEvent.new()
 	_terminal.history = StringListValue.new()
 	_terminal.focused = BoolValue.new()
@@ -16,12 +16,19 @@ func before_test() -> void:
 	_terminal.leave = GUIDEAction.new()
 	_terminal.terminal_context = GUIDEMappingContext.new()
 	_terminal.clear = Event.new()
+	_terminal.lean_amount = FloatValue.new()
+	_terminal.directory = StringValue.new()
+	_terminal.unlocked_modules = StringListValue.new()
+	_terminal.volume_model = VolumeModel.new()
+	var wake := StationFile.new()
+	wake.path = "USR:OKONJO/WAKE.TXT"
+	var nights := StationFile.new()
+	nights.path = "USR:OKONJO/NIGHTS.TXT"
+	_terminal.volume_model.files = [wake, nights]
+	_terminal.scroll_rule = auto_free(Label.new())
+	_terminal.top_rule = auto_free(Label.new())
 	_out = AtomSpy.events(_terminal.out)
-	_seq = SeqCommand.new()
-	_seq.name = "SEQ"
-	_seq.out = _terminal.out
-	_seq.sequence = StringListValue.new()
-	_seq.transmitting = BoolValue.new()
+	_seq = TerminalFixture.seq(_terminal.out)
 	_terminal.current_pass = TerminalFixture.pass_with([_seq])
 	add_child(_terminal)
 	_terminal.clear.raise()
@@ -86,3 +93,75 @@ func test_escape_closes_the_popup_before_leaving() -> void:
 	assert_bool(_terminal.focused.value).is_true()
 	_terminal.leave_pressed()
 	assert_bool(_terminal.focused.value).is_false()
+
+func test_the_wheel_scrolls_three_lines() -> void:
+	for n: int in 30:
+		_terminal.out.raise("LINE %d" % n)
+	assert_bool(_terminal.handle_wheel(MOUSE_BUTTON_WHEEL_UP)).is_true()
+	assert_int(_terminal.editor.scroll).is_equal(3)
+	assert_str(_terminal.scroll_rule.text).contains(" +3 BELOW ")
+	assert_str(_terminal.top_rule.text).contains(" ABOVE ")
+	assert_bool(_terminal.handle_wheel(MOUSE_BUTTON_WHEEL_DOWN)).is_true()
+	assert_int(_terminal.editor.scroll).is_equal(0)
+	assert_bool(_terminal.handle_wheel(MOUSE_BUTTON_LEFT)).is_false()
+
+func test_the_wheel_scrolls_only_fully_leaned_in() -> void:
+	for n: int in 30:
+		_terminal.out.raise("LINE %d" % n)
+	_terminal.focused.value = false
+	var wheel := InputEventMouseButton.new()
+	wheel.button_index = MOUSE_BUTTON_WHEEL_UP
+	wheel.pressed = true
+	get_viewport().push_input(wheel)
+	assert_int(_terminal.editor.scroll).is_equal(0)
+	_terminal.focused.value = true
+	_terminal.lean_amount.value = 0.8
+	get_viewport().push_input(wheel)
+	assert_int(_terminal.editor.scroll).is_equal(0)
+	_terminal.lean_amount.value = 1.0
+	get_viewport().push_input(wheel)
+	assert_int(_terminal.editor.scroll).is_equal(3)
+
+func test_echoes_commands_with_the_working_directory() -> void:
+	_terminal.directory.value = "USR:"
+	_terminal.submit("seq")
+	assert_str(_terminal.lines[0]).is_equal("LP4 USR:> SEQ")
+	assert_str(_terminal.screen.text).contains("LP4 USR:> [bgcolor=")
+
+func test_arrow_keys_edit_inside_the_line() -> void:
+	for character: String in "LS X":
+		_terminal.handle_key(KEY_NONE, character.unicode_at(0))
+	_terminal.handle_key(KEY_HOME, 0)
+	_terminal.handle_key(KEY_DELETE, 0)
+	_terminal.handle_key(KEY_RIGHT, 0)
+	_terminal.handle_key(KEY_LEFT, 0)
+	_terminal.handle_key(KEY_NONE, "Q".unicode_at(0))
+	_terminal.handle_key(KEY_END, 0)
+	assert_str(_terminal.editor.text).is_equal("QS X")
+	assert_int(_terminal.editor.cursor).is_equal(4)
+
+func _type(line: String) -> void:
+	for character: String in line:
+		_terminal.handle_key(KEY_NONE, character.unicode_at(0))
+
+func test_tab_completes_a_path_and_lists_choices() -> void:
+	_type("read usr:o")
+	_terminal.handle_key(KEY_TAB, 0)
+	assert_str(_terminal.editor.text).is_equal("READ USR:OKONJO/")
+	_out.calls.clear()
+	_terminal.handle_key(KEY_TAB, 0)
+	assert_array(_out.calls).is_equal(["USR:OKONJO/WAKE.TXT  USR:OKONJO/NIGHTS.TXT"])
+	_type("w")
+	_terminal.handle_key(KEY_TAB, 0)
+	assert_str(_terminal.editor.text).is_equal("READ USR:OKONJO/WAKE.TXT")
+
+func test_tab_leaves_the_command_name_alone() -> void:
+	_type("re")
+	_terminal.handle_key(KEY_TAB, 0)
+	assert_str(_terminal.editor.text).is_equal("RE")
+
+func test_ctrl_arrows_move_by_word() -> void:
+	_type("ls usr:")
+	assert_bool(_terminal.handle_word_key(KEY_LEFT)).is_true()
+	assert_int(_terminal.editor.cursor).is_equal(3)
+	assert_bool(_terminal.handle_word_key(KEY_UP)).is_false()

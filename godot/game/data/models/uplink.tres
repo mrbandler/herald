@@ -4,3 +4,4 @@
 
 [resource]
 script = ExtResource("1")
+bar_width = 29

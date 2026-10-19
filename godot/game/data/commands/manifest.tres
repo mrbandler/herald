@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="ManifestCommand" format=3]
+
+[ext_resource type="Script" path="res://scripts/terminal/commands/manifest_command.gd" id="1_script"]
+[ext_resource type="Resource" path="res://game/data/atoms/terminal/stdout.tres" id="2_stdout"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/manifest_received.tres" id="3_received"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/manifest.tres" id="4_manifest"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/download_queue.tres" id="5_queue"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/storage.tres" id="6_storage"]
+[ext_resource type="Resource" path="res://game/data/models/downlink.tres" id="7_model"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/manifest_seen.tres" id="8_seen"]
+
+[resource]
+script = ExtResource("1_script")
+name = "MANIFEST"
+help = "MANIFEST          HERALD'S QUEUE LISTING"
+out = ExtResource("2_stdout")
+manifest_received = ExtResource("3_received")
+manifest = ExtResource("4_manifest")
+download_queue = ExtResource("5_queue")
+storage = ExtResource("6_storage")
+model = ExtResource("7_model")
+manifest_seen = ExtResource("8_seen")

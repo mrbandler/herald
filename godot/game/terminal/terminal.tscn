@@ -4,7 +4,6 @@
 [ext_resource type="Script" path="res://scripts/terminal/uplink.gd" id="2_uplink"]
 [ext_resource type="Script" path="res://scripts/core/interaction/focus_target.gd" id="3_focus"]
 [ext_resource type="Script" path="res://scripts/terminal/link_status.gd" id="4_link_status"]
-[ext_resource type="Script" path="res://scripts/core/atoms/nodes/event_latch.gd" id="5_latch"]
 [ext_resource type="Resource" path="res://game/data/atoms/terminal/screen_cleared.tres" id="40_cleared"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/speak_open.tres" id="39_speak_open"]
 [ext_resource type="Resource" path="res://game/data/models/terminal.tres" id="10_m_terminal"]
@@ -18,7 +17,6 @@
 [ext_resource type="Resource" path="res://game/data/atoms/player/terminal_focused.tres" id="24_focused"]
 [ext_resource type="Resource" path="res://game/data/atoms/player/terminal_focus_point.tres" id="25_point"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/tx_requested.tres" id="30_tx"]
-[ext_resource type="Resource" path="res://game/data/atoms/uplink/uplinked.tres" id="31_uplinked"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/sequence.tres" id="32_sequence"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/transmitting.tres" id="33_transmitting"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/acked.tres" id="34_acked"]
@@ -26,6 +24,38 @@
 [ext_resource type="Resource" path="res://game/data/atoms/pass/los.tres" id="36_los"]
 [ext_resource type="Resource" path="res://game/data/atoms/antenna/signal_strength.tres" id="41_strength"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/pass_time.tres" id="42_time"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/manifest.tres" id="50_manifest"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/manifest_received.tres" id="51_manifest_received"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/download_queue.tres" id="52_queue"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/storage.tres" id="53_storage"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/download_received.tres" id="54_dl_received"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/progress_line.tres" id="55_progress"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/status_notice.tres" id="56_notice"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/row_received.tres" id="57_row"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/download_complete.tres" id="58_complete"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/downlink_open.tres" id="59_dl_open"]
+[ext_resource type="Script" path="res://scripts/terminal/downlink/downlink.gd" id="60_downlink"]
+[ext_resource type="Resource" path="res://game/data/models/downlink.tres" id="61_m_downlink"]
+[ext_resource type="Resource" path="res://game/data/models/receiver.tres" id="62_m_receiver"]
+[ext_resource type="Resource" path="res://game/data/atoms/pass/speak_opened.tres" id="63_speak_opened"]
+[ext_resource type="Resource" path="res://game/data/atoms/antenna/carrier_present.tres" id="64_carrier"]
+[ext_resource type="Script" path="res://scripts/core/audio/event_sound.gd" id="70_event_sound"]
+[ext_resource type="Resource" path="res://game/data/atoms/modules/module_unlocked.tres" id="71_unlocked"]
+[ext_resource type="AudioStream" path="res://game/data/audio/relay.tres" id="72_relay"]
+[ext_resource type="AudioStream" path="res://game/data/audio/unlock_bell.tres" id="73_unlock_bell"]
+[ext_resource type="Script" path="res://scripts/terminal/progress_label.gd" id="74_progress_label"]
+[ext_resource type="Resource" path="res://game/data/atoms/player/lean_amount.tres" id="75_lean"]
+[ext_resource type="Resource" path="res://game/data/atoms/uplink/last_sent.tres" id="76_last_sent"]
+[ext_resource type="Script" path="res://scripts/terminal/storage_lamps.gd" id="77_storage_lamps"]
+[ext_resource type="Resource" path="res://game/data/models/lamp.tres" id="78_m_lamp"]
+[ext_resource type="Script" path="res://scripts/terminal/volumes/file_viewer.gd" id="79_file_viewer"]
+[ext_resource type="Resource" path="res://game/data/models/volumes.tres" id="80_m_volumes"]
+[ext_resource type="Resource" path="res://game/data/atoms/modules/unlocked_modules.tres" id="81_unlocked"]
+[ext_resource type="Resource" path="res://game/data/atoms/terminal/directory.tres" id="82_directory"]
+[ext_resource type="Script" path="res://addons/markdownlabel/markdownlabel.gd" id="83_markdown"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/running_item.tres" id="84_running"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/manifest_arrived.tres" id="85_manifest_arrived"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/manifest_seen.tres" id="86_manifest_seen"]
 
 [sub_resource type="SystemFont" id="Font_mono"]
 font_names = PackedStringArray("monospace")
@@ -44,10 +74,14 @@ size = Vector2(0.48, 0.36)
 [sub_resource type="BoxShape3D" id="Shape_crt"]
 size = Vector3(0.5, 0.38, 0.05)
 
+[sub_resource type="SphereMesh" id="Mesh_storage_lamp"]
+radius = 0.008
+height = 0.016
+
 [node name="Terminal" type="Node3D"]
 
 [node name="Screen" type="SubViewport" parent="."]
-size = Vector2i(512, 384)
+size = Vector2i(640, 480)
 render_target_update_mode = 4
 
 [node name="Background" type="ColorRect" parent="Screen"]
@@ -61,19 +95,20 @@ color = Color(0.02, 0.015, 0.01, 1)
 [node name="StatusBand" type="ColorRect" parent="Screen"]
 offset_left = 6.0
 offset_top = 6.0
-offset_right = 506.0
-offset_bottom = 28.0
+offset_right = 634.0
+offset_bottom = 30.0
 color = Color(1, 0.72, 0.25, 1)
 
-[node name="StatusBar" type="Label" parent="Screen"]
+[node name="StatusBar" type="Label" parent="Screen" node_paths=PackedStringArray("countdown", "band")]
 offset_left = 12.0
 offset_top = 6.0
-offset_right = 500.0
-offset_bottom = 28.0
+offset_right = 628.0
+offset_bottom = 30.0
 theme_override_colors/font_color = Color(0.1, 0.07, 0.02, 1)
 theme_override_fonts/font = SubResource("Font_mono")
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 15
 text = "NO CARRIER"
+vertical_alignment = 1
 script = ExtResource("4_link_status")
 pass_time = ExtResource("42_time")
 current_pass = ExtResource("23_current")
@@ -81,35 +116,302 @@ signal_strength = ExtResource("41_strength")
 locked = ExtResource("35_locked")
 uplink_open = ExtResource("39_speak_open")
 transmitting = ExtResource("33_transmitting")
+status_notice = ExtResource("56_notice")
+countdown = NodePath("../StatusCountdown")
+band = NodePath("../StatusBand")
 
-[node name="Text" type="Label" parent="Screen"]
+[node name="StatusCountdown" type="Label" parent="Screen"]
 offset_left = 12.0
-offset_top = 32.0
-offset_right = 500.0
-offset_bottom = 354.0
-theme_override_colors/font_color = Color(1, 0.72, 0.25, 1)
+offset_top = 6.0
+offset_right = 628.0
+offset_bottom = 30.0
 theme_override_fonts/font = SubResource("Font_mono")
-theme_override_font_sizes/font_size = 17
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="ProgressLine" type="Label" parent="Screen" node_paths=PackedStringArray("storage_readout")]
+offset_left = 12.0
+offset_top = 34.0
+offset_right = 628.0
+offset_bottom = 55.0
+theme_override_fonts/font = SubResource("Font_mono")
+theme_override_font_sizes/font_size = 15
+text = "NO TRANSFER"
+script = ExtResource("74_progress_label")
+progress_line = ExtResource("55_progress")
+storage = ExtResource("53_storage")
+downlink_model = ExtResource("61_m_downlink")
+storage_readout = NodePath("../StorageReadout")
+manifest_received = ExtResource("51_manifest_received")
+manifest = ExtResource("50_manifest")
+manifest_seen = ExtResource("86_manifest_seen")
+
+[node name="StorageReadout" type="Label" parent="Screen"]
+offset_left = 12.0
+offset_top = 34.0
+offset_right = 628.0
+offset_bottom = 55.0
+theme_override_fonts/font = SubResource("Font_mono")
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 2
+
+[node name="TopRule" type="Label" parent="Screen"]
+offset_left = 12.0
+offset_top = 56.0
+offset_right = 628.0
+offset_bottom = 77.0
+theme_override_colors/font_color = Color(0.6, 0.42, 0.14, 1)
+theme_override_fonts/font = SubResource("Font_mono")
+theme_override_font_sizes/font_size = 15
+
+[node name="Text" type="RichTextLabel" parent="Screen"]
+offset_left = 12.0
+offset_top = 78.0
+offset_right = 628.0
+offset_bottom = 414.0
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.8, 0.576, 0.2, 1)
+theme_override_constants/line_separation = 0
+theme_override_constants/text_highlight_h_padding = 0
+theme_override_constants/text_highlight_v_padding = 0
+theme_override_fonts/normal_font = SubResource("Font_mono")
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
 text = "LP4> _"
+scroll_active = false
+autowrap_mode = 0
+
+[node name="ScrollRule" type="Label" parent="Screen"]
+offset_left = 12.0
+offset_top = 420.0
+offset_right = 628.0
+offset_bottom = 441.0
+theme_override_colors/font_color = Color(0.6, 0.42, 0.14, 1)
+theme_override_fonts/font = SubResource("Font_mono")
+theme_override_font_sizes/font_size = 15
+
+[node name="KeyBand" type="ColorRect" parent="Screen"]
+offset_left = 6.0
+offset_top = 450.0
+offset_right = 634.0
+offset_bottom = 474.0
+color = Color(1, 0.72, 0.25, 1)
 
 [node name="KeyHints" type="Label" parent="Screen"]
 offset_left = 12.0
-offset_top = 356.0
-offset_right = 500.0
-offset_bottom = 378.0
+offset_top = 450.0
+offset_right = 628.0
+offset_bottom = 474.0
+theme_override_colors/font_color = Color(0.1, 0.07, 0.02, 1)
+theme_override_fonts/font = SubResource("Font_mono")
+theme_override_font_sizes/font_size = 15
+text = "ESC LEAVE   UP/DOWN HISTORY   PGUP/PGDN/WHEEL SCROLL   TAB COMPLETE"
+vertical_alignment = 1
+
+[node name="FilePanel" type="ColorRect" parent="Screen"]
+visible = false
+offset_left = 38.0
+offset_top = 92.0
+offset_right = 602.0
+offset_bottom = 400.0
+mouse_filter = 2
+color = Color(1, 0.72, 0.25, 1)
+
+[node name="Dim" type="ColorRect" parent="Screen/FilePanel"]
+show_behind_parent = true
+offset_left = -38.0
+offset_top = -92.0
+offset_right = 602.0
+offset_bottom = 388.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0.55)
+
+[node name="Inside" type="ColorRect" parent="Screen/FilePanel"]
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 563.0
+offset_bottom = 307.0
+mouse_filter = 2
+color = Color(0.02, 0.015, 0.01, 1)
+
+[node name="Title" type="Label" parent="Screen/FilePanel"]
+offset_left = 6.0
+offset_top = 1.0
+offset_right = 558.0
+offset_bottom = 29.0
+theme_override_colors/font_color = Color(1, 0.72, 0.25, 1)
+theme_override_fonts/font = SubResource("Font_mono")
+theme_override_font_sizes/font_size = 15
+vertical_alignment = 1
+
+[node name="Counter" type="Label" parent="Screen/FilePanel"]
+offset_left = 6.0
+offset_top = 1.0
+offset_right = 558.0
+offset_bottom = 29.0
 theme_override_colors/font_color = Color(0.6, 0.42, 0.14, 1)
 theme_override_fonts/font = SubResource("Font_mono")
-theme_override_font_sizes/font_size = 17
-text = "ESC LEAVE   UP/DOWN HISTORY   PGUP/PGDN SCROLL"
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Rule" type="ColorRect" parent="Screen/FilePanel"]
+offset_left = 6.0
+offset_top = 29.0
+offset_right = 558.0
+offset_bottom = 30.0
+mouse_filter = 2
+color = Color(0.6, 0.42, 0.14, 1)
+
+[node name="Body" type="RichTextLabel" parent="Screen/FilePanel"]
+offset_left = 6.0
+offset_top = 36.0
+offset_right = 550.0
+offset_bottom = 267.0
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.8, 0.576, 0.2, 1)
+theme_override_constants/line_separation = 0
+theme_override_fonts/normal_font = SubResource("Font_mono")
+theme_override_fonts/bold_font = SubResource("Font_mono")
+theme_override_fonts/italics_font = SubResource("Font_mono")
+theme_override_fonts/mono_font = SubResource("Font_mono")
+theme_override_font_sizes/normal_font_size = 15
+theme_override_font_sizes/bold_font_size = 15
+theme_override_font_sizes/italics_font_size = 15
+theme_override_font_sizes/mono_font_size = 15
+bbcode_enabled = true
+scroll_active = false
+autowrap_mode = 0
+script = ExtResource("83_markdown")
+
+[node name="Track" type="ColorRect" parent="Screen/FilePanel"]
+offset_left = 554.0
+offset_top = 36.0
+offset_right = 558.0
+offset_bottom = 267.0
+mouse_filter = 2
+color = Color(0.3, 0.21, 0.07, 1)
+
+[node name="Thumb" type="ColorRect" parent="Screen/FilePanel/Track"]
+offset_right = 4.0
+offset_bottom = 40.0
+mouse_filter = 2
+color = Color(1, 0.72, 0.25, 1)
+
+[node name="KeyBand" type="ColorRect" parent="Screen/FilePanel"]
+offset_left = 1.0
+offset_top = 284.0
+offset_right = 563.0
+offset_bottom = 306.0
+mouse_filter = 2
+color = Color(1, 0.72, 0.25, 1)
+
+[node name="Keys" type="Label" parent="Screen/FilePanel"]
+offset_left = 6.0
+offset_top = 284.0
+offset_right = 558.0
+offset_bottom = 306.0
+theme_override_colors/font_color = Color(0.1, 0.07, 0.02, 1)
+theme_override_fonts/font = SubResource("Font_mono")
+theme_override_font_sizes/font_size = 15
+text = "ESC CLOSE   UP/DOWN/PGUP/PGDN/WHEEL SCROLL"
+vertical_alignment = 1
 
 [node name="Bezel" type="CSGBox3D" parent="."]
 position = Vector3(0, 0, -0.06)
 size = Vector3(0.6, 0.48, 0.1)
 
+[node name="DriveUnit" type="CSGBox3D" parent="."]
+position = Vector3(0, -0.29, -0.06)
+size = Vector3(0.6, 0.08, 0.24)
+
+[node name="StorageLamps" type="Node3D" parent="DriveUnit"]
+position = Vector3(0, -0.008, 0.121)
+script = ExtResource("77_storage_lamps")
+model = ExtResource("78_m_lamp")
+downlink_model = ExtResource("61_m_downlink")
+storage = ExtResource("53_storage")
+
+[node name="Lamp1" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(-0.2275, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="Lamp2" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(-0.1925, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="Lamp3" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(-0.1575, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="Lamp4" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(-0.1225, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="Lamp5" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(-0.0875, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="Lamp6" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(-0.0525, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="Lamp7" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(-0.0175, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="Lamp8" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(0.0175, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="Lamp9" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(0.0525, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="Lamp10" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(0.0875, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="Lamp11" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(0.1225, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="Lamp12" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(0.1575, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="Lamp13" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(0.1925, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="Lamp14" type="MeshInstance3D" parent="DriveUnit/StorageLamps"]
+position = Vector3(0.2275, 0, 0)
+mesh = SubResource("Mesh_storage_lamp")
+
+[node name="StorageCaption" type="Label3D" parent="DriveUnit"]
+position = Vector3(-0.2275, 0.02, 0.121)
+pixel_size = 0.001
+modulate = Color(0.15, 0.15, 0.15, 1)
+font_size = 14
+outline_size = 0
+horizontal_alignment = 0
+text = "STORAGE"
+
+[node name="Keyboard" type="CSGBox3D" parent="."]
+position = Vector3(0, -0.315, 0.25)
+size = Vector3(0.44, 0.03, 0.15)
+
 [node name="Crt" type="MeshInstance3D" parent="."]
 position = Vector3(0, 0, 0.001)
 mesh = SubResource("Mesh_crt")
 material_override = SubResource("Material_crt")
+
+[node name="RelayPlayer" type="AudioStreamPlayer3D" parent="Crt"]
+stream = ExtResource("72_relay")
+
+[node name="UnlockBellPlayer" type="AudioStreamPlayer3D" parent="Crt"]
+stream = ExtResource("73_unlock_bell")
 
 [node name="FocusTarget" type="Area3D" parent="." node_paths=PackedStringArray("anchor")]
 script = ExtResource("3_focus")
@@ -122,10 +424,12 @@ shape = SubResource("Shape_crt")
 
 [node name="Anchor" type="Node3D" parent="FocusTarget"]
 
-[node name="Terminal" type="Node" parent="." node_paths=PackedStringArray("screen")]
+[node name="Terminal" type="Node" parent="." node_paths=PackedStringArray("screen", "scroll_rule", "top_rule")]
 script = ExtResource("1_terminal")
 model = ExtResource("10_m_terminal")
 screen = NodePath("../Screen/Text")
+scroll_rule = NodePath("../Screen/ScrollRule")
+top_rule = NodePath("../Screen/TopRule")
 out = ExtResource("20_stdout")
 history = ExtResource("21_history")
 focused = ExtResource("24_focused")
@@ -134,19 +438,72 @@ current_pass = ExtResource("23_current")
 leave = ExtResource("12_leave")
 terminal_context = ExtResource("13_context")
 clear = ExtResource("40_cleared")
+lean_amount = ExtResource("75_lean")
+directory = ExtResource("82_directory")
+volume_model = ExtResource("80_m_volumes")
+unlocked_modules = ExtResource("81_unlocked")
+
+[node name="FileViewer" type="Node" parent="." node_paths=PackedStringArray("panel", "title", "counter", "body", "track", "thumb")]
+script = ExtResource("79_file_viewer")
+terminal_model = ExtResource("10_m_terminal")
+volume_model = ExtResource("80_m_volumes")
+viewing = ExtResource("22_viewing")
+focused = ExtResource("24_focused")
+lean_amount = ExtResource("75_lean")
+unlocked_modules = ExtResource("81_unlocked")
+panel = NodePath("../Screen/FilePanel")
+title = NodePath("../Screen/FilePanel/Title")
+counter = NodePath("../Screen/FilePanel/Counter")
+body = NodePath("../Screen/FilePanel/Body")
+track = NodePath("../Screen/FilePanel/Track")
+thumb = NodePath("../Screen/FilePanel/Track/Thumb")
 
 [node name="Uplink" type="Node" parent="."]
 script = ExtResource("2_uplink")
 model = ExtResource("11_m_uplink")
 tx_requested = ExtResource("30_tx")
 los = ExtResource("36_los")
-uplinked = ExtResource("31_uplinked")
 sequence = ExtResource("32_sequence")
 locked = ExtResource("35_locked")
 transmitting = ExtResource("33_transmitting")
 out = ExtResource("20_stdout")
+progress_line = ExtResource("55_progress")
+last_sent = ExtResource("76_last_sent")
+receiver_model = ExtResource("62_m_receiver")
+signal_strength = ExtResource("41_strength")
+status_notice = ExtResource("56_notice")
+acked = ExtResource("34_acked")
 
-[node name="AckLatch" type="Node" parent="."]
-script = ExtResource("5_latch")
-on = ExtResource("31_uplinked")
-target = ExtResource("34_acked")
+[node name="Downlink" type="Node" parent="."]
+script = ExtResource("60_downlink")
+model = ExtResource("61_m_downlink")
+receiver_model = ExtResource("62_m_receiver")
+current_pass = ExtResource("23_current")
+carrier_present = ExtResource("64_carrier")
+speak_open = ExtResource("39_speak_open")
+locked = ExtResource("35_locked")
+signal_strength = ExtResource("41_strength")
+speak_opened = ExtResource("63_speak_opened")
+downlink_open = ExtResource("59_dl_open")
+manifest = ExtResource("50_manifest")
+manifest_received = ExtResource("51_manifest_received")
+download_queue = ExtResource("52_queue")
+storage = ExtResource("53_storage")
+download_received = ExtResource("54_dl_received")
+running_item = ExtResource("84_running")
+progress_line = ExtResource("55_progress")
+status_notice = ExtResource("56_notice")
+row_received = ExtResource("57_row")
+download_complete = ExtResource("58_complete")
+out = ExtResource("20_stdout")
+manifest_arrived = ExtResource("85_manifest_arrived")
+
+[node name="RelaySound" type="Node" parent="." node_paths=PackedStringArray("sound")]
+script = ExtResource("70_event_sound")
+event = ExtResource("71_unlocked")
+sound = NodePath("../Crt/RelayPlayer")
+
+[node name="UnlockBellSound" type="Node" parent="." node_paths=PackedStringArray("sound")]
+script = ExtResource("70_event_sound")
+event = ExtResource("71_unlocked")
+sound = NodePath("../Crt/UnlockBellPlayer")

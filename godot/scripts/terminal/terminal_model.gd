@@ -6,10 +6,11 @@ extends Resource
 ## Characters per row.
 @export var columns := 48
 
-## Rows on screen, including the prompt line and the reserved bottom line.
+## Rows in the text area, the prompt line included.
 @export var rows := 18
 
-## Shown before the input line and before each echoed command.
+## Shown before the input line and before each echoed command at the top directory. Its first
+## word, the station name, marks command lines.
 @export var prompt := "LP4> "
 
 ## Commands kept in the history.
@@ -18,13 +19,50 @@ extends Resource
 ## Lines kept in scrollback.
 @export var scrollback := 300
 
-## The longest input that fits beside the prompt and the cursor.
-func max_input() -> int:
-	return columns - prompt.length() - 1
+## Colour of command lines, echoed and typed: full amber, against the dimmer output.
+@export var command_color := Color(1, 0.72, 0.25)
 
-## How far back `line_count` lines can scroll. The screen shows `rows - 2` of them.
+## Lines one mouse wheel step scrolls.
+@export var wheel_lines := 3
+
+## The prompt in `directory`: `LP4> ` at the top, `LP4 USR:OKONJO> ` inside a directory.
+func prompt_in(directory: String) -> String:
+	if directory.is_empty():
+		return prompt
+
+	return "%s %s> " % [_station(), directory.trim_suffix("/")]
+
+## The longest input that fits beside the prompt in `directory` and the cursor.
+func max_input(directory := "") -> int:
+	return columns - prompt_in(directory).length() - 1
+
+## How far back `line_count` lines can scroll. The screen shows `rows - 1` of them.
 func max_scroll(line_count: int) -> int:
-	return maxi(line_count - (rows - 2), 0)
+	return maxi(line_count - (rows - 1), 0)
+
+## The rule under the text area: a plain line, or ` +12 BELOW ` in its middle while scrolled
+## `scroll` lines back.
+func rule_below(scroll: int) -> String:
+	return _rule(" +%d BELOW " % scroll if scroll > 0 else "")
+
+## The rule over the text area: a plain line, or ` +40 ABOVE ` in its middle while `above`
+## lines sit above the screen.
+func rule_above(above: int) -> String:
+	return _rule(" +%d ABOVE " % above if above > 0 else "")
+
+## Lines above the screen when `line_count` lines are scrolled `scroll` back.
+func lines_above(line_count: int, scroll: int) -> int:
+	return maxi(line_count - scroll - (rows - 1), 0)
+
+## A line `columns` wide with `marker` set into its middle.
+func _rule(marker: String) -> String:
+	var line := "─".repeat(columns)
+	var start := floori((columns - marker.length()) / 2.0)
+	return line.left(start) + marker + line.substr(start + marker.length())
+
+## The station name: the prompt's first word, e.g. `LP4`.
+func _station() -> String:
+	return prompt.get_slice(" ", 0).trim_suffix(">")
 
 ## Splits a line into chunks that fit the screen width.
 func wrap_line(line: String) -> PackedStringArray:
@@ -37,12 +75,41 @@ func wrap_line(line: String) -> PackedStringArray:
 
 	return chunks
 
-## The screen: scrollback above, the prompt line, and a reserved bottom line (progress, later).
-func compose(lines: PackedStringArray, input: String, scroll: int) -> String:
+## The text area as BBCode: scrollback above, the prompt line last, commands in
+## `command_color`. The cursor sits `cursor` characters into the input, -1 for its end.
+func compose(
+	lines: PackedStringArray,
+	input: String,
+	scroll: int,
+	directory := "",
+	cursor := -1,
+) -> String:
 	var end := maxi(lines.size() - scroll, 0)
-	var shown := lines.slice(maxi(end - (rows - 2), 0), end)
+	var marked := PackedStringArray()
+	for line: String in lines.slice(maxi(end - (rows - 1), 0), end):
+		marked.append(_marked(line))
 
-	shown.append(prompt + input + "_")
-	shown.append("")
+	marked.append(_input_line(prompt_in(directory), input, cursor))
+	return "\n".join(marked)
 
-	return "\n".join(shown)
+## The prompt line with a block cursor: the character under it shown inverse, or an inverse
+## space at the end.
+func _input_line(shown_prompt: String, input: String, cursor: int) -> String:
+	var at := input.length() if cursor < 0 else mini(cursor, input.length())
+	var before := (shown_prompt + input.left(at)).replace("[", "[lb]")
+	var after := input.substr(at + 1).replace("[", "[lb]")
+	var colour := command_color.to_html(false)
+
+	var under := input.substr(at, 1).replace("[", "[lb]")
+	var block := "[bgcolor=#%s][color=#000000]%s[/color][/bgcolor]"
+	var mark := block % [colour, " " if under.is_empty() else under]
+	return "[color=#%s]%s%s%s[/color]" % [colour, before, mark, after]
+
+## `line` with its brackets escaped, coloured when it is a command. A command always fits one
+## row, so only command rows start with the station name.
+func _marked(line: String) -> String:
+	var escaped := line.replace("[", "[lb]")
+	if not line.begins_with(_station()):
+		return escaped
+
+	return "[color=#%s]%s[/color]" % [command_color.to_html(false), escaped]

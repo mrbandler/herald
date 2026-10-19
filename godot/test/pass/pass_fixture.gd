@@ -1,7 +1,7 @@
 class_name PassFixture
 extends RefCounted
 
-## Window 1 from the GDD time budget and Star Card, for tests.
+## Window 1 from the GDD time budget and prayer card, for tests.
 
 static func window_one() -> PassWindow:
 	var window := PassWindow.new()

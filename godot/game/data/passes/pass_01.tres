@@ -1,7 +1,19 @@
-[gd_resource type="Resource" script_class="PassWindow" format=3]
+[gd_resource type="Resource" script_class="PassWindow" format=3 uid="uid://c1y0eb3df3yoj"]
 
-[ext_resource type="Script" path="res://scripts/pass/pass_window.gd" id="1"]
-[ext_resource type="Resource" path="res://game/data/commands/window_01.tres" id="2"]
+[ext_resource type="Script" uid="uid://c47dbxuo8d1i" path="res://scripts/pass/pass_window.gd" id="1"]
+[ext_resource type="Resource" path="res://game/data/commands/station.tres" id="2"]
+[ext_resource type="Script" uid="uid://brwtsdfx0ckf0" path="res://scripts/terminal/downlink/manifest_item.gd" id="2_j567y"]
+[ext_resource type="Script" uid="uid://yriiq0w5gpfr" path="res://scripts/room/papers/paper.gd" id="3_paper"]
+[ext_resource type="Resource" path="res://game/data/papers/window_01/letter.tres" id="4_letter"]
+
+[sub_resource type="Resource" id="Paper_card"]
+script = ExtResource("3_paper")
+text = "TONIGHT'S PRAYER
+SEEK THE VOICE AT
+AZ %05.1f  EL %04.1f
+BIND IT AT DIAL %.0f"
+fields = PackedStringArray("card_azimuth", "card_elevation", "card_tuning")
+size = Vector2(0.105, 0.074)
 
 [resource]
 script = ExtResource("1")
@@ -15,4 +27,5 @@ card_azimuth = 214.6
 card_elevation = 38.2
 card_tuning = 52.0
 card_seed = 1
+papers = Array[ExtResource("3_paper")]([ExtResource("4_letter"), SubResource("Paper_card")])
 command_set = ExtResource("2")

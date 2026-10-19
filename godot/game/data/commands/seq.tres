@@ -1,17 +1,92 @@
-[gd_resource type="Resource" script_class="SeqCommand" format=3]
+[gd_resource type="Resource" script_class="SeqCommand" format=3 uid="uid://dr3msgb8ebj41"]
 
-[ext_resource type="Script" path="res://scripts/terminal/commands/seq_command.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://cjlf1avlef13b" path="res://scripts/terminal/commands/seq_command.gd" id="1_script"]
 [ext_resource type="Resource" path="res://game/data/atoms/terminal/stdout.tres" id="2_stdout"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/sequence.tres" id="3_sequence"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/transmitting.tres" id="4_transmitting"]
+[ext_resource type="Script" uid="uid://bq0ok36j085wq" path="res://scripts/terminal/commands/herald_command.gd" id="5_herald"]
+[ext_resource type="Resource" path="res://game/data/atoms/modules/unlocked_modules.tres" id="6_unlocked"]
+[ext_resource type="Resource" path="res://game/data/atoms/uplink/last_sent.tres" id="7_last_sent"]
+
+[sub_resource type="Resource" id="Herald_ack"]
+script = ExtResource("5_herald")
+name = "ACK"
+usage = "ACK"
+description = "CONFIRM THE CURRENT PHASE"
+
+[sub_resource type="Resource" id="Herald_retx"]
+script = ExtResource("5_herald")
+name = "RETX"
+usage = "RETX <ID>"
+description = "RESEND AN ITEM'S LOST ROWS"
+
+[sub_resource type="Resource" id="Herald_img"]
+script = ExtResource("5_herald")
+name = "IMG"
+usage = "IMG <N> [L/H]"
+description = "IMAGE BODY N, LOW OR HIGH RES"
+unlocked_by = "IMG"
+
+[sub_resource type="Resource" id="Herald_spc"]
+script = ExtResource("5_herald")
+name = "SPC"
+usage = "SPC <N>"
+description = "SPECTRUM OF BODY N"
+unlocked_by = "SPC"
+
+[sub_resource type="Resource" id="Herald_insert"]
+script = ExtResource("5_herald")
+name = "INSERT"
+usage = "INSERT"
+description = "COMMIT ORBIT INSERTION"
+unlocked_by = "INSERT"
+
+[sub_resource type="Resource" id="Herald_pwr"]
+script = ExtResource("5_herald")
+name = "PWR"
+usage = "PWR <INSTR> OFF"
+description = "SWITCH AN INSTRUMENT OFF FOR GOOD"
+unlocked_by = "PWR"
+
+[sub_resource type="Resource" id="Herald_reset"]
+script = ExtResource("5_herald")
+name = "RESET"
+usage = "RESET <SUBSYSTEM>"
+description = "CLEAR A FAULT NAMED IN AN ALERT"
+unlocked_by = "RESET"
+
+[sub_resource type="Resource" id="Herald_erase"]
+script = ExtResource("5_herald")
+name = "ERASE"
+usage = "ERASE <ID>"
+description = "FREE SPACE ON HERALD'S RECORDER"
+unlocked_by = "ERASE"
+
+[sub_resource type="Resource" id="Herald_descend"]
+script = ExtResource("5_herald")
+name = "DESCEND"
+usage = "DESCEND"
+description = "PLUNGE INTO CANDRA. ENDS HERALD"
+unlocked_by = "DESCEND"
+hidden = true
+
+[sub_resource type="Resource" id="Herald_transfer"]
+script = ExtResource("5_herald")
+name = "TRANSFER"
+usage = "TRANSFER"
+description = "BURN FOR TARBA. HERALD LIVES ON"
+unlocked_by = "TRANSFER"
+hidden = true
 
 [resource]
 script = ExtResource("1_script")
+sequence = ExtResource("3_sequence")
+last_sent = ExtResource("7_last_sent")
+transmitting = ExtResource("4_transmitting")
+herald_commands = Array[ExtResource("5_herald")]([SubResource("Herald_ack"), SubResource("Herald_retx"), SubResource("Herald_img"), SubResource("Herald_spc"), SubResource("Herald_insert"), SubResource("Herald_pwr"), SubResource("Herald_reset"), SubResource("Herald_erase"), SubResource("Herald_descend"), SubResource("Herald_transfer")])
+unlocked_modules = ExtResource("6_unlocked")
 name = "SEQ"
-help = "SEQ               LIST THE PROBE SEQUENCE
-SEQ ADD <CMD>     QUEUE A PROBE COMMAND
+help = "SEQ               LIST THE HERALD SEQUENCE
+SEQ ADD <CMD>     QUEUE A HERALD COMMAND
 SEQ CLR           CLEAR THE SEQUENCE"
 out = ExtResource("2_stdout")
-sequence = ExtResource("3_sequence")
-transmitting = ExtResource("4_transmitting")
-allowed = PackedStringArray("ACK")

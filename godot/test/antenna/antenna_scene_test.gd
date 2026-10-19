@@ -24,6 +24,9 @@ func test_antenna_scene_is_wired() -> void:
 	assert_object((scene.get_node("TuneNeedle") as Needle).source).is_same(receiver.lock_quality)
 	var mark := scene.get_node("LockMark") as NeedleMark
 	assert_object(mark.receiver_model).is_same(receiver.model)
+	var margin_mark := scene.get_node("MarginMark") as NeedleMark
+	assert_str(margin_mark.threshold).is_equal("margin")
+	assert_object(margin_mark.receiver_model).is_same(receiver.model)
 	var volume := scene.get_node("VolumeKnob") as Knob
 	assert_object(tone.volume).is_same(volume.target)
 	for knob: Knob in [azimuth, volume, scene.get_node("TuningKnob") as Knob]:
@@ -44,3 +47,12 @@ func test_antenna_scene_is_wired() -> void:
 	for latch: EventLatch in [carrier_latch, speak_latch]:
 		assert_object(latch.on).is_not_same(latch.off)
 	assert_vector(azimuth.rotation_degrees).is_equal_approx(Vector3(90, 0, 0), Vector3.ONE * 0.01)
+	var data_lamp := scene.get_node("DataLamp") as DataLamp
+	assert_str(data_lamp.row_received.resource_path.get_file()).is_equal("row_received.tres")
+	var lock_sound := scene.get_node("LockSound") as BoolSound
+	assert_str(lock_sound.source.resource_path.get_file()).is_equal("locked.tres")
+	assert_object(lock_sound.on_sound.stream).is_instanceof(ClickStream)
+	assert_object(lock_sound.off_sound.stream).is_instanceof(ClickStream)
+	var bell := scene.get_node("BellSound") as EventSound
+	assert_str(bell.event.resource_path.get_file()).is_equal("download_complete.tres")
+	assert_object(bell.sound.stream).is_instanceof(ChimeStream)

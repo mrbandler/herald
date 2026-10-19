@@ -11,7 +11,7 @@
 script = ExtResource("1_script")
 name = "TX"
 help = "TX                SEND THE SEQUENCE AT SPEAK
-                  HOLD THE LOCK UNTIL IT IS SENT"
+                  HOLD THE SIGNAL LOCK UNTIL SENT"
 out = ExtResource("2_stdout")
 speak_open = ExtResource("3_speak")
 sequence = ExtResource("4_sequence")

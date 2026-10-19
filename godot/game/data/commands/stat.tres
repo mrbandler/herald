@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="StatCommand" format=3]
+
+[ext_resource type="Script" path="res://scripts/terminal/commands/stat_command.gd" id="1_script"]
+[ext_resource type="Resource" path="res://game/data/atoms/terminal/stdout.tres" id="2_stdout"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/download_queue.tres" id="3_queue"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/running_item.tres" id="4_running"]
+[ext_resource type="Resource" path="res://game/data/models/downlink.tres" id="5_model"]
+
+[resource]
+script = ExtResource("1_script")
+name = "STAT"
+help = "STAT              RUNNING AND QUEUED DOWNLOADS"
+out = ExtResource("2_stdout")
+download_queue = ExtResource("3_queue")
+running_item = ExtResource("4_running")
+model = ExtResource("5_model")

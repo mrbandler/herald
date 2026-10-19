@@ -25,6 +25,9 @@ extends Node
 ## Stops the blinking so the fall takes over.
 @export var shift_ended: Event
 
+## Written. How sleepy the Listener is, 0..1, so the look can slow down.
+@export var drowsiness: FloatValue
+
 ## Blink cycles since the warning started; the fraction is the place in the current blink.
 var _cycle := 0.0
 
@@ -46,6 +49,7 @@ func tick(delta: float) -> void:
 		return
 
 	var drowsy := model.drowsiness(pass_time.value, window.bell)
+	drowsiness.value = drowsy
 	if drowsy <= 0.0:
 		_cycle = 0.0
 		_pose(0.0, 0.0, Vector3.ZERO)

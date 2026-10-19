@@ -34,7 +34,15 @@
 [ext_resource type="AudioStream" path="res://game/data/audio/click.tres" id="18_click"]
 [ext_resource type="AudioStream" path="res://game/data/audio/uplink_open.tres" id="19_chime_open"]
 [ext_resource type="AudioStream" path="res://game/data/audio/uplink_close.tres" id="19_chime_close"]
+[ext_resource type="AudioStream" path="res://game/data/audio/lock_relay.tres" id="19_lock_relay"]
+[ext_resource type="AudioStream" path="res://game/data/audio/lock_drop.tres" id="19_lock_drop"]
 [ext_resource type="Script" path="res://scripts/core/audio/bool_sound.gd" id="9_bool_sound"]
+[ext_resource type="Script" path="res://scripts/antenna/data_lamp.gd" id="41_data_lamp"]
+[ext_resource type="Script" path="res://scripts/core/audio/event_sound.gd" id="43_event_sound"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/row_received.tres" id="45_row"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/download_complete.tres" id="47_complete"]
+[ext_resource type="AudioStream" path="res://game/data/audio/download_bell.tres" id="48_bell"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/manifest_arrived.tres" id="49_manifest_arrived"]
 
 [sub_resource type="CylinderShape3D" id="Shape_wheel"]
 height = 0.04
@@ -71,6 +79,10 @@ size = Vector3(0.008, 0.09, 0.004)
 [sub_resource type="SphereMesh" id="Mesh_lamp"]
 radius = 0.02
 height = 0.04
+
+[sub_resource type="SphereMesh" id="Mesh_small_lamp"]
+radius = 0.008
+height = 0.016
 
 [node name="Antenna" type="Node3D"]
 
@@ -259,6 +271,17 @@ receiver_model = ExtResource("10_m_receiver")
 position = Vector3(0, 0.083, 0)
 mesh = SubResource("Mesh_mark")
 
+[node name="MarginMark" type="Node3D" parent="."]
+position = Vector3(0.1, 0.23, 0.206)
+script = ExtResource("8_mark")
+needle_model = ExtResource("14_m_needle")
+receiver_model = ExtResource("10_m_receiver")
+threshold = "margin"
+
+[node name="Tick" type="MeshInstance3D" parent="MarginMark"]
+position = Vector3(0, 0.083, 0)
+mesh = SubResource("Mesh_mark")
+
 [node name="TuneNeedle" type="Node3D" parent="."]
 position = Vector3(0.28, 0.23, 0.208)
 script = ExtResource("3_needle")
@@ -313,6 +336,46 @@ modulate = Color(0.15, 0.15, 0.15, 1)
 font_size = 14
 outline_size = 0
 text = "UPLINK"
+
+[node name="DataLamp" type="MeshInstance3D" parent="."]
+position = Vector3(0.405, 0.12, 0.2)
+mesh = SubResource("Mesh_lamp")
+script = ExtResource("41_data_lamp")
+model = ExtResource("15_m_lamp")
+row_received = ExtResource("45_row")
+
+[node name="DownloadBell" type="AudioStreamPlayer3D" parent="DataLamp"]
+stream = ExtResource("48_bell")
+
+[node name="BellSound" type="Node" parent="." node_paths=PackedStringArray("sound")]
+script = ExtResource("43_event_sound")
+event = ExtResource("47_complete")
+sound = NodePath("../DataLamp/DownloadBell")
+
+[node name="ManifestBellSound" type="Node" parent="." node_paths=PackedStringArray("sound")]
+script = ExtResource("43_event_sound")
+event = ExtResource("49_manifest_arrived")
+sound = NodePath("../DataLamp/DownloadBell")
+
+[node name="DataCaption" type="Label3D" parent="."]
+position = Vector3(0.405, 0.15, 0.206)
+pixel_size = 0.001
+modulate = Color(0.15, 0.15, 0.15, 1)
+font_size = 14
+outline_size = 0
+text = "DATA"
+
+[node name="LockRelay" type="AudioStreamPlayer3D" parent="LockLamp"]
+stream = ExtResource("19_lock_relay")
+
+[node name="LockDrop" type="AudioStreamPlayer3D" parent="LockLamp"]
+stream = ExtResource("19_lock_drop")
+
+[node name="LockSound" type="Node" parent="." node_paths=PackedStringArray("on_sound", "off_sound")]
+script = ExtResource("9_bool_sound")
+source = ExtResource("36_locked")
+on_sound = NodePath("../LockLamp/LockRelay")
+off_sound = NodePath("../LockLamp/LockDrop")
 
 [node name="Receiver" type="Node" parent="."]
 script = ExtResource("1_receiver")
