@@ -1,10 +1,11 @@
 class_name PaperDesk
 extends Node
 
-## Lays out the window's papers: the kept ones and those from the start on the desk slots, the
-## rest in the tube's tray once their time has come, each with a capsule's thunk.
+## Lays out the window's papers: a centred one in front of the keyboard, the kept ones and the
+## rest from the start on the stacks left and right, and the tube's in its tray once their time
+## has come, each with a capsule's thunk.
 
-## Metres between papers stacked in the tray.
+## Metres between stacked papers, on the desk and in the tray.
 const STACK := 0.003
 
 ## Read. Supplies the papers.
@@ -29,8 +30,11 @@ const STACK := 0.003
 ## Papers on the desk in every window, before the window's own, e.g. the handover letter.
 @export var kept: Array[Paper] = []
 
-## Where papers from the start lie, in order.
-@export var desk_slots: Array[Node3D] = []
+## Where a centred paper lies, in front of the keyboard.
+@export var centre: Node3D
+
+## The stacks the other papers from the start take turns on, left first.
+@export var stacks: Array[Node3D] = []
 
 ## Where tube papers land, stacked.
 @export var tray: Node3D
@@ -41,31 +45,24 @@ var _waiting: Array[Paper] = []
 ## How many tube papers have arrived.
 var _arrived := 0
 
-## Lays the start papers on the slots and lines up the tube papers.
+## Lays the start papers on the centre and the stacks, and lines up the tube papers.
 func _ready() -> void:
 	var window := current_pass.value as PassWindow
 	if window == null:
 		return
 
-	var taken: Array[int] = []
-	var loose: Array[Paper] = []
+	var heights: Dictionary[Node3D, int] = { }
+	var turn := 0
 	for paper: Paper in kept + window.papers:
 		if paper.arrives_at > 0.0:
 			_waiting.append(paper)
-		elif paper.slot >= 0 and paper.slot < desk_slots.size() and not taken.has(paper.slot):
-			_place(paper, desk_slots[paper.slot].global_transform)
-			taken.append(paper.slot)
-		else:
-			loose.append(paper)
-
-	for paper: Paper in loose:
-		var free := _free_slot(taken)
-		if free < 0:
-			push_warning("No desk slot left for a paper of window %d" % window.number)
 			continue
 
-		_place(paper, desk_slots[free].global_transform)
-		taken.append(free)
+		var anchor := centre if paper.centred else stacks[turn % stacks.size()]
+		turn += 0 if paper.centred else 1
+		var height: int = heights.get(anchor, 0)
+		_place(paper, anchor.global_transform.translated(Vector3.UP * STACK * height))
+		heights[anchor] = height + 1
 
 	_waiting.sort_custom(_earlier)
 	reading.updated.connect(_on_reading)
@@ -99,14 +96,6 @@ func _on_reading(_previous: Variant, _current: Variant) -> void:
 	var paper := reading.value as Paper
 	if paper != null and _waiting.has(paper):
 		capsule_waiting.value = 0.0
-
-## The first desk slot not in `taken`, or -1 when all are.
-func _free_slot(taken: Array[int]) -> int:
-	for index: int in range(desk_slots.size()):
-		if not taken.has(index):
-			return index
-
-	return -1
 
 ## True when `first` arrives before `second`.
 func _earlier(first: Paper, second: Paper) -> bool:

@@ -17,8 +17,9 @@ extends Resource
 ## Seconds into the pass it arrives by tube. 0 lies on the desk from the start.
 @export var arrives_at := 0.0
 
-## The desk slot it lies on from the start, or -1 for the next free one.
-@export var slot := -1
+## Lies in the middle in front of the keyboard from the start, e.g. the prayer card. Other
+## papers from the start go on the stacks left and right.
+@export var centred := false
 
 ## The paper's text: `text`, or the sibling `.md` of a saved resource, e.g. `letter.md` next to
 ## `letter.tres`.

@@ -60,6 +60,7 @@ AZ %05.1f  EL %04.1f
 BIND IT AT DIAL %.0f"
 fields = PackedStringArray("card_azimuth", "card_elevation", "card_tuning")
 size = Vector2(0.105, 0.074)
+centred = true
 
 [resource]
 script = ExtResource("1")

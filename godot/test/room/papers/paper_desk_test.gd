@@ -8,7 +8,7 @@ func _paper(arrives_at: float) -> Paper:
 	paper.arrives_at = arrives_at
 	return paper
 
-func _build(papers: Array[Paper], slots: int, kept: Array[Paper] = []) -> void:
+func _build(papers: Array[Paper], kept: Array[Paper] = []) -> void:
 	var window := PassFixture.window_one()
 	window.papers = papers
 	_desk = auto_free(PaperDesk.new())
@@ -22,17 +22,19 @@ func _build(papers: Array[Paper], slots: int, kept: Array[Paper] = []) -> void:
 	_desk.capsule_waiting = FloatValue.new()
 	_arrivals = AtomSpy.events(_desk.capsule_arrived)
 	var room: Node3D = auto_free(Node3D.new())
-	for i: int in range(slots):
-		var slot := Marker3D.new()
-		slot.position = Vector3(float(i), 0.0, 0.0)
-		room.add_child(slot)
-		_desk.desk_slots.append(slot)
-	_desk.tray = Marker3D.new()
-	_desk.tray.position = Vector3(0.0, 1.0, 0.0)
-	room.add_child(_desk.tray)
+	_desk.centre = _marker(room, Vector3.ZERO)
+	_desk.stacks.append(_marker(room, Vector3(-1.0, 0.0, 0.0)))
+	_desk.stacks.append(_marker(room, Vector3(1.0, 0.0, 0.0)))
+	_desk.tray = _marker(room, Vector3(0.0, 1.0, 0.0))
 	add_child(room)
 	add_child(_desk)
 	_desk.set_process(false)
+
+func _marker(room: Node3D, at: Vector3) -> Marker3D:
+	var marker := Marker3D.new()
+	marker.position = at
+	room.add_child(marker)
+	return marker
 
 func _sheets() -> Array[DeskPaper]:
 	var found: Array[DeskPaper] = []
@@ -40,22 +42,24 @@ func _sheets() -> Array[DeskPaper]:
 		found.append(child as DeskPaper)
 	return found
 
-func test_start_papers_land_on_the_slots_and_extras_are_left_out() -> void:
-	_build([_paper(0.0), _paper(0.0), _paper(0.0)], 2)
-	var sheets := _sheets()
-	assert_int(sheets.size()).is_equal(2)
-	assert_vector(sheets[1].global_position).is_equal(Vector3(1.0, 0.0, 0.0))
-
-func test_kept_papers_lie_first_in_every_window() -> void:
+func test_the_centred_paper_lies_in_the_middle_and_the_rest_stack_left_and_right() -> void:
+	var card := _paper(0.0)
+	card.centred = true
 	var letter := _paper(0.0)
-	_build([_paper(0.0)], 2, [letter])
+	_build([_paper(0.0), card, _paper(0.0)], [letter])
 	var sheets := _sheets()
-	assert_int(sheets.size()).is_equal(2)
 	assert_object(sheets[0].paper).is_same(letter)
-	assert_vector(sheets[0].global_position).is_equal(Vector3.ZERO)
+	assert_vector(sheets[0].global_position).is_equal(Vector3(-1.0, 0.0, 0.0))
+	assert_vector(sheets[1].global_position).is_equal(Vector3(1.0, 0.0, 0.0))
+	assert_object(sheets[2].paper).is_same(card)
+	assert_vector(sheets[2].global_position).is_equal(Vector3.ZERO)
+	assert_vector(sheets[3].global_position).is_equal_approx(
+		Vector3(-1.0, PaperDesk.STACK, 0.0),
+		Vector3.ONE * 0.0001,
+	)
 
 func test_a_tube_paper_arrives_once_its_time_has_come() -> void:
-	_build([_paper(40.0)], 1)
+	_build([_paper(40.0)])
 	_desk.pass_time.value = 39.0
 	_desk.tick()
 	assert_int(_sheets().size()).is_equal(0)
@@ -67,7 +71,7 @@ func test_a_tube_paper_arrives_once_its_time_has_come() -> void:
 	assert_vector(_sheets()[0].global_position).is_equal(Vector3(0.0, 1.0, 0.0))
 
 func test_a_skip_delivers_every_paper_due_stacked() -> void:
-	_build([_paper(60.0), _paper(40.0)], 1)
+	_build([_paper(60.0), _paper(40.0)])
 	_desk.pass_time.value = 90.0
 	_desk.tick()
 	var sheets := _sheets()
@@ -77,7 +81,7 @@ func test_a_skip_delivers_every_paper_due_stacked() -> void:
 	assert_float(sheets[0].paper.arrives_at).is_equal(40.0)
 
 func test_the_tube_lamp_waits_for_the_paper_to_be_picked_up() -> void:
-	_build([_paper(0.0), _paper(40.0)], 1)
+	_build([_paper(0.0), _paper(40.0)])
 	_desk.pass_time.value = 40.0
 	_desk.tick()
 	assert_float(_desk.capsule_waiting.value).is_equal(1.0)
@@ -85,12 +89,3 @@ func test_the_tube_lamp_waits_for_the_paper_to_be_picked_up() -> void:
 	assert_float(_desk.capsule_waiting.value).is_equal(1.0)
 	_desk.reading.value = _sheets()[1].paper
 	assert_float(_desk.capsule_waiting.value).is_equal(0.0)
-
-func test_a_paper_with_a_slot_lands_on_it_and_the_rest_fill_around() -> void:
-	var noted := _paper(0.0)
-	noted.slot = 1
-	_build([_paper(0.0), noted], 2)
-	var sheets := _sheets()
-	assert_object(sheets[0].paper).is_same(noted)
-	assert_vector(sheets[0].global_position).is_equal(Vector3(1.0, 0.0, 0.0))
-	assert_vector(sheets[1].global_position).is_equal(Vector3(0.0, 0.0, 0.0))
