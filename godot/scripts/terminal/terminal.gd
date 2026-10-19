@@ -11,8 +11,8 @@ const GREETING := "LISTENING POST 4 - HTB MODULE - TYPE HELP"
 ## Model to use.
 @export var model: TerminalModel
 
-## Shows the composed screen text.
-@export var screen: Label
+## Shows the composed screen text, BBCode enabled.
+@export var screen: RichTextLabel
 
 ## Shows the model's rule under the text area, marking lines below while scrolled back.
 ## Optional.

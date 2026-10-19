@@ -18,6 +18,9 @@ extends Resource
 ## Lines kept in scrollback.
 @export var scrollback := 300
 
+## Colour of command lines, echoed and typed: full amber, against the dimmer output.
+@export var command_color := Color(1, 0.72, 0.25)
+
 ## Lines one mouse wheel step scrolls.
 @export var wheel_lines := 3
 
@@ -51,11 +54,24 @@ func wrap_line(line: String) -> PackedStringArray:
 
 	return chunks
 
-## The text area: scrollback above, the prompt line last.
+## The text area as BBCode: scrollback above, the prompt line last, commands in
+## `command_color`.
 func compose(lines: PackedStringArray, input: String, scroll: int) -> String:
 	var end := maxi(lines.size() - scroll, 0)
 	var shown := lines.slice(maxi(end - (rows - 1), 0), end)
-
 	shown.append(prompt + input + "_")
 
-	return "\n".join(shown)
+	var marked := PackedStringArray()
+	for line: String in shown:
+		marked.append(_marked(line))
+
+	return "\n".join(marked)
+
+## `line` with its brackets escaped, coloured when it is a command. A command always fits one
+## row, so only command rows start with the prompt.
+func _marked(line: String) -> String:
+	var escaped := line.replace("[", "[lb]")
+	if not line.begins_with(prompt):
+		return escaped
+
+	return "[color=#%s]%s[/color]" % [command_color.to_html(false), escaped]

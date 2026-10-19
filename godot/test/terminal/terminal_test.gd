@@ -8,7 +8,7 @@ func before_test() -> void:
 	_terminal = auto_free(Terminal.new())
 	_terminal.model = TerminalModel.new()
 	_terminal.model.history_cap = 2
-	_terminal.screen = auto_free(Label.new())
+	_terminal.screen = auto_free(RichTextLabel.new())
 	_terminal.out = StringEvent.new()
 	_terminal.history = StringListValue.new()
 	_terminal.focused = BoolValue.new()
