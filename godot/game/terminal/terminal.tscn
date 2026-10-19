@@ -86,7 +86,7 @@ offset_right = 634.0
 offset_bottom = 30.0
 color = Color(1, 0.72, 0.25, 1)
 
-[node name="StatusBar" type="Label" parent="Screen" node_paths=PackedStringArray("band")]
+[node name="StatusBar" type="Label" parent="Screen" node_paths=PackedStringArray("countdown", "band")]
 offset_left = 12.0
 offset_top = 6.0
 offset_right = 628.0
@@ -104,7 +104,18 @@ locked = ExtResource("35_locked")
 uplink_open = ExtResource("39_speak_open")
 transmitting = ExtResource("33_transmitting")
 status_notice = ExtResource("56_notice")
+countdown = NodePath("../StatusCountdown")
 band = NodePath("../StatusBand")
+
+[node name="StatusCountdown" type="Label" parent="Screen"]
+offset_left = 12.0
+offset_top = 6.0
+offset_right = 628.0
+offset_bottom = 30.0
+theme_override_fonts/font = SubResource("Font_mono")
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 2
+vertical_alignment = 1
 
 [node name="ProgressLine" type="Label" parent="Screen"]
 offset_left = 12.0

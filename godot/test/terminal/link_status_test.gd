@@ -94,3 +94,12 @@ func test_a_mode_change_blinks_the_band() -> void:
 	assert_object(_status.band.color).is_equal(_status.ink_color)
 	_status.tick(1.0)
 	assert_object(_status.band.color).is_equal(_status.lit_color)
+
+func test_counts_down_to_the_next_mark_in_the_text_colour() -> void:
+	_status.countdown = auto_free(Label.new())
+	_status.locked.value = true
+	_status.pass_time.value = 40.0
+	_status.refresh()
+	var mark := PassFixture.window_one().next_mark(40.0)
+	assert_str(_status.countdown.text).is_equal(mark.countdown())
+	assert_object(_status.countdown.get_theme_color("font_color")).is_equal(_status.ink_color)

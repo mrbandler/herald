@@ -1,24 +1,19 @@
 class_name WallClock
 extends Label3D
 
-## Digital wall clock: counts down to the next mark, e.g. "UPLINK T-00:42", until LOS.
-## After LOS it shows the station time of day instead, e.g. "02:51", running faster than real time.
+## Digital wall clock: the station time of day, e.g. "02:51". Real time until LOS, faster after.
+## The countdowns to the marks are on the terminal's status bar.
 
-## Read only. The time the next mark is measured from.
+## Read only. Seconds into the pass, turned into the time of day.
 @export var pass_time: FloatValue
 
-## Read only. Supplies the marks.
+## Read only. Supplies the clock start and the night rate.
 @export var current_pass: ResourceValue
 
 ## Redraws on every change of `pass_time` and draws the first reading.
 func _ready() -> void:
 	pass_time.updated.connect(_on_time)
 	_refresh()
-
-## Mark name and time left rounded up to whole seconds, e.g. "UPLINK T-00:43".
-static func format(mark: PassMark) -> String:
-	var total := ceili(mark.remaining)
-	return "%s T-%02d:%02d" % [mark.name, floori(total / 60.0), total % 60]
 
 ## Time of day as "HH:MM" for `seconds` after midnight, wrapping at midnight.
 static func format_time(seconds: float) -> String:
@@ -29,13 +24,7 @@ static func format_time(seconds: float) -> String:
 func _on_time(_previous: Variant, _current: Variant) -> void:
 	_refresh()
 
-## Shows the countdown before LOS, the station time after it, and nothing without a pass.
+## Shows the station time, and nothing without a pass.
 func _refresh() -> void:
 	var window := current_pass.value as PassWindow
-
-	if window == null:
-		text = ""
-	elif pass_time.value >= window.los:
-		text = WallClock.format_time(window.station_time(pass_time.value))
-	else:
-		text = WallClock.format(window.next_mark(pass_time.value))
+	text = "" if window == null else WallClock.format_time(window.station_time(pass_time.value))
