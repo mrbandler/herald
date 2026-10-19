@@ -41,6 +41,39 @@ func delete() -> void:
 func move(by: int) -> void:
 	cursor = clampi(cursor + by, 0, text.length())
 
+## Moves the cursor a word at a time: back to the start of the word before it, or forward past
+## the next word and its spaces, like Ctrl and the arrow keys in a shell.
+func move_word(direction: int) -> void:
+	var at := cursor
+	if direction < 0:
+		while at > 0 and text[at - 1] == " ":
+			at -= 1
+		while at > 0 and text[at - 1] != " ":
+			at -= 1
+	else:
+		while at < text.length() and text[at] != " ":
+			at += 1
+		while at < text.length() and text[at] == " ":
+			at += 1
+
+	cursor = at
+
+## The part of the current word before the cursor, back to the last space.
+func word_before_cursor() -> String:
+	var before := text.left(cursor)
+	return before.substr(before.rfind(" ") + 1)
+
+## Replaces the part of the current word before the cursor with `word`, in upper case, unless the
+## line would grow past `max_length`.
+func replace_word(word: String, max_length: int) -> void:
+	var start := cursor - word_before_cursor().length()
+	var replaced := text.left(start) + word.to_upper() + text.substr(cursor)
+	if replaced.length() > max_length:
+		return
+
+	text = replaced
+	cursor = start + word.length()
+
 ## Puts the cursor at the start of the line.
 func home() -> void:
 	cursor = 0

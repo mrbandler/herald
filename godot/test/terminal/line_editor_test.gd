@@ -68,3 +68,17 @@ func test_history_puts_the_cursor_at_the_end() -> void:
 	var editor := LineEditor.new()
 	editor.history_up(PackedStringArray(["LS USR:"]))
 	assert_int(editor.cursor).is_equal(7)
+
+func test_moves_by_word_and_replaces_the_word_before_the_cursor() -> void:
+	var editor := LineEditor.new()
+	for character: String in "READ USR:OKONJO/WA":
+		editor.insert(character, 60)
+	assert_str(editor.word_before_cursor()).is_equal("USR:OKONJO/WA")
+	editor.replace_word("USR:OKONJO/WAKE.TXT", 60)
+	assert_str(editor.text).is_equal("READ USR:OKONJO/WAKE.TXT")
+	editor.move_word(-1)
+	assert_int(editor.cursor).is_equal(5)
+	editor.move_word(-1)
+	assert_int(editor.cursor).is_equal(0)
+	editor.move_word(1)
+	assert_int(editor.cursor).is_equal(5)

@@ -60,6 +60,21 @@ func test_entries_list_one_level() -> void:
 	var inside := PackedStringArray(["NIGHTS.TXT", "WAKE.TXT"])
 	assert_array(_model.entries("USR:OKONJO/", none)).is_equal(inside)
 
+func test_completes_volumes_directories_and_files() -> void:
+	var none := PackedStringArray()
+	assert_array(_model.completions("", "us", none)).is_equal(PackedStringArray(["USR:"]))
+	assert_array(_model.completions("", "USR:O", none)).is_equal(PackedStringArray(["USR:OKONJO/"]))
+	var both := PackedStringArray(["OKONJO/NIGHTS.TXT", "OKONJO/WAKE.TXT"])
+	assert_array(_model.completions("USR:", "OKONJO/", none)).is_equal(both)
+	var wake := PackedStringArray(["WAKE.TXT"])
+	assert_array(_model.completions("USR:OKONJO/", "W", none)).is_equal(wake)
+	assert_array(_model.completions("", "SYS:T", none)).is_empty()
+
+func test_the_common_start_of_names() -> void:
+	var names := PackedStringArray(["OKONJO/NIGHTS.TXT", "OKONJO/WAKE.TXT"])
+	assert_str(VolumeModel.common_start(names)).is_equal("OKONJO/")
+	assert_str(VolumeModel.common_start(PackedStringArray())).is_empty()
+
 func test_the_game_files_fit_the_popup_and_their_volumes() -> void:
 	var game: VolumeModel = load("res://game/data/models/volumes.tres")
 	var paths := PackedStringArray()

@@ -128,6 +128,8 @@ func test_volumes_are_wired() -> void:
 	assert_object(viewer.lean_amount).is_same(terminal.lean_amount)
 	assert_object(viewer.terminal_model).is_same(terminal.model)
 	assert_object(viewer.volume_model).is_same(read.volume_model)
+	assert_object(terminal.volume_model).is_same(read.volume_model)
+	assert_object(terminal.unlocked_modules).is_same(unlock.unlocked_modules)
 	assert_object(ls.volume_model).is_same(read.volume_model)
 	assert_object(viewer.unlocked_modules).is_same(unlock.unlocked_modules)
 	assert_object(ls.unlocked_modules).is_same(unlock.unlocked_modules)

@@ -72,6 +72,40 @@ func entries(directory: String, unlocked: PackedStringArray) -> PackedStringArra
 
 	return found
 
+## Every path the typed `word` could grow into from `directory`, as it would be typed: volumes
+## at the top, otherwise the entries of the directory the word points into. Directories end
+## in `/`, volumes in `:`.
+func completions(directory: String, word: String, unlocked: PackedStringArray) -> PackedStringArray:
+	var typed := word.to_upper()
+	var found := PackedStringArray()
+	if directory.is_empty() and not typed.contains(":") and not typed.contains("/"):
+		for volume: String in volumes:
+			if (volume + ":").begins_with(typed):
+				found.append(volume + ":")
+
+		return found
+
+	var cut := maxi(typed.rfind("/"), typed.rfind(":")) + 1
+	var head := typed.left(cut)
+	var base := head if head.contains(":") else directory + head
+	for entry: String in entries(base, unlocked):
+		if entry.begins_with(typed.substr(cut)):
+			found.append(head + entry)
+
+	return found
+
+## The longest start every one of `names` shares.
+static func common_start(names: PackedStringArray) -> String:
+	if names.is_empty():
+		return ""
+
+	var start := names[0]
+	for name: String in names:
+		while not name.begins_with(start):
+			start = start.left(-1)
+
+	return start
+
 ## The file's lines, without the empty one a trailing line break leaves.
 func lines(file: StationFile) -> PackedStringArray:
 	var text := file.body().rstrip("\n")

@@ -51,6 +51,12 @@ const GREETING := "LISTENING POST 4 - HTB MODULE - TYPE HELP"
 ## Read. The working directory, shown in the prompt. CD writes it.
 @export var directory: StringValue
 
+## Completes paths on Tab.
+@export var volume_model: VolumeModel
+
+## Read. Modules unlocked so far; completion offers only the files they open.
+@export var unlocked_modules: StringListValue
+
 ## Wrapped stdout lines, oldest first, capped at the model's scrollback.
 var lines := PackedStringArray()
 
@@ -83,7 +89,14 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	# Modifier chords (Ctrl, Alt, Meta) never type: Alt+letter would otherwise insert the letter.
 	# Keys left unused stay unhandled: GUIDE reads unhandled input, so Esc still reaches `leave`.
 	var chord := key.ctrl_pressed or key.alt_pressed or key.meta_pressed
-	if viewing.value.is_empty() and not chord and handle_key(key.keycode, key.unicode):
+	if not viewing.value.is_empty():
+		return
+
+	var used := handle_word_key(key.keycode) if key.ctrl_pressed else false
+	if not chord:
+		used = handle_key(key.keycode, key.unicode)
+
+	if used:
 		get_viewport().set_input_as_handled()
 
 ## Feeds wheel steps to `handle_wheel` while fully leaned in and no file popup is open.
@@ -111,9 +124,37 @@ func handle_wheel(button: MouseButton) -> bool:
 
 	return true
 
+## Ctrl with Left or Right moves the cursor a word at a time. Returns false for other keys.
+func handle_word_key(keycode: Key) -> bool:
+	match keycode:
+		KEY_LEFT:
+			editor.move_word(-1)
+		KEY_RIGHT:
+			editor.move_word(1)
+		_:
+			return false
+
+	_refresh()
+
+	return true
+
+## Completes the path before the cursor: as far as every match agrees, and when that adds
+## nothing and several match, lists them. The command name itself is not completed.
+func complete() -> void:
+	if not editor.text.left(editor.cursor).contains(" "):
+		return
+
+	var word := editor.word_before_cursor()
+	var options := volume_model.completions(directory.value, word, unlocked_modules.value)
+	var start := VolumeModel.common_start(options)
+	if start.length() > word.length():
+		editor.replace_word(start, model.max_input(directory.value))
+	elif options.size() > 1:
+		out.raise("  ".join(options))
+
 ## Applies one key press: Enter submits, Up and Down recall history, Left, Right, Home and End
-## move the cursor, Page keys scroll, printable keys are typed. Returns false for keys it does
-## not use.
+## move the cursor, Tab completes a path, Page keys scroll, printable keys are typed. Returns
+## false for keys it does not use.
 func handle_key(keycode: Key, unicode: int) -> bool:
 	match keycode:
 		KEY_ENTER, KEY_KP_ENTER:
@@ -126,6 +167,8 @@ func handle_key(keycode: Key, unicode: int) -> bool:
 			editor.move(-1)
 		KEY_RIGHT:
 			editor.move(1)
+		KEY_TAB:
+			complete()
 		KEY_HOME:
 			editor.home()
 		KEY_END:

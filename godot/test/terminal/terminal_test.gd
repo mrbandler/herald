@@ -18,6 +18,13 @@ func before_test() -> void:
 	_terminal.clear = Event.new()
 	_terminal.lean_amount = FloatValue.new()
 	_terminal.directory = StringValue.new()
+	_terminal.unlocked_modules = StringListValue.new()
+	_terminal.volume_model = VolumeModel.new()
+	var wake := StationFile.new()
+	wake.path = "USR:OKONJO/WAKE.TXT"
+	var nights := StationFile.new()
+	nights.path = "USR:OKONJO/NIGHTS.TXT"
+	_terminal.volume_model.files = [wake, nights]
 	_terminal.scroll_rule = auto_free(Label.new())
 	_terminal.top_rule = auto_free(Label.new())
 	_out = AtomSpy.events(_terminal.out)
@@ -132,3 +139,29 @@ func test_arrow_keys_edit_inside_the_line() -> void:
 	_terminal.handle_key(KEY_END, 0)
 	assert_str(_terminal.editor.text).is_equal("QS X")
 	assert_int(_terminal.editor.cursor).is_equal(4)
+
+func _type(line: String) -> void:
+	for character: String in line:
+		_terminal.handle_key(KEY_NONE, character.unicode_at(0))
+
+func test_tab_completes_a_path_and_lists_choices() -> void:
+	_type("read usr:o")
+	_terminal.handle_key(KEY_TAB, 0)
+	assert_str(_terminal.editor.text).is_equal("READ USR:OKONJO/")
+	_out.calls.clear()
+	_terminal.handle_key(KEY_TAB, 0)
+	assert_array(_out.calls).is_equal(["USR:OKONJO/WAKE.TXT  USR:OKONJO/NIGHTS.TXT"])
+	_type("w")
+	_terminal.handle_key(KEY_TAB, 0)
+	assert_str(_terminal.editor.text).is_equal("READ USR:OKONJO/WAKE.TXT")
+
+func test_tab_leaves_the_command_name_alone() -> void:
+	_type("re")
+	_terminal.handle_key(KEY_TAB, 0)
+	assert_str(_terminal.editor.text).is_equal("RE")
+
+func test_ctrl_arrows_move_by_word() -> void:
+	_type("ls usr:")
+	assert_bool(_terminal.handle_word_key(KEY_LEFT)).is_true()
+	assert_int(_terminal.editor.cursor).is_equal(3)
+	assert_bool(_terminal.handle_word_key(KEY_UP)).is_false()
