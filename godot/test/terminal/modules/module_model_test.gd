@@ -3,6 +3,7 @@ extends GdUnitTestSuite
 const CLEAN := DownlinkModel.Grade.CLEAN
 const NOISY := DownlinkModel.Grade.NOISY
 const LOST := DownlinkModel.Grade.LOST
+const SHIPPED := "res://game/data/models/modules.tres"
 
 var _model := ModuleModel.new()
 
@@ -33,7 +34,7 @@ func test_decoders_and_banners() -> void:
 	assert_str(_model.decoder_for("TLM")).is_equal("TLM")
 	assert_str(_model.decoder_for("AUTH")).is_empty()
 	assert_array(_model.banner("IMG")).is_empty()
-	var shipped: ModuleModel = load("res://game/data/models/modules.tres")
+	var shipped: ModuleModel = load(SHIPPED)
 	assert_str(shipped.banner("TLM")[0]).is_equal("TLM DECODER V1.4  (C) SOWING PROGRAMME")
 	assert_int(shipped.banner("TLM").size()).is_equal(4)
 
@@ -68,3 +69,8 @@ func test_empty_content_and_blank_noisy_lines() -> void:
 	assert_array(_model.decode_lines(_text(22, 2, "", [CLEAN, CLEAN]))).is_empty()
 	var lines := _model.decode_lines(_text(22, 3, "A\n\nB", [CLEAN, NOISY, CLEAN]))
 	assert_str(lines[1]).is_empty()
+
+func test_the_game_describes_every_module() -> void:
+	var model: ModuleModel = load(SHIPPED)
+	for module: String in model.modules:
+		assert_bool(model.descriptions.has(module)).override_failure_message(module).is_true()

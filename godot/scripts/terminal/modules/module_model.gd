@@ -7,6 +7,9 @@ extends Resource
 ## The modules, in the order MOD lists them.
 @export var modules := PackedStringArray(["TLM", "IMG", "SPC"])
 
+## What each module does, shown by HELP MOD. A module without an entry shows its name alone.
+@export var descriptions: Dictionary[String, String] = { }
+
 ## Lines printed under the unlock line, per module. A module without an entry prints none.
 @export var banners: Dictionary[String, PackedStringArray] = { }
 
