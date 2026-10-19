@@ -36,6 +36,8 @@ func before_test() -> void:
 	_downlink.storage = ResourceListValue.new()
 	_downlink.download_received = IntValue.new()
 	_downlink.running_item = ResourceValue.new()
+	_downlink.shown_item = ResourceValue.new()
+	_downlink.monitor_mode = IntValue.new()
 	_downlink.progress_line = StringValue.new()
 	_downlink.status_notice = StringEvent.new()
 	_downlink.out = StringEvent.new()
@@ -214,3 +216,23 @@ func test_the_manifest_is_announced_in_the_terminal_and_rung() -> void:
 	_receive_manifest()
 	assert_array(lines.calls).is_equal(["-- MANIFEST RECEIVED. 2 ITEM(S). TYPE MANIFEST --"])
 	assert_int(bells.calls.size()).is_equal(1)
+
+func test_an_image_streams_onto_the_monitor() -> void:
+	var image := _item(23, 4)
+	image.type = "IMG"
+	_downlink.current_pass.value = _window([image])
+	_receive_manifest()
+	_downlink.download_queue.add(_downlink.manifest.value[0])
+	_run(1.0)
+	assert_object(_downlink.shown_item.value).is_same(_downlink.running_item.value)
+	assert_int(_downlink.monitor_mode.value).is_equal(MonitorModel.Mode.STREAM)
+	_run(16.0)
+	assert_int(_downlink.monitor_mode.value).is_equal(MonitorModel.Mode.SNOW)
+	assert_object(_downlink.shown_item.value).is_null()
+
+func test_text_leaves_the_monitor_alone() -> void:
+	_receive_manifest()
+	_downlink.download_queue.add(_downlink.manifest.value[0])
+	_run(1.0)
+	assert_int(_downlink.monitor_mode.value).is_equal(MonitorModel.Mode.SNOW)
+	assert_object(_downlink.shown_item.value).is_null()
