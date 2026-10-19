@@ -18,7 +18,7 @@ uniform float hum_strength = 0.4;
 uniform float hum_seconds = 7.0;
 
 // Height of the hum bar as a share of the screen.
-uniform float hum_width = 0.18;
+uniform float hum_width = 0.035;
 
 void fragment() {
 	float scan = 0.5 + 0.5 * cos(SCREEN_UV.y * scanlines * TAU);

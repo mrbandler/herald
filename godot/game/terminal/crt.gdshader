@@ -32,7 +32,7 @@ uniform vec3 hum_glow : source_color = vec3(0.07, 0.05, 0.02);
 uniform float hum_seconds = 7.0;
 
 // Height of the hum bar as a share of the picture.
-uniform float hum_width = 0.18;
+uniform float hum_width = 0.035;
 
 // Overall brightness of the phosphor.
 uniform float glow = 1.3;
