@@ -44,3 +44,27 @@ func test_scroll_is_clamped() -> void:
 	assert_int(editor.scroll).is_equal(10)
 	editor.scroll_by(-16, 10)
 	assert_int(editor.scroll).is_equal(0)
+
+func test_types_and_deletes_at_the_cursor() -> void:
+	var editor := LineEditor.new()
+	for character: String in "LS USR":
+		editor.insert(character, 40)
+	editor.home()
+	editor.delete()
+	editor.delete()
+	for character: String in "read":
+		editor.insert(character, 40)
+	assert_str(editor.text).is_equal("READ USR")
+	assert_int(editor.cursor).is_equal(4)
+	editor.move(-10)
+	editor.backspace()
+	assert_str(editor.text).is_equal("READ USR")
+	editor.end()
+	editor.move(5)
+	editor.backspace()
+	assert_str(editor.text).is_equal("READ US")
+
+func test_history_puts_the_cursor_at_the_end() -> void:
+	var editor := LineEditor.new()
+	editor.history_up(PackedStringArray(["LS USR:"]))
+	assert_int(editor.cursor).is_equal(7)

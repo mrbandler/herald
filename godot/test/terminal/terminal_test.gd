@@ -119,4 +119,16 @@ func test_echoes_commands_with_the_working_directory() -> void:
 	_terminal.directory.value = "USR:"
 	_terminal.submit("seq")
 	assert_str(_terminal.lines[0]).is_equal("LP4 USR:> SEQ")
-	assert_str(_terminal.screen.text).contains("LP4 USR:> _")
+	assert_str(_terminal.screen.text).contains("LP4 USR:> [bgcolor=")
+
+func test_arrow_keys_edit_inside_the_line() -> void:
+	for character: String in "LS X":
+		_terminal.handle_key(KEY_NONE, character.unicode_at(0))
+	_terminal.handle_key(KEY_HOME, 0)
+	_terminal.handle_key(KEY_DELETE, 0)
+	_terminal.handle_key(KEY_RIGHT, 0)
+	_terminal.handle_key(KEY_LEFT, 0)
+	_terminal.handle_key(KEY_NONE, "Q".unicode_at(0))
+	_terminal.handle_key(KEY_END, 0)
+	assert_str(_terminal.editor.text).is_equal("QS X")
+	assert_int(_terminal.editor.cursor).is_equal(4)

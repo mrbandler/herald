@@ -111,14 +111,25 @@ func handle_wheel(button: MouseButton) -> bool:
 
 	return true
 
-## Applies one key press: Enter submits, Up and Down recall history,
-## Page keys scroll, printable keys are typed. Returns false for keys it does not use.
+## Applies one key press: Enter submits, Up and Down recall history, Left, Right, Home and End
+## move the cursor, Page keys scroll, printable keys are typed. Returns false for keys it does
+## not use.
 func handle_key(keycode: Key, unicode: int) -> bool:
 	match keycode:
 		KEY_ENTER, KEY_KP_ENTER:
 			submit(editor.submit())
 		KEY_BACKSPACE:
 			editor.backspace()
+		KEY_DELETE:
+			editor.delete()
+		KEY_LEFT:
+			editor.move(-1)
+		KEY_RIGHT:
+			editor.move(1)
+		KEY_HOME:
+			editor.home()
+		KEY_END:
+			editor.end()
 		KEY_UP:
 			editor.history_up(history.value)
 		KEY_DOWN:
@@ -203,7 +214,7 @@ func _refresh() -> void:
 	if screen == null:
 		return
 
-	screen.text = model.compose(lines, editor.text, editor.scroll, directory.value)
+	screen.text = model.compose(lines, editor.text, editor.scroll, directory.value, editor.cursor)
 	if scroll_rule != null:
 		scroll_rule.text = model.rule_below(editor.scroll)
 

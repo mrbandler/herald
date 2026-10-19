@@ -76,17 +76,34 @@ func wrap_line(line: String) -> PackedStringArray:
 	return chunks
 
 ## The text area as BBCode: scrollback above, the prompt line last, commands in
-## `command_color`.
-func compose(lines: PackedStringArray, input: String, scroll: int, directory := "") -> String:
+## `command_color`. The cursor sits `cursor` characters into the input, -1 for its end.
+func compose(
+	lines: PackedStringArray,
+	input: String,
+	scroll: int,
+	directory := "",
+	cursor := -1,
+) -> String:
 	var end := maxi(lines.size() - scroll, 0)
-	var shown := lines.slice(maxi(end - (rows - 1), 0), end)
-	shown.append(prompt_in(directory) + input + "_")
-
 	var marked := PackedStringArray()
-	for line: String in shown:
+	for line: String in lines.slice(maxi(end - (rows - 1), 0), end):
 		marked.append(_marked(line))
 
+	marked.append(_input_line(prompt_in(directory), input, cursor))
 	return "\n".join(marked)
+
+## The prompt line with a block cursor: the character under it shown inverse, or an inverse
+## space at the end.
+func _input_line(shown_prompt: String, input: String, cursor: int) -> String:
+	var at := input.length() if cursor < 0 else mini(cursor, input.length())
+	var before := (shown_prompt + input.left(at)).replace("[", "[lb]")
+	var after := input.substr(at + 1).replace("[", "[lb]")
+	var colour := command_color.to_html(false)
+
+	var under := input.substr(at, 1).replace("[", "[lb]")
+	var block := "[bgcolor=#%s][color=#000000]%s[/color][/bgcolor]"
+	var mark := block % [colour, " " if under.is_empty() else under]
+	return "[color=#%s]%s%s%s[/color]" % [colour, before, mark, after]
 
 ## `line` with its brackets escaped, coloured when it is a command. A command always fits one
 ## row, so only command rows start with the station name.
