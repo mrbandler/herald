@@ -12,7 +12,7 @@ uniform float scanline_strength = 0.3;
 uniform float vignette = 0.45;
 
 // The hum bar: a soft band rolling up the screen. Outside it the screen sits this much darker.
-uniform float hum_strength = 0.22;
+uniform float hum_strength = 0.4;
 
 // Seconds the hum bar takes to roll once over the screen.
 uniform float hum_seconds = 7.0;

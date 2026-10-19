@@ -24,6 +24,18 @@ uniform float curvature = 0.02;
 // How strongly the corners darken.
 uniform float vignette = 0.1;
 
+// The hum bar: a soft brighter band rolling up the picture, as on old sets.
+uniform float hum_strength = 0.2;
+
+// The hum bar's own glow, added where it passes, so it shows over black too.
+uniform vec3 hum_glow : source_color = vec3(0.05, 0.055, 0.07);
+
+// Seconds the hum bar takes to roll once over the picture.
+uniform float hum_seconds = 7.0;
+
+// Height of the hum bar as a share of the picture.
+uniform float hum_width = 0.18;
+
 // Overall brightness of the phosphor, above 1 so bright pictures bloom.
 uniform float brightness = 1.2;
 
@@ -35,6 +47,13 @@ float hash(vec3 p) {
 	return fract((p.x + p.y) * p.z);
 }
 
+// 0..1 where the rolling hum bar lies over `y`, softly faded at its edges.
+float hum_bar(float y, float time, float seconds, float width) {
+	float centre = 1.0 - fract(time / seconds);
+	float distance = abs(fract(y - centre + 0.5) - 0.5);
+	return smoothstep(width, 0.0, distance);
+}
+
 void fragment() {
 	vec2 centred = UV * 2.0 - 1.0;
 	centred *= 1.0 + curvature * dot(centred, centred);
@@ -44,10 +63,11 @@ void fragment() {
 	bool outside = any(lessThan(uv, vec2(0.0))) || any(greaterThan(uv, vec2(1.0)));
 
 	float snow = hash(vec3(floor(uv * vec2(320.0, 240.0)), floor(TIME * 30.0)));
+	float band = hum_bar(uv.y, TIME, hum_seconds, hum_width);
 	if (outside) {
 		ALBEDO = vec3(0.0);
 	} else if (mode == 0) {
-		ALBEDO = tint * snow * 0.25 * shade_corners;
+		ALBEDO = (tint * snow * 0.25 * (1.0 + hum_strength * band) + hum_glow * band) * shade_corners;
 	} else {
 		float screen_row = floor(uv.y * float(rows));
 		float s = (screen_row + uv.x) * k + phase - offset;
@@ -71,6 +91,7 @@ void fragment() {
 			colour = mix(colour, glow * shade, fresh);
 		}
 		float scan = 0.88 + 0.12 * step(0.5, fract(uv.y * float(rows)));
+		colour = colour * (1.0 + hum_strength * band) + hum_glow * band;
 		ALBEDO = colour * scan * shade_corners * brightness;
 	}
 }
