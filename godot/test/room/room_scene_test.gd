@@ -58,7 +58,7 @@ func test_papers_desk_and_tube_are_wired() -> void:
 	assert_str(papers.kept[0].body()).contains("SEQ ADD ACK")
 	assert_str(papers.ack_heard.resource_path.get_file()).is_equal("ack_heard.tres")
 	assert_str(papers.missed_ack.body()).contains("SEQ ADD ACK")
-	assert_str(papers.pinned.resource_path.get_file()).is_equal("pinned.tres")
+	assert_str(papers.placed.resource_path.get_file()).is_equal("placed.tres")
 	var wall := room.get_node("PinWall") as DeskSurface
 	assert_bool(wall.upright).is_true()
 	assert_object(wall.put_down).is_same(surface.put_down)

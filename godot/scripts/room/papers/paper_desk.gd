@@ -1,13 +1,16 @@
 class_name PaperDesk
 extends Node
 
-## Lays out the window's papers: the pinned ones on the wall where they hang, a centred one in
-## front of the keyboard, the kept ones and the rest from the start on the stacks left and right,
-## and the tube's in its tray once their time has come, each with a capsule's thunk. Remembers
-## what the player hangs on the pin wall.
+## Lays out the papers: every paper from earlier windows where the Listener left it, a new
+## centred one in front of the keyboard, the other new ones from the start on the stacks left and
+## right, and the tube's in its tray once their time has come, each with a capsule's thunk.
+## Remembers where every paper lies.
 
 ## Metres between stacked papers, on the desk and in the tray.
 const STACK := 0.003
+
+## Metres from a stack's spot within which a remembered paper counts as lying on that stack.
+const LYING_RADIUS := 0.05
 
 ## Read. Supplies the papers.
 @export var current_pass: ResourceValue
@@ -38,9 +41,9 @@ const STACK := 0.003
 ## the heartbeat out.
 @export var missed_ack: Paper
 
-## Read and written. PinnedPaper entries on the pin wall. Kept across windows, except another
-## window's prayer card, which comes down.
-@export var pinned: ResourceListValue
+## Read and written. Where every paper lies: PlacedPaper entries. Kept across windows, so papers
+## stay where the Listener left them, except another window's prayer card, which goes.
+@export var placed: ResourceListValue
 
 ## Where a centred paper lies, in front of the keyboard.
 @export var centre: Node3D
@@ -57,21 +60,27 @@ var _waiting: Array[Paper] = []
 ## How many tube papers have arrived.
 var _arrived := 0
 
-## Lays the start papers on the centre and the stacks, and lines up the tube papers.
+## Papers already lying in the tray from earlier windows, so new ones land on top.
+var _tray_base := 0
+
+## Lays every paper where it was left, the new start papers on the centre and the stacks, and
+## lines up the tube papers.
 func _ready() -> void:
 	var window := current_pass.value as PassWindow
 	if window == null:
 		return
 
-	var on_wall: Array[Paper] = []
-	for entry: PinnedPaper in pinned.value:
+	var lying: Array[Paper] = []
+	for entry: PlacedPaper in placed.value:
 		# An old prayer card would send the Listener to last night's coordinates.
 		if entry.paper.centred and not window.papers.has(entry.paper):
-			pinned.remove(entry)
+			placed.remove(entry)
 			continue
 
 		_place(entry.paper, entry.at)
-		on_wall.append(entry.paper)
+		lying.append(entry.paper)
+
+	_tray_base = _lying_at(tray)
 
 	var papers := kept + window.papers
 	if not ack_heard.value:
@@ -80,7 +89,7 @@ func _ready() -> void:
 	var heights: Dictionary[Node3D, int] = { }
 	var turn := 0
 	for paper: Paper in papers:
-		if on_wall.has(paper):
+		if lying.has(paper):
 			continue
 
 		if paper.arrives_at > 0.0:
@@ -89,7 +98,7 @@ func _ready() -> void:
 
 		var anchor := centre if paper.centred else stacks[turn % stacks.size()]
 		turn += 0 if paper.centred else 1
-		var height: int = heights.get(anchor, 0)
+		var height: int = heights.get(anchor, _lying_at(anchor))
 		_place(paper, anchor.global_transform.translated(Vector3.UP * STACK * height))
 		heights[anchor] = height + 1
 
@@ -105,14 +114,16 @@ func _process(_delta: float) -> void:
 ## all, and raises `capsule_arrived` once per paper.
 func tick() -> void:
 	while _arrived < _waiting.size() and pass_time.value >= _waiting[_arrived].arrives_at:
-		var spot := tray.global_transform.translated(Vector3.UP * STACK * _arrived)
+		var spot := tray.global_transform.translated(Vector3.UP * STACK * (_tray_base + _arrived))
 		_place(_waiting[_arrived], spot)
 		_arrived += 1
 		capsule_waiting.value = 1.0
 		capsule_arrived.raise()
 
-## A new DeskPaper for `paper` at `at`.
+## A new DeskPaper for `paper` at `at`, remembered there.
 func _place(paper: Paper, at: Transform3D) -> void:
+	_remember(paper, at)
+
 	var sheet := DeskPaper.new()
 	sheet.paper = paper
 	sheet.current_pass = current_pass
@@ -121,28 +132,40 @@ func _place(paper: Paper, at: Transform3D) -> void:
 	add_child(sheet)
 	sheet.global_transform = at
 
-## Stops the tube's lamp once a delivered paper is picked up, and takes a paper picked off the
-## pin wall off the pinned list.
+## Stops the tube's lamp once a delivered paper is picked up.
 func _on_reading(_previous: Variant, _current: Variant) -> void:
 	var paper := reading.value as Paper
 	if paper != null and _waiting.has(paper):
 		capsule_waiting.value = 0.0
 
-	for entry: PinnedPaper in pinned.value:
-		if entry.paper == paper:
-			pinned.remove(entry)
-
-## Pins the paper in hand when it is hung upright, i.e. put down on the pin wall.
+## Remembers where the paper in hand goes down.
 func _on_put_down(at: Variant) -> void:
-	var placed: Transform3D = at
+	var spot: Transform3D = at
 	var paper := reading.value as Paper
-	if paper == null or placed.basis.y.dot(Vector3.UP) > 0.5:
-		return
+	if paper != null:
+		_remember(paper, spot)
 
-	var entry := PinnedPaper.new()
+## Records `paper` as lying at `at`, in place of where it lay before.
+func _remember(paper: Paper, at: Transform3D) -> void:
+	var entry := PlacedPaper.new()
 	entry.paper = paper
-	entry.at = placed
-	pinned.add(entry)
+	entry.at = at
+
+	for old: PlacedPaper in placed.value:
+		if old.paper == paper:
+			placed.replace(old, entry)
+			return
+
+	placed.add(entry)
+
+## How many remembered papers lie on `anchor`'s spot, so new ones stack on top.
+func _lying_at(anchor: Node3D) -> int:
+	var count := 0
+	for entry: PlacedPaper in placed.value:
+		if entry.at.origin.distance_to(anchor.global_position) < LYING_RADIUS:
+			count += 1
+
+	return count
 
 ## True when `first` arrives before `second`.
 func _earlier(first: Paper, second: Paper) -> bool:

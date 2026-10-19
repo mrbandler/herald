@@ -78,7 +78,7 @@
 [ext_resource type="Script" uid="uid://yriiq0w5gpfr" path="res://scripts/room/papers/paper.gd" id="116_paper"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/ack_heard.tres" id="117_ack_heard"]
 [ext_resource type="Resource" path="res://game/data/papers/guide/missed_ack.tres" id="118_missed_ack"]
-[ext_resource type="Resource" path="res://game/data/atoms/room/pinned.tres" id="119_pinned"]
+[ext_resource type="Resource" path="res://game/data/atoms/room/placed.tres" id="119_placed"]
 
 [sub_resource type="Environment" id="Environment_room"]
 background_mode = 1
@@ -246,7 +246,7 @@ capsule_waiting = ExtResource("101_waiting")
 kept = Array[ExtResource("116_paper")]([ExtResource("115_letter")])
 ack_heard = ExtResource("117_ack_heard")
 missed_ack = ExtResource("118_missed_ack")
-pinned = ExtResource("119_pinned")
+placed = ExtResource("119_placed")
 centre = NodePath("../PaperSlots/Centre")
 stacks = [NodePath("../PaperSlots/Left"), NodePath("../PaperSlots/Right")]
 tray = NodePath("../Tube/Tray")

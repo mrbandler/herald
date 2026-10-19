@@ -12,7 +12,7 @@ func _build(
 	papers: Array[Paper],
 	kept: Array[Paper] = [],
 	heard := true,
-	pinned: Array[Resource] = [],
+	placed: Array[Resource] = [],
 ) -> void:
 	var window := PassFixture.window_one()
 	window.papers = papers
@@ -21,8 +21,8 @@ func _build(
 	_desk.ack_heard = BoolValue.new()
 	_desk.ack_heard.value = heard
 	_desk.missed_ack = _paper(5.0)
-	_desk.pinned = ResourceListValue.new()
-	_desk.pinned.value = pinned
+	_desk.placed = ResourceListValue.new()
+	_desk.placed.value = placed
 	_desk.current_pass = ResourceValue.new()
 	_desk.current_pass.value = window
 	_desk.pass_time = FloatValue.new()
@@ -113,23 +113,25 @@ func test_no_insider_letter_after_a_heard_ack() -> void:
 	_desk.tick()
 	assert_int(_sheets().size()).is_equal(0)
 
-func test_a_paper_hung_on_the_wall_is_pinned_until_picked_off() -> void:
+func test_a_paper_put_down_is_remembered_where_it_lies() -> void:
 	_build([])
 	var letter := _paper(0.0)
 	_desk.reading.value = letter
 	_desk.put_down.raise(Transform3D.IDENTITY)
-	assert_array(_desk.pinned.value).is_empty()
 	var hung := Transform3D(Basis(Vector3.RIGHT, PI / 2.0), Vector3(0.0, 1.5, -1.6))
 	_desk.put_down.raise(hung)
-	_desk.reading.value = null
-	assert_int(_desk.pinned.value.size()).is_equal(1)
-	assert_object((_desk.pinned.value[0] as PinnedPaper).paper).is_same(letter)
-	_desk.reading.value = letter
-	assert_array(_desk.pinned.value).is_empty()
+	assert_int(_desk.placed.value.size()).is_equal(1)
+	var entry := _desk.placed.value[0] as PlacedPaper
+	assert_object(entry.paper).is_same(letter)
+	assert_vector(entry.at.origin).is_equal(hung.origin)
 
-func test_a_pinned_paper_hangs_where_it_was_and_leaves_the_stack() -> void:
+func test_papers_from_the_start_are_remembered() -> void:
+	_build([_paper(0.0)])
+	assert_int(_desk.placed.value.size()).is_equal(1)
+
+func test_a_remembered_paper_lies_where_it_was_and_leaves_the_stack() -> void:
 	var letter := _paper(0.0)
-	var entry := PinnedPaper.new()
+	var entry := PlacedPaper.new()
 	entry.paper = letter
 	entry.at = Transform3D(Basis(Vector3.RIGHT, PI / 2.0), Vector3(0.0, 2.0, 0.0))
 	_build([], [letter], true, [entry])
@@ -137,11 +139,18 @@ func test_a_pinned_paper_hangs_where_it_was_and_leaves_the_stack() -> void:
 	assert_int(sheets.size()).is_equal(1)
 	assert_vector(sheets[0].global_position).is_equal(Vector3(0.0, 2.0, 0.0))
 
-func test_last_windows_pinned_prayer_card_comes_down() -> void:
+func test_a_new_paper_goes_on_top_of_one_left_on_the_stack() -> void:
+	var old := PlacedPaper.new()
+	old.paper = _paper(0.0)
+	old.at = Transform3D(Basis.IDENTITY, Vector3(-1.0, 0.0, 0.0))
+	_build([_paper(0.0)], [], true, [old])
+	assert_float(_sheets()[1].global_position.y).is_equal_approx(PaperDesk.STACK, 0.0001)
+
+func test_last_windows_prayer_card_goes() -> void:
 	var card := _paper(0.0)
 	card.centred = true
-	var entry := PinnedPaper.new()
+	var entry := PlacedPaper.new()
 	entry.paper = card
 	_build([], [], true, [entry])
 	assert_int(_sheets().size()).is_equal(0)
-	assert_array(_desk.pinned.value).is_empty()
+	assert_array(_desk.placed.value).is_empty()
