@@ -48,6 +48,9 @@
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/last_sent.tres" id="76_last_sent"]
 [ext_resource type="Script" path="res://scripts/terminal/storage_lamps.gd" id="77_storage_lamps"]
 [ext_resource type="Resource" path="res://game/data/models/lamp.tres" id="78_m_lamp"]
+[ext_resource type="Script" path="res://scripts/terminal/volumes/file_viewer.gd" id="79_file_viewer"]
+[ext_resource type="Resource" path="res://game/data/models/volumes.tres" id="80_m_volumes"]
+[ext_resource type="Resource" path="res://game/data/atoms/modules/unlocked_modules.tres" id="81_unlocked"]
 
 [sub_resource type="SystemFont" id="Font_mono"]
 font_names = PackedStringArray("monospace")
@@ -196,6 +199,52 @@ theme_override_font_sizes/font_size = 15
 text = "ESC LEAVE   UP/DOWN HISTORY   PGUP/PGDN/WHEEL SCROLL"
 vertical_alignment = 1
 
+[node name="FilePanel" type="ColorRect" parent="Screen"]
+visible = false
+offset_left = 11.0
+offset_top = 77.0
+offset_right = 629.0
+offset_bottom = 415.0
+mouse_filter = 2
+color = Color(1, 0.72, 0.25, 1)
+
+[node name="Inside" type="ColorRect" parent="Screen/FilePanel"]
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 617.0
+offset_bottom = 337.0
+mouse_filter = 2
+color = Color(0.02, 0.015, 0.01, 1)
+
+[node name="Title" type="Label" parent="Screen/FilePanel"]
+offset_left = 4.0
+offset_top = 1.0
+offset_right = 614.0
+offset_bottom = 22.0
+theme_override_colors/font_color = Color(1, 0.72, 0.25, 1)
+theme_override_fonts/font = SubResource("Font_mono")
+theme_override_font_sizes/font_size = 15
+
+[node name="Counter" type="Label" parent="Screen/FilePanel"]
+offset_left = 4.0
+offset_top = 1.0
+offset_right = 614.0
+offset_bottom = 22.0
+theme_override_colors/font_color = Color(0.6, 0.42, 0.14, 1)
+theme_override_fonts/font = SubResource("Font_mono")
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 2
+
+[node name="Body" type="Label" parent="Screen/FilePanel"]
+offset_left = 4.0
+offset_top = 22.0
+offset_right = 614.0
+offset_bottom = 337.0
+theme_override_colors/font_color = Color(0.8, 0.576, 0.2, 1)
+theme_override_constants/line_spacing = 0
+theme_override_fonts/font = SubResource("Font_mono")
+theme_override_font_sizes/font_size = 15
+
 [node name="Bezel" type="CSGBox3D" parent="."]
 position = Vector3(0, 0, -0.06)
 size = Vector3(0.6, 0.48, 0.1)
@@ -317,6 +366,20 @@ leave = ExtResource("12_leave")
 terminal_context = ExtResource("13_context")
 clear = ExtResource("40_cleared")
 lean_amount = ExtResource("75_lean")
+
+[node name="FileViewer" type="Node" parent="." node_paths=PackedStringArray("panel", "title", "counter", "body", "hints")]
+script = ExtResource("79_file_viewer")
+terminal_model = ExtResource("10_m_terminal")
+volume_model = ExtResource("80_m_volumes")
+viewing = ExtResource("22_viewing")
+focused = ExtResource("24_focused")
+lean_amount = ExtResource("75_lean")
+unlocked_modules = ExtResource("81_unlocked")
+panel = NodePath("../Screen/FilePanel")
+title = NodePath("../Screen/FilePanel/Title")
+counter = NodePath("../Screen/FilePanel/Counter")
+body = NodePath("../Screen/FilePanel/Body")
+hints = NodePath("../Screen/KeyHints")
 
 [node name="Uplink" type="Node" parent="."]
 script = ExtResource("2_uplink")

@@ -35,3 +35,18 @@ func test_lines_drop_the_trailing_break() -> void:
 	assert_array(_model.lines(_model.files[0])).is_equal(PackedStringArray(["ONE", "TWO"]))
 	assert_array(_model.lines(_file("X:Y", ""))).is_empty()
 	assert_str(_model.files[1].volume()).is_equal("USR")
+
+func test_the_game_files_fit_the_popup_and_their_volumes() -> void:
+	var game: VolumeModel = load("res://game/data/models/volumes.tres")
+	var paths := PackedStringArray()
+	for file: StationFile in game.files:
+		paths.append(file.path)
+		assert_bool(game.volumes.has(file.volume())).override_failure_message(file.path).is_true()
+		for line: String in game.lines(file):
+			var message := "%s: %s" % [file.path, line]
+			assert_int(line.length()).override_failure_message(message).is_less_equal(64)
+
+	var expected := ["HTB:HEARTBEAT.LOG", "USR:OKONJO/NIGHTS.TXT", "USR:OKONJO/WAKE.TXT"]
+	expected.append_array(["SYS:BOOT.LOG", "SYS:TLM.MAN"])
+	assert_array(paths).is_equal(PackedStringArray(expected))
+	assert_object(game.find("SYS:TLM.MAN", PackedStringArray())).is_null()

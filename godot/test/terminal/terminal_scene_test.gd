@@ -107,3 +107,28 @@ func test_module_unlock_is_wired() -> void:
 	expected.append_array(["DESCEND", "TRANSFER"])
 	assert_array(herald_names).is_equal(expected)
 	assert_object(decode.storage).is_same(unlock.storage)
+
+func test_volumes_are_wired() -> void:
+	var scene: Node = auto_free((load(TERMINAL) as PackedScene).instantiate())
+	var terminal := scene.get_node("Terminal") as Terminal
+	var viewer := scene.get_node("FileViewer") as FileViewer
+	var two: PassWindow = load(PASS_02)
+	var ls := two.command_set.find("LS") as LsCommand
+	var read := two.command_set.find("READ") as ReadCommand
+	var unlock := two.command_set.find("UNLOCK") as UnlockCommand
+	assert_object(read.viewing).is_same(terminal.viewing)
+	assert_object(viewer.viewing).is_same(terminal.viewing)
+	assert_object(viewer.focused).is_same(terminal.focused)
+	assert_object(viewer.lean_amount).is_same(terminal.lean_amount)
+	assert_object(viewer.terminal_model).is_same(terminal.model)
+	assert_object(viewer.volume_model).is_same(read.volume_model)
+	assert_object(ls.volume_model).is_same(read.volume_model)
+	assert_object(viewer.unlocked_modules).is_same(unlock.unlocked_modules)
+	assert_object(ls.unlocked_modules).is_same(unlock.unlocked_modules)
+	assert_object(read.unlocked_modules).is_same(unlock.unlocked_modules)
+	assert_object(viewer.panel).is_same(scene.get_node("Screen/FilePanel"))
+	assert_object(viewer.title).is_same(scene.get_node("Screen/FilePanel/Title"))
+	assert_object(viewer.counter).is_same(scene.get_node("Screen/FilePanel/Counter"))
+	assert_object(viewer.body).is_same(scene.get_node("Screen/FilePanel/Body"))
+	assert_object(viewer.hints).is_same(scene.get_node("Screen/KeyHints"))
+	assert_bool(viewer.panel.visible).is_false()

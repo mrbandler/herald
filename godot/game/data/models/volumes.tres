@@ -1,0 +1,43 @@
+[gd_resource type="Resource" script_class="VolumeModel" format=3]
+
+[ext_resource type="Script" path="res://scripts/terminal/volumes/volume_model.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/terminal/volumes/station_file.gd" id="2"]
+
+[sub_resource type="Resource" id="File_heartbeat"]
+script = ExtResource("2")
+path = "HTB:HEARTBEAT.LOG"
+text = "PLACEHOLDER: HEARTBEAT LOG EXCERPT, ABOUT 20 LINES.
+VRFY OK  OP 0412
+VRFY OK  OP 0412
+"
+
+[sub_resource type="Resource" id="File_nights"]
+script = ExtResource("2")
+path = "USR:OKONJO/NIGHTS.TXT"
+text = "PLACEHOLDER: THE PREDECESSOR'S PRIVATE NOTES.
+"
+
+[sub_resource type="Resource" id="File_wake"]
+script = ExtResource("2")
+path = "USR:OKONJO/WAKE.TXT"
+text = "PLACEHOLDER: IF IT EVER WAKES.
+MANIFEST, GET <ID>, VRFY <ID>, UNLOCK TLM <ID>, DECODE <ID>.
+"
+
+[sub_resource type="Resource" id="File_boot"]
+script = ExtResource("2")
+path = "SYS:BOOT.LOG"
+text = "PLACEHOLDER: STATION BOOT LOG.
+"
+
+[sub_resource type="Resource" id="File_tlm_manual"]
+script = ExtResource("2")
+path = "SYS:TLM.MAN"
+text = "PLACEHOLDER: TLM MANUAL. BUS, POWER, INSTRUMENTS, POSITION,
+POINTING, STATUS.
+"
+unlocked_by = "TLM"
+
+[resource]
+script = ExtResource("1")
+files = Array[ExtResource("2")]([SubResource("File_heartbeat"), SubResource("File_nights"), SubResource("File_wake"), SubResource("File_boot"), SubResource("File_tlm_manual")])

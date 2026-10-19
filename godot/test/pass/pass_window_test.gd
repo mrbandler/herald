@@ -78,6 +78,8 @@ func test_window_two_offers_the_downlink_commands() -> void:
 		"DEL",
 		"MOD",
 		"UNLOCK",
+		"LS",
+		"READ",
 		"DECODE",
 		"VRFY",
 		"TAG",
