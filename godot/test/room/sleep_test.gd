@@ -75,3 +75,8 @@ func test_the_view_hazes_while_drowsy_and_fully_in_the_fall() -> void:
 	amount = (haze.material as ShaderMaterial).get_shader_parameter("amount")
 	assert_float(amount).is_equal_approx(1.0, 0.001)
 	_sleep.fall(0.0)
+
+func test_the_sound_rises_out_of_the_muffle_as_a_window_starts() -> void:
+	assert_float(AudioServer.get_bus_volume_db(0)).is_less(0.0)
+	await get_tree().create_timer(_sleep.model.wake_seconds + 0.2).timeout
+	assert_float(AudioServer.get_bus_volume_db(0)).is_equal_approx(0.0, 0.01)

@@ -37,11 +37,13 @@ var _cycle := 0.0
 ## False once the shift has ended and the fall has taken over.
 var _awake := true
 
-## Listens for the end of the shift, and opens the sound and the view again after a reload.
+## Listens for the end of the shift, clears the view, and lets the sound rise out of the muffle
+## the last shift ended in.
 func _ready() -> void:
 	shift_ended.raised.connect(_on_shift_ended)
-	_muffle(0.0)
 	_set_haze(0.0)
+	_muffle(1.0)
+	create_tween().tween_method(_muffle, 1.0, 0.0, model.wake_seconds)
 
 ## Blinks every frame.
 func _process(delta: float) -> void:

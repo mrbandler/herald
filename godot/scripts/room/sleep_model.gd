@@ -33,6 +33,9 @@ extends Resource
 ## Cutoff in Hz that lets every sound through.
 @export var open_hz := 20000.0
 
+## Seconds the sound takes to rise out of the muffle when a window starts.
+@export var wake_seconds := 3.0
+
 ## How strongly the view darkens and blurs at full drowsiness, 0..1. The fall takes it to 1.
 @export var haze_at_bell := 0.7
 
