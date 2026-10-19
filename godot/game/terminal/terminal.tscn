@@ -67,6 +67,8 @@
 [ext_resource type="Material" path="res://game/data/materials/plastic_grey.tres" id="m_grey"]
 [ext_resource type="Shader" path="res://game/terminal/crt.gdshader" id="m_crt"]
 [ext_resource type="Script" path="res://scripts/terminal/screen_glow.gd" id="95_screen_glow"]
+[ext_resource type="Script" path="res://scripts/terminal/keycaps.gd" id="96_keycaps"]
+[ext_resource type="Material" path="res://game/data/materials/monitor_grey.tres" id="97_caps"]
 
 [sub_resource type="SystemFont" id="Font_mono"]
 font_names = PackedStringArray("monospace")
@@ -471,6 +473,16 @@ text = "STORAGE"
 [node name="Keyboard" type="CSGBox3D" parent="."]
 position = Vector3(0, -0.315, 0.25)
 size = Vector3(0.44, 0.03, 0.15)
+material = ExtResource("97_caps")
+
+[node name="Keycaps" type="MultiMeshInstance3D" parent="."]
+position = Vector3(0, -0.295, 0.24)
+material_override = ExtResource("m_grey")
+script = ExtResource("96_keycaps")
+
+[node name="Spacebar" type="CSGBox3D" parent="."]
+position = Vector3(0, -0.296, 0.308)
+size = Vector3(0.17, 0.01, 0.022)
 material = ExtResource("m_grey")
 
 [node name="Crt" type="MeshInstance3D" parent="."]
