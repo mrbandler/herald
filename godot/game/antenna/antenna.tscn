@@ -34,6 +34,8 @@
 [ext_resource type="AudioStream" path="res://game/data/audio/click.tres" id="18_click"]
 [ext_resource type="AudioStream" path="res://game/data/audio/uplink_open.tres" id="19_chime_open"]
 [ext_resource type="AudioStream" path="res://game/data/audio/uplink_close.tres" id="19_chime_close"]
+[ext_resource type="AudioStream" path="res://game/data/audio/lock_relay.tres" id="19_lock_relay"]
+[ext_resource type="AudioStream" path="res://game/data/audio/lock_drop.tres" id="19_lock_drop"]
 [ext_resource type="Script" path="res://scripts/core/audio/bool_sound.gd" id="9_bool_sound"]
 [ext_resource type="Script" path="res://scripts/antenna/data_lamp.gd" id="41_data_lamp"]
 [ext_resource type="Script" path="res://scripts/core/audio/event_sound.gd" id="43_event_sound"]
@@ -356,6 +358,18 @@ modulate = Color(0.15, 0.15, 0.15, 1)
 font_size = 14
 outline_size = 0
 text = "DATA"
+
+[node name="LockRelay" type="AudioStreamPlayer3D" parent="LockLamp"]
+stream = ExtResource("19_lock_relay")
+
+[node name="LockDrop" type="AudioStreamPlayer3D" parent="LockLamp"]
+stream = ExtResource("19_lock_drop")
+
+[node name="LockSound" type="Node" parent="." node_paths=PackedStringArray("on_sound", "off_sound")]
+script = ExtResource("9_bool_sound")
+source = ExtResource("36_locked")
+on_sound = NodePath("../LockLamp/LockRelay")
+off_sound = NodePath("../LockLamp/LockDrop")
 
 [node name="Receiver" type="Node" parent="."]
 script = ExtResource("1_receiver")

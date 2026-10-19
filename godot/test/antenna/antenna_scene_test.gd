@@ -49,6 +49,10 @@ func test_antenna_scene_is_wired() -> void:
 	assert_vector(azimuth.rotation_degrees).is_equal_approx(Vector3(90, 0, 0), Vector3.ONE * 0.01)
 	var data_lamp := scene.get_node("DataLamp") as DataLamp
 	assert_str(data_lamp.row_received.resource_path.get_file()).is_equal("row_received.tres")
+	var lock_sound := scene.get_node("LockSound") as BoolSound
+	assert_str(lock_sound.source.resource_path.get_file()).is_equal("locked.tres")
+	assert_object(lock_sound.on_sound.stream).is_instanceof(ClickStream)
+	assert_object(lock_sound.off_sound.stream).is_instanceof(ClickStream)
 	var bell := scene.get_node("BellSound") as EventSound
 	assert_str(bell.event.resource_path.get_file()).is_equal("download_complete.tres")
 	assert_object(bell.sound.stream).is_instanceof(ChimeStream)
