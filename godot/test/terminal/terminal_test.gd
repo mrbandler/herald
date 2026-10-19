@@ -13,7 +13,7 @@ func before_test() -> void:
 	_terminal.history = StringListValue.new()
 	_terminal.focused = BoolValue.new()
 	_terminal.viewing = StringValue.new()
-	_terminal.alert = StringValue.new()
+	_terminal.alert = ResourceValue.new()
 	_terminal.leave = GUIDEAction.new()
 	_terminal.terminal_context = GUIDEMappingContext.new()
 	_terminal.clear = Event.new()
@@ -169,13 +169,13 @@ func test_ctrl_arrows_move_by_word() -> void:
 
 func test_an_alert_keeps_the_keys_from_the_prompt() -> void:
 	_terminal.focused.value = true
-	_terminal.alert.value = "!! NO ACK SENT !!"
+	_terminal.alert.value = Alert.new()
 	var key := InputEventKey.new()
 	key.pressed = true
 	key.keycode = KEY_S
 	key.unicode = 83
 	get_tree().root.push_input(key)
 	assert_str(_terminal.editor.text).is_empty()
-	_terminal.alert.value = ""
+	_terminal.alert.value = null
 	get_tree().root.push_input(key)
 	assert_str(_terminal.editor.text).is_equal("S")

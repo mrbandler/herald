@@ -9,12 +9,8 @@ extends Resource
 ## What the status bar shows at LOS when HERALD never received ACK.
 @export var ack_missed_notice := "!! NO ACK SENT !!"
 
-## The alert box raised at LOS when HERALD never received ACK. Lines are centred.
-@export_multiline var ack_missed_alert := (
-	"/\\\n/  \\\n/ !! \\\n/  !!  \\\n/   !!   \\\n/          \\\n/     !!     \\\n"
-	+ "/______________\\\n\n!! NO ACK SENT !!\n\n"
-	+ "THE HEARTBEAT NEVER REACHED HERALD.\nHERALD HOLDS ITS PHASE AND WAITS."
-)
+## The alert box raised at LOS when HERALD never received ACK.
+@export var ack_missed_alert: Alert
 
 ## Characters inside the progress bar's brackets. The game's matches the downlink's.
 @export var bar_width := 10

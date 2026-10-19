@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Alert" format=3]
+
+[ext_resource type="Script" path="res://scripts/terminal/alert.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+title = "NO ACK SENT"
+explainer = "THE HEARTBEAT NEVER REACHED HERALD.
+HERALD HOLDS ITS PHASE AND WAITS.
+
+NEXT WINDOW: SEQ ADD ACK, THEN TX
+WHILE THE UPLINK IS OPEN."

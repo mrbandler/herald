@@ -34,7 +34,7 @@ const GREETING := "LISTENING POST 4 - HTB MODULE - TYPE HELP"
 @export var viewing: StringValue
 
 ## Read. While an alert is up, its box owns the keys and the wheel.
-@export var alert: StringValue
+@export var alert: ResourceValue
 
 ## Read. Its window's command set resolves what is typed.
 @export var current_pass: ResourceValue
@@ -92,7 +92,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	# Modifier chords (Ctrl, Alt, Meta) never type: Alt+letter would otherwise insert the letter.
 	# Keys left unused stay unhandled: GUIDE reads unhandled input, so Esc still reaches `leave`.
 	var chord := key.ctrl_pressed or key.alt_pressed or key.meta_pressed
-	if not viewing.value.is_empty() or not alert.value.is_empty():
+	if not viewing.value.is_empty() or alert.value != null:
 		return
 
 	var used := handle_word_key(key.keycode) if key.ctrl_pressed else false
@@ -106,7 +106,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	var button := event as InputEventMouseButton
 	var leaned_in := focused.value and lean_amount.value >= 1.0
-	var popup := not viewing.value.is_empty() or not alert.value.is_empty()
+	var popup := not viewing.value.is_empty() or alert.value != null
 	if not leaned_in or button == null or not button.pressed or popup:
 		return
 

@@ -49,7 +49,7 @@ extends Node
 @export var ack_missed: Event
 
 ## Written. Takes the alert box at LOS when HERALD never received ACK.
-@export var alert: StringValue
+@export var alert: ResourceValue
 
 ## The commands of the running send, in order.
 var _sending := PackedStringArray()
