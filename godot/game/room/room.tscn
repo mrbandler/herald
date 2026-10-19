@@ -104,6 +104,7 @@
 [ext_resource type="Resource" path="res://game/data/models/ending.tres" id="136_ending"]
 [ext_resource type="PackedScene" path="res://game/music/music.tscn" id="137_music"]
 [ext_resource type="Shader" path="res://game/room/haze.gdshader" id="138_haze"]
+[ext_resource type="PackedScene" path="res://game/room/wake_card.tscn" id="140_wake"]
 
 [sub_resource type="Environment" id="Environment_room"]
 background_mode = 1
@@ -416,3 +417,6 @@ mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
 [node name="Music" parent="." instance=ExtResource("137_music")]
+
+[node name="WakeCard" parent="." node_paths=PackedStringArray("wall_clock") instance=ExtResource("140_wake")]
+wall_clock = NodePath("../Pass/WallClock")
