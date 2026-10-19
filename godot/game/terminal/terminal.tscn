@@ -117,7 +117,7 @@ theme_override_font_sizes/font_size = 15
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="ProgressLine" type="Label" parent="Screen"]
+[node name="ProgressLine" type="Label" parent="Screen" node_paths=PackedStringArray("storage_readout")]
 offset_left = 12.0
 offset_top = 34.0
 offset_right = 628.0
@@ -127,6 +127,18 @@ theme_override_font_sizes/font_size = 15
 text = "NO TRANSFER"
 script = ExtResource("74_progress_label")
 progress_line = ExtResource("55_progress")
+storage = ExtResource("53_storage")
+downlink_model = ExtResource("61_m_downlink")
+storage_readout = NodePath("../StorageReadout")
+
+[node name="StorageReadout" type="Label" parent="Screen"]
+offset_left = 12.0
+offset_top = 34.0
+offset_right = 628.0
+offset_bottom = 55.0
+theme_override_fonts/font = SubResource("Font_mono")
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 2
 
 [node name="HeaderRule" type="ColorRect" parent="Screen"]
 offset_left = 12.0

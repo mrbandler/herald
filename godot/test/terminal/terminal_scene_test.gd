@@ -51,6 +51,9 @@ func test_downlink_is_wired() -> void:
 	var status := scene.get_node("Screen/StatusBar") as LinkStatus
 	var progress := scene.get_node("Screen/ProgressLine") as ProgressLabel
 	assert_object(progress.progress_line).is_same(downlink.progress_line)
+	assert_object(progress.storage).is_same(downlink.storage)
+	assert_object(progress.downlink_model).is_same(downlink.model)
+	assert_object(progress.storage_readout).is_same(scene.get_node("Screen/StorageReadout"))
 	assert_object(status.status_notice).is_same(downlink.status_notice)
 	assert_str(downlink.storage.resource_path.get_file()).is_equal("storage.tres")
 	assert_str(downlink.speak_opened.resource_path.get_file()).is_equal("speak_opened.tres")

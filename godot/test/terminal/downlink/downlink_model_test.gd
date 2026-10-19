@@ -24,6 +24,13 @@ func test_time_scales_with_size() -> void:
 	assert_float(_model.seconds_for(_item(21, "AUTH", 1, 16))).is_equal(15.0)
 	assert_float(_model.seconds_for(_item(23, "IMG", 6, 480))).is_equal(90.0)
 
+func test_the_longest_progress_line_fills_the_row_beside_the_storage() -> void:
+	var model: DownlinkModel = load("res://game/data/models/downlink.tres")
+	var terminal: TerminalModel = load("res://game/data/models/terminal.tres")
+	var line := model.item_line(_item(123, "AUTH", 1, 480), 240, 480)
+	var gap_and_readout := "  STORAGE 14/14"
+	assert_int(line.length() + gap_and_readout.length()).is_equal(terminal.columns)
+
 func test_rows_arrive_one_interval_after_another() -> void:
 	var item := _item(21, "AUTH", 1, 16)
 	assert_int(_model.rows_due(item, 0.0)).is_equal(0)

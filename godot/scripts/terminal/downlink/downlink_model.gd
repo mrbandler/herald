@@ -19,7 +19,8 @@ enum Grade {
 ## Local storage capacity in units.
 @export var storage_capacity := 8
 
-## Characters inside the progress bar's brackets.
+## Characters inside the progress bar's brackets. The game's 29 fills the screen's width with
+## the longest line, `RECV 123 AUTH [...] 480/480`, beside the storage readout.
 @export var bar_width := 10
 
 ## Lost without lock, noisy below the `margin` signal strength, clean at or above it.
