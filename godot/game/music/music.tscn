@@ -1,3 +1,14 @@
 [gd_scene format=3]
 
+[ext_resource type="Script" path="res://scripts/music/music_player.gd" id="1_player"]
+[ext_resource type="Resource" path="res://game/data/models/music.tres" id="2_model"]
+[ext_resource type="Resource" path="res://game/data/atoms/antenna/volume.tres" id="3_volume"]
+[ext_resource type="Resource" path="res://game/data/atoms/pass/pass_time.tres" id="4_time"]
+[ext_resource type="Resource" path="res://game/data/atoms/pass/current_pass.tres" id="5_pass"]
+
 [node name="Music" type="AudioStreamPlayer"]
+script = ExtResource("1_player")
+model = ExtResource("2_model")
+volume = ExtResource("3_volume")
+pass_time = ExtResource("4_time")
+current_pass = ExtResource("5_pass")

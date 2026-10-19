@@ -101,6 +101,7 @@
 [ext_resource type="Resource" path="res://game/data/passes/pass_07.tres" id="134_pass_07"]
 [ext_resource type="Resource" path="res://game/data/passes/pass_08.tres" id="135_pass_08"]
 [ext_resource type="Resource" path="res://game/data/models/ending.tres" id="136_ending"]
+[ext_resource type="PackedScene" path="res://game/music/music.tscn" id="137_music"]
 
 [sub_resource type="Environment" id="Environment_room"]
 background_mode = 1
@@ -398,3 +399,5 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
+
+[node name="Music" parent="." instance=ExtResource("137_music")]
