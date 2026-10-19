@@ -43,20 +43,28 @@
 [ext_resource type="Resource" path="res://game/data/atoms/downlink/download_complete.tres" id="47_complete"]
 [ext_resource type="AudioStream" path="res://game/data/audio/download_bell.tres" id="48_bell"]
 [ext_resource type="Resource" path="res://game/data/atoms/downlink/manifest_arrived.tres" id="49_manifest_arrived"]
+[ext_resource type="Material" path="res://game/data/materials/device_dark.tres" id="m_device"]
+[ext_resource type="Material" path="res://game/data/materials/knob.tres" id="m_knob"]
+[ext_resource type="Material" path="res://game/data/materials/brass.tres" id="m_brass"]
+[ext_resource type="Material" path="res://game/data/materials/gauge_face.tres" id="m_face"]
+[ext_resource type="Material" path="res://game/data/materials/plastic_dark.tres" id="m_dark"]
 
 [sub_resource type="CylinderShape3D" id="Shape_wheel"]
 height = 0.04
 radius = 0.07
 
 [sub_resource type="CylinderMesh" id="Mesh_wheel"]
+material = ExtResource("m_brass")
 top_radius = 0.07
 bottom_radius = 0.07
 height = 0.03
 
 [sub_resource type="BoxMesh" id="Mesh_spoke"]
+material = ExtResource("m_dark")
 size = Vector3(0.04, 0.04, 0.015)
 
 [sub_resource type="BoxMesh" id="Mesh_face"]
+material = ExtResource("m_face")
 size = Vector3(0.16, 0.12, 0.01)
 
 [sub_resource type="StandardMaterial3D" id="Material_mark"]
@@ -89,6 +97,7 @@ height = 0.016
 [node name="Console" type="CSGBox3D" parent="."]
 position = Vector3(0, 0.175, 0)
 size = Vector3(0.9, 0.35, 0.4)
+material = ExtResource("m_device")
 
 [node name="AzimuthKnob" type="Area3D" parent="." node_paths=PackedStringArray("visual", "click")]
 position = Vector3(-0.28, 0.2, 0.21)
@@ -156,10 +165,12 @@ shape = SubResource("Shape_wheel")
 
 [node name="Wheel" type="MeshInstance3D" parent="TuningKnob/Visual"]
 mesh = SubResource("Mesh_wheel")
+material_override = ExtResource("m_dark")
 
 [node name="Spoke" type="MeshInstance3D" parent="TuningKnob/Visual"]
 position = Vector3(0.045, 0.02, 0)
 mesh = SubResource("Mesh_spoke")
+material_override = ExtResource("m_knob")
 
 [node name="Click" type="AudioStreamPlayer3D" parent="TuningKnob"]
 stream = ExtResource("18_click")
@@ -324,7 +335,7 @@ off_sound = NodePath("../SpeakLamp/CloseChime")
 [node name="LockCaption" type="Label3D" parent="."]
 position = Vector3(0.405, 0.31, 0.206)
 pixel_size = 0.001
-modulate = Color(0.15, 0.15, 0.15, 1)
+modulate = Color(0.85, 0.82, 0.74, 1)
 font_size = 14
 outline_size = 0
 text = "LOCK"
@@ -332,7 +343,7 @@ text = "LOCK"
 [node name="SpeakCaption" type="Label3D" parent="."]
 position = Vector3(0.405, 0.23, 0.206)
 pixel_size = 0.001
-modulate = Color(0.15, 0.15, 0.15, 1)
+modulate = Color(0.85, 0.82, 0.74, 1)
 font_size = 14
 outline_size = 0
 text = "UPLINK"
@@ -360,7 +371,7 @@ sound = NodePath("../DataLamp/DownloadBell")
 [node name="DataCaption" type="Label3D" parent="."]
 position = Vector3(0.405, 0.15, 0.206)
 pixel_size = 0.001
-modulate = Color(0.15, 0.15, 0.15, 1)
+modulate = Color(0.85, 0.82, 0.74, 1)
 font_size = 14
 outline_size = 0
 text = "DATA"

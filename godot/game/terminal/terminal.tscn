@@ -64,6 +64,7 @@
 [ext_resource type="Script" path="res://scripts/terminal/alert_popup.gd" id="92_alert_popup"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/ack_heard.tres" id="93_ack_heard"]
 [ext_resource type="Resource" path="res://game/data/atoms/downlink/held_keys.tres" id="94_held_keys"]
+[ext_resource type="Material" path="res://game/data/materials/plastic_grey.tres" id="m_grey"]
 
 [sub_resource type="SystemFont" id="Font_mono"]
 font_names = PackedStringArray("monospace")
@@ -380,10 +381,12 @@ vertical_alignment = 1
 [node name="Bezel" type="CSGBox3D" parent="."]
 position = Vector3(0, 0, -0.06)
 size = Vector3(0.6, 0.48, 0.1)
+material = ExtResource("m_grey")
 
 [node name="DriveUnit" type="CSGBox3D" parent="."]
 position = Vector3(0, -0.29, -0.06)
 size = Vector3(0.6, 0.08, 0.24)
+material = ExtResource("m_grey")
 
 [node name="StorageLamps" type="Node3D" parent="DriveUnit"]
 position = Vector3(0, -0.008, 0.121)
@@ -460,6 +463,7 @@ text = "STORAGE"
 [node name="Keyboard" type="CSGBox3D" parent="."]
 position = Vector3(0, -0.315, 0.25)
 size = Vector3(0.44, 0.03, 0.15)
+material = ExtResource("m_grey")
 
 [node name="Crt" type="MeshInstance3D" parent="."]
 position = Vector3(0, 0, 0.001)

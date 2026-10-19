@@ -79,6 +79,12 @@
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/ack_heard.tres" id="117_ack_heard"]
 [ext_resource type="Resource" path="res://game/data/papers/guide/missed_ack.tres" id="118_missed_ack"]
 [ext_resource type="Resource" path="res://game/data/atoms/room/placed.tres" id="119_placed"]
+[ext_resource type="Material" path="res://game/data/materials/wall.tres" id="m_wall"]
+[ext_resource type="Material" path="res://game/data/materials/floor.tres" id="m_floor"]
+[ext_resource type="Material" path="res://game/data/materials/desk.tres" id="m_desk"]
+[ext_resource type="Material" path="res://game/data/materials/cork.tres" id="m_cork"]
+[ext_resource type="Material" path="res://game/data/materials/device_dark.tres" id="m_device"]
+[ext_resource type="Material" path="res://game/data/materials/knob.tres" id="m_knob"]
 
 [sub_resource type="Environment" id="Environment_room"]
 background_mode = 1
@@ -98,7 +104,7 @@ script = ExtResource("104_bool")
 size = Vector3(1.65, 0.004, 0.31)
 
 [sub_resource type="BoxShape3D" id="Shape_pin_wall"]
-size = Vector3(2.4, 1.2, 0.004)
+size = Vector3(2.4, 0.85, 0.004)
 
 [sub_resource type="SphereShape3D" id="Shape_bead"]
 radius = 0.05
@@ -138,22 +144,32 @@ omni_range = 4.0
 [node name="Floor" type="CSGBox3D" parent="Geometry" unique_id=1707663974]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, -0.4)
 size = Vector3(3.2, 0.1, 3.2)
+material = ExtResource("m_floor")
 
 [node name="BackWall" type="CSGBox3D" parent="Geometry" unique_id=2020507245]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, -1.65)
 size = Vector3(3.2, 2.6, 0.1)
+material = ExtResource("m_wall")
 
 [node name="LeftWall" type="CSGBox3D" parent="Geometry" unique_id=2065403973]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1.3, -0.4)
 size = Vector3(0.1, 2.6, 3.2)
+material = ExtResource("m_wall")
 
 [node name="RightWall" type="CSGBox3D" parent="Geometry" unique_id=1414174918]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 1.3, -0.4)
 size = Vector3(0.1, 2.6, 3.2)
+material = ExtResource("m_wall")
 
 [node name="Desk" type="CSGBox3D" parent="Geometry" unique_id=1352032104]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.725, -0.75)
 size = Vector3(2.2, 0.05, 0.8)
+material = ExtResource("m_desk")
+
+[node name="PinBoard" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.32, -1.597)
+size = Vector3(2.4, 0.85, 0.006)
+material = ExtResource("m_cork")
 
 [node name="Pass" parent="." unique_id=1557326940 instance=ExtResource("10_pass")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.95, -1.59)
@@ -186,10 +202,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, -0.08)
 radius = 0.07
 height = 0.7
 sides = 12
+material = ExtResource("m_device")
 
 [node name="Hatch" type="CSGBox3D" parent="Tube" unique_id=1017265470]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.84, -0.02)
 size = Vector3(0.16, 0.12, 0.04)
+material = ExtResource("m_device")
 
 [node name="Tray" type="Marker3D" parent="Tube" unique_id=1164226197]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.177, 0.753, 0.191)
@@ -200,12 +218,14 @@ visible = false
 radius = 0.035
 height = 0.2
 sides = 12
+material = ExtResource("m_knob")
 
 [node name="Cap" type="CSGCylinder3D" parent="Tube/Capsule" unique_id=186932007]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09, 0)
 radius = 0.038
 height = 0.03
 sides = 12
+material = ExtResource("m_knob")
 
 [node name="Thunk" type="AudioStreamPlayer3D" parent="Tube" unique_id=379928780]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
@@ -265,7 +285,7 @@ shape = SubResource("Shape_desk_top")
 disabled = true
 
 [node name="PinWall" type="Area3D" parent="." unique_id=1095389071 node_paths=PackedStringArray("shape")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, -1.598)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.32, -1.592)
 script = ExtResource("91_desk_surface")
 reading = ExtResource("93_reading")
 aim_point = ExtResource("96_aim")
