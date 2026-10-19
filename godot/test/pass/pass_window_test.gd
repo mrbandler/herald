@@ -177,3 +177,13 @@ func test_window_six_keys_the_spectra_and_tastes_candra() -> void:
 	assert_str(six.manifest[1].type).is_equal("SPC")
 	assert_str(six.manifest[1].content).contains("O2")
 	assert_object(six.requests["IMG 3 H"]).is_not_null()
+
+func test_window_seven_requires_the_insertion_burn() -> void:
+	var seven: PassWindow = load("res://game/data/passes/pass_07.tres")
+	assert_int(seven.number).is_equal(7)
+	assert_str(seven.required).is_equal("INSERT")
+	assert_str(seven.manifest[0].key_for).is_equal("INSERT")
+	assert_str(seven.missed_text).is_not_empty()
+	assert_str((seven.requests["SPC 4"] as ManifestItem).content).contains("H2O")
+	var modules: ModuleModel = load("res://game/data/models/modules.tres")
+	assert_bool(modules.modules.has("INSERT")).is_true()
