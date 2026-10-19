@@ -19,10 +19,10 @@ func before_test() -> void:
 	_ended = AtomSpy.events(_end.shift_ended)
 	add_child(_end)
 
-func test_reports_the_ack_and_ends_the_shift() -> void:
+func test_a_received_ack_needs_no_report() -> void:
 	_end.acked.value = true
 	_end.morning_bell.raise()
-	assert_array(_spy.calls).is_equal(["HEARTBEAT ACKNOWLEDGED"])
+	assert_array(_spy.calls).is_empty()
 	assert_int(_ended.calls.size()).is_equal(1)
 
 func test_reports_a_missing_ack() -> void:

@@ -55,6 +55,10 @@ func test_downlink_is_wired() -> void:
 	assert_object(progress.progress_line).is_same(downlink.progress_line)
 	var uplink := scene.get_node("Uplink") as Uplink
 	assert_object(uplink.progress_line).is_same(downlink.progress_line)
+	assert_object(uplink.status_notice).is_same(downlink.status_notice)
+	assert_object(uplink.receiver_model).is_same(downlink.receiver_model)
+	assert_object(uplink.signal_strength).is_same(downlink.signal_strength)
+	assert_str(uplink.acked.resource_path.get_file()).is_equal("acked.tres")
 	assert_object(progress.storage).is_same(downlink.storage)
 	assert_object(progress.downlink_model).is_same(downlink.model)
 	assert_object(progress.storage_readout).is_same(scene.get_node("Screen/StorageReadout"))

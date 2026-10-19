@@ -4,7 +4,6 @@
 [ext_resource type="Script" path="res://scripts/terminal/uplink.gd" id="2_uplink"]
 [ext_resource type="Script" path="res://scripts/core/interaction/focus_target.gd" id="3_focus"]
 [ext_resource type="Script" path="res://scripts/terminal/link_status.gd" id="4_link_status"]
-[ext_resource type="Script" path="res://scripts/core/atoms/nodes/event_latch.gd" id="5_latch"]
 [ext_resource type="Resource" path="res://game/data/atoms/terminal/screen_cleared.tres" id="40_cleared"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/speak_open.tres" id="39_speak_open"]
 [ext_resource type="Resource" path="res://game/data/models/terminal.tres" id="10_m_terminal"]
@@ -18,7 +17,6 @@
 [ext_resource type="Resource" path="res://game/data/atoms/player/terminal_focused.tres" id="24_focused"]
 [ext_resource type="Resource" path="res://game/data/atoms/player/terminal_focus_point.tres" id="25_point"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/tx_requested.tres" id="30_tx"]
-[ext_resource type="Resource" path="res://game/data/atoms/uplink/uplinked.tres" id="31_uplinked"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/sequence.tres" id="32_sequence"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/transmitting.tres" id="33_transmitting"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/acked.tres" id="34_acked"]
@@ -322,13 +320,16 @@ script = ExtResource("2_uplink")
 model = ExtResource("11_m_uplink")
 tx_requested = ExtResource("30_tx")
 los = ExtResource("36_los")
-uplinked = ExtResource("31_uplinked")
 sequence = ExtResource("32_sequence")
 locked = ExtResource("35_locked")
 transmitting = ExtResource("33_transmitting")
 out = ExtResource("20_stdout")
 progress_line = ExtResource("55_progress")
 last_sent = ExtResource("76_last_sent")
+receiver_model = ExtResource("62_m_receiver")
+signal_strength = ExtResource("41_strength")
+status_notice = ExtResource("56_notice")
+acked = ExtResource("34_acked")
 
 [node name="Downlink" type="Node" parent="."]
 script = ExtResource("60_downlink")
@@ -350,11 +351,6 @@ progress_line = ExtResource("55_progress")
 status_notice = ExtResource("56_notice")
 row_received = ExtResource("57_row")
 download_complete = ExtResource("58_complete")
-
-[node name="AckLatch" type="Node" parent="."]
-script = ExtResource("5_latch")
-on = ExtResource("31_uplinked")
-target = ExtResource("34_acked")
 
 [node name="RelaySound" type="Node" parent="." node_paths=PackedStringArray("sound")]
 script = ExtResource("70_event_sound")
