@@ -25,7 +25,7 @@ uniform float curvature = 0.02;
 uniform float vignette = 0.1;
 
 // The hum bar: a soft brighter band rolling up the picture, as on old sets.
-uniform float hum_strength = 0.15;
+uniform float hum_strength = 0.3;
 
 
 // Seconds the hum bar takes to roll once over the picture.

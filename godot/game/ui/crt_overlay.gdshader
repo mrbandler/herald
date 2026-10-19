@@ -13,7 +13,7 @@ uniform float vignette = 0.45;
 
 // The hum bar: a thin band rolling up the screen that lifts the glow beneath it by thinning the
 // veil this much, 0..1.
-uniform float hum_strength = 0.5;
+uniform float hum_strength = 0.7;
 
 // Seconds the hum bar takes to roll once over the screen.
 uniform float hum_seconds = 7.0;

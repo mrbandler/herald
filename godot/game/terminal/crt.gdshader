@@ -23,7 +23,7 @@ uniform vec3 phosphor : source_color = vec3(0.045, 0.03, 0.012);
 
 // The hum bar: a thin band rolling up the picture, as on old sets, that lifts the glow beneath
 // it by this share. Black stays black.
-uniform float hum_strength = 0.15;
+uniform float hum_strength = 0.3;
 
 
 // Seconds the hum bar takes to roll once over the picture.
