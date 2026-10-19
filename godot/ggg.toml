@@ -14,14 +14,6 @@ exclude = ["addons/gdUnit4/test"]
 from = "addons/gdUnit4"
 
 [[dependency]]
-name = "phantom-camera"
-git = "https://github.com/ramokz/phantom-camera.git"
-rev = "v0.11.0.3"
-
-[[dependency.map]]
-from = "addons/phantom_camera"
-
-[[dependency]]
 name = "limbo-console"
 url = "https://github.com/limbonaut/limbo_console/releases/download/v0.8.0/limbo_console_v0.8.0.zip"
 sha256 = "68cee989910322561222fde3261871a7bd0878122147a949bbb7a27fabef8d9a"
@@ -35,14 +27,6 @@ rev = "v0.15.0"
 from = "addons/guide"
 
 [[dependency]]
-name = "limboai"
-url = "https://github.com/limbonaut/limboai/releases/download/v1.8.1/limboai%2Bv1.8.1.gdextension-4.6.zip"
-sha256 = "0910411f8dbc0da8920f6c8bbbb6397c347cd9f2f193942468a702dfb11d5f0e"
-
-[[dependency.map]]
-from = "addons/limboai"
-
-[[dependency]]
 name = "better-tooltips"
 git = "https://github.com/Tobias004/filesystem_dock_tooltips.git"
 rev = "10de44d45107a8348190a534bc22f8e69356b4b4"
@@ -54,4 +38,6 @@ from = "addons/better_tooltips"
 name = "markdownlabel"
 git = "https://github.com/daenvil/MarkdownLabel.git"
 rev = "v1.4.0"
-map = [{ from = "addons/markdownlabel" }]
+
+[[dependency.map]]
+from = "addons/markdownlabel"
