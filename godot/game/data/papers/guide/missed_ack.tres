@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="Paper" format=3]
+
+[ext_resource type="Script" path="res://scripts/room/papers/paper.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+size = Vector2(0.148, 0.21)
+arrives_at = 20.0

@@ -76,6 +76,8 @@
 [ext_resource type="Resource" path="res://game/data/models/lamp.tres" id="103_m_lamp"]
 [ext_resource type="Script" uid="uid://chfphy4xlrc4o" path="res://scripts/core/atoms/values/bool_value.gd" id="104_bool"]
 [ext_resource type="Script" uid="uid://bq7oc87c543yf" path="res://scripts/core/atoms/nodes/value_visibility.gd" id="105_visibility"]
+[ext_resource type="Resource" path="res://game/data/atoms/uplink/ack_heard.tres" id="117_ack_heard"]
+[ext_resource type="Resource" path="res://game/data/papers/guide/missed_ack.tres" id="118_missed_ack"]
 
 [sub_resource type="Environment" id="Environment_room"]
 background_mode = 1
@@ -238,6 +240,8 @@ put_down = ExtResource("94_put_down")
 capsule_arrived = ExtResource("95_capsule")
 capsule_waiting = ExtResource("101_waiting")
 kept = Array[ExtResource("116_paper")]([ExtResource("115_letter")])
+ack_heard = ExtResource("117_ack_heard")
+missed_ack = ExtResource("118_missed_ack")
 centre = NodePath("../PaperSlots/Centre")
 stacks = [NodePath("../PaperSlots/Left"), NodePath("../PaperSlots/Right")]
 tray = NodePath("../Tube/Tray")

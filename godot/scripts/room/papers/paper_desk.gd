@@ -30,6 +30,13 @@ const STACK := 0.003
 ## Papers on the desk in every window, before the window's own, e.g. the handover letter.
 @export var kept: Array[Paper] = []
 
+## Read. False when HERALD never heard last window's ACK.
+@export var ack_heard: BoolValue
+
+## Comes with the window's papers when HERALD never heard last window's ACK: the insider spells
+## the heartbeat out.
+@export var missed_ack: Paper
+
 ## Where a centred paper lies, in front of the keyboard.
 @export var centre: Node3D
 
@@ -51,9 +58,13 @@ func _ready() -> void:
 	if window == null:
 		return
 
+	var papers := kept + window.papers
+	if not ack_heard.value:
+		papers.append(missed_ack)
+
 	var heights: Dictionary[Node3D, int] = { }
 	var turn := 0
-	for paper: Paper in kept + window.papers:
+	for paper: Paper in papers:
 		if paper.arrives_at > 0.0:
 			_waiting.append(paper)
 			continue

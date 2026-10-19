@@ -56,6 +56,8 @@ func test_papers_desk_and_tube_are_wired() -> void:
 	assert_int(papers.stacks.size()).is_equal(2)
 	assert_float(papers.centre.position.x).is_equal(0.0)
 	assert_str(papers.kept[0].body()).contains("SEQ ADD ACK")
+	assert_str(papers.ack_heard.resource_path.get_file()).is_equal("ack_heard.tres")
+	assert_str(papers.missed_ack.body()).contains("SEQ ADD ACK")
 	assert_object(papers.tray).is_same(room.get_node("Tube/Tray"))
 	assert_object(sound.event).is_same(papers.capsule_arrived)
 	var lamp := room.get_node("Tube/Lamp") as Lamp

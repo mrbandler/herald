@@ -8,11 +8,14 @@ func _paper(arrives_at: float) -> Paper:
 	paper.arrives_at = arrives_at
 	return paper
 
-func _build(papers: Array[Paper], kept: Array[Paper] = []) -> void:
+func _build(papers: Array[Paper], kept: Array[Paper] = [], heard := true) -> void:
 	var window := PassFixture.window_one()
 	window.papers = papers
 	_desk = auto_free(PaperDesk.new())
 	_desk.kept = kept
+	_desk.ack_heard = BoolValue.new()
+	_desk.ack_heard.value = heard
+	_desk.missed_ack = _paper(5.0)
 	_desk.current_pass = ResourceValue.new()
 	_desk.current_pass.value = window
 	_desk.pass_time = FloatValue.new()
@@ -89,3 +92,16 @@ func test_the_tube_lamp_waits_for_the_paper_to_be_picked_up() -> void:
 	assert_float(_desk.capsule_waiting.value).is_equal(1.0)
 	_desk.reading.value = _sheets()[1].paper
 	assert_float(_desk.capsule_waiting.value).is_equal(0.0)
+
+func test_the_insider_spells_the_heartbeat_out_after_a_missed_ack() -> void:
+	_build([], [], false)
+	_desk.pass_time.value = 5.0
+	_desk.tick()
+	assert_int(_sheets().size()).is_equal(1)
+	assert_object(_sheets()[0].paper).is_same(_desk.missed_ack)
+
+func test_no_insider_letter_after_a_heard_ack() -> void:
+	_build([])
+	_desk.pass_time.value = 5.0
+	_desk.tick()
+	assert_int(_sheets().size()).is_equal(0)
