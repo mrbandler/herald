@@ -169,3 +169,11 @@ func test_window_five_answers_requests_and_resends() -> void:
 				first = item
 		assert_int(again.rows).is_equal(first.rows)
 		assert_float(again.line_length).is_equal(first.line_length)
+
+func test_window_six_keys_the_spectra_and_tastes_candra() -> void:
+	var six: PassWindow = load("res://game/data/passes/pass_06.tres")
+	assert_int(six.number).is_equal(6)
+	assert_str(six.manifest[0].key_for).is_equal("SPC")
+	assert_str(six.manifest[1].type).is_equal("SPC")
+	assert_str(six.manifest[1].content).contains("O2")
+	assert_object(six.requests["IMG 3 H"]).is_not_null()
