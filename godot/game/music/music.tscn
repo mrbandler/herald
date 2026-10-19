@@ -8,6 +8,7 @@
 
 [node name="Music" type="AudioStreamPlayer"]
 script = ExtResource("1_player")
+bus = &"Music"
 model = ExtResource("2_model")
 volume = ExtResource("3_volume")
 pass_time = ExtResource("4_time")

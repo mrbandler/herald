@@ -494,12 +494,15 @@ material_override = SubResource("Material_crt")
 
 [node name="RelayPlayer" type="AudioStreamPlayer3D" parent="Crt"]
 stream = ExtResource("72_relay")
+bus = &"Antenna"
 
 [node name="UnlockBellPlayer" type="AudioStreamPlayer3D" parent="Crt"]
 stream = ExtResource("73_unlock_bell")
+bus = &"Antenna"
 
 [node name="AckAlarmPlayer" type="AudioStreamPlayer3D" parent="Crt"]
 stream = ExtResource("90_ack_alarm")
+bus = &"Antenna"
 
 [node name="FocusTarget" type="Area3D" parent="." node_paths=PackedStringArray("anchor")]
 script = ExtResource("3_focus")
