@@ -18,6 +18,7 @@ func _build(papers: Array[Paper], slots: int) -> void:
 	_desk.reading = ResourceValue.new()
 	_desk.put_down = Event.new()
 	_desk.capsule_arrived = Event.new()
+	_desk.capsule_waiting = FloatValue.new()
 	_arrivals = AtomSpy.events(_desk.capsule_arrived)
 	var room: Node3D = auto_free(Node3D.new())
 	for i: int in range(slots):
@@ -65,3 +66,13 @@ func test_a_skip_delivers_every_paper_due_stacked() -> void:
 	assert_int(_arrivals.calls.size()).is_equal(2)
 	assert_float(sheets[1].global_position.y).is_equal_approx(1.003, 0.0001)
 	assert_float(sheets[0].paper.arrives_at).is_equal(40.0)
+
+func test_the_tube_lamp_waits_for_the_paper_to_be_picked_up() -> void:
+	_build([_paper(0.0), _paper(40.0)], 1)
+	_desk.pass_time.value = 40.0
+	_desk.tick()
+	assert_float(_desk.capsule_waiting.value).is_equal(1.0)
+	_desk.reading.value = _sheets()[0].paper
+	assert_float(_desk.capsule_waiting.value).is_equal(1.0)
+	_desk.reading.value = _sheets()[1].paper
+	assert_float(_desk.capsule_waiting.value).is_equal(0.0)

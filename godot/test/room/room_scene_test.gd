@@ -56,6 +56,8 @@ func test_papers_desk_and_tube_are_wired() -> void:
 	assert_int(papers.desk_slots.size()).is_equal(3)
 	assert_object(papers.tray).is_same(room.get_node("Tube/Tray"))
 	assert_object(sound.event).is_same(papers.capsule_arrived)
+	var lamp := room.get_node("Tube/Lamp") as Lamp
+	assert_object(lamp.blink_source).is_same(papers.capsule_waiting)
 	assert_object(surface.reading).is_same(papers.reading)
 	assert_object(surface.put_down).is_same(papers.put_down)
 	assert_object(surface.aim_point).is_same(picker.aim_point)

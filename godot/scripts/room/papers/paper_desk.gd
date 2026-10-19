@@ -22,6 +22,10 @@ const STACK := 0.003
 ## Raised once per paper the tube delivers.
 @export var capsule_arrived: Event
 
+## Written. 1 while a delivered paper waits in the tray unread, 0 once one is picked up. The
+## tube's lamp blinks on it.
+@export var capsule_waiting: FloatValue
+
 ## Where papers from the start lie, in order.
 @export var desk_slots: Array[Node3D] = []
 
@@ -51,6 +55,7 @@ func _ready() -> void:
 			push_warning("No desk slot left for a paper of window %d" % window.number)
 
 	_waiting.sort_custom(_earlier)
+	reading.updated.connect(_on_reading)
 
 ## Delivers papers as their time comes.
 func _process(_delta: float) -> void:
@@ -63,6 +68,7 @@ func tick() -> void:
 		var spot := tray.global_transform.translated(Vector3.UP * STACK * _arrived)
 		_place(_waiting[_arrived], spot)
 		_arrived += 1
+		capsule_waiting.value = 1.0
 		capsule_arrived.raise()
 
 ## A new DeskPaper for `paper` at `at`.
@@ -74,6 +80,12 @@ func _place(paper: Paper, at: Transform3D) -> void:
 	sheet.put_down = put_down
 	add_child(sheet)
 	sheet.global_transform = at
+
+## Stops the tube's lamp once a delivered paper is picked up.
+func _on_reading(_previous: Variant, _current: Variant) -> void:
+	var paper := reading.value as Paper
+	if paper != null and _waiting.has(paper):
+		capsule_waiting.value = 0.0
 
 ## True when `first` arrives before `second`.
 func _earlier(first: Paper, second: Paper) -> bool:
