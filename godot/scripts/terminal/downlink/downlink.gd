@@ -133,8 +133,7 @@ func _advance_item(delta: float) -> void:
 	if _running.sent() < head.rows:
 		return
 
-	var notice := model.received_notice(_running)
-	_store_running()
+	var notice := model.received_notice(_store_running())
 	download_complete.raise()
 	status_notice.raise(notice)
 
@@ -144,14 +143,22 @@ func _start(item: ManifestItem) -> void:
 	_running.item = item
 	_item_elapsed = 0.0
 
-## Moves the running item into storage, then off the queue, and clears the progress.
-func _store_running() -> void:
+## Moves the running item into storage, merged into an earlier copy if there is one, then off
+## the queue, and clears the progress. Returns the copy now in storage.
+func _store_running() -> StoredItem:
 	var item := _running.item
+	var kept := model.stored(storage.value, str(item.id))
+	var result := _running if kept == null else model.merged(kept, _running)
 
-	storage.add(_running)
+	if kept == null:
+		storage.add(result)
+	else:
+		storage.replace(kept, result)
+
 	download_queue.remove(item)
-
 	_clear_running()
+
+	return result
 
 ## Forgets the running item and clears its progress.
 func _clear_running() -> void:
@@ -168,9 +175,7 @@ func _on_speak_opened(_payload: Variant) -> void:
 	progress_line.value = ""
 
 	if _running != null and _running.sent() > 0:
-		var notice := model.cut_notice(_running)
-		_store_running()
-		status_notice.raise(notice)
+		status_notice.raise(model.cut_notice(_store_running()))
 	else:
 		_clear_running()
 

@@ -31,6 +31,19 @@ func test_the_longest_progress_line_fills_the_row_beside_the_storage() -> void:
 	var gap_and_readout := "  STORAGE 14/14"
 	assert_int(line.length() + gap_and_readout.length()).is_equal(terminal.columns)
 
+func test_merged_keeps_each_rows_better_grade() -> void:
+	var item := _item(21, "AUTH", 1, 4)
+	var clean := DownlinkModel.Grade.CLEAN
+	var noisy := DownlinkModel.Grade.NOISY
+	var lost := DownlinkModel.Grade.LOST
+	var kept := DownlinkFixture.stored(item, [clean, lost, noisy])
+	kept.tag = "KEY"
+	var again := DownlinkFixture.stored(item, [noisy, clean, lost, clean])
+	var best := _model.merged(kept, again)
+	assert_array(Array(best.grades)).is_equal([clean, clean, noisy, clean])
+	assert_str(best.tag).is_equal("KEY")
+	assert_array(Array(kept.grades)).is_equal([clean, lost, noisy])
+
 func test_rows_arrive_one_interval_after_another() -> void:
 	var item := _item(21, "AUTH", 1, 16)
 	assert_int(_model.rows_due(item, 0.0)).is_equal(0)

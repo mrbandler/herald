@@ -46,7 +46,10 @@ func test_queues_several_items() -> void:
 func test_refuses_unknown_queued_and_stored_items() -> void:
 	_ready_to_get()
 	var auth := _get.manifest.value[0] as ManifestItem
-	_get.storage.add(DownlinkFixture.stored(auth, []))
+	var clean: Array[int] = []
+	clean.resize(16)
+	clean.fill(DownlinkModel.Grade.CLEAN)
+	_get.storage.add(DownlinkFixture.stored(auth, clean))
 	_get.run(PackedStringArray(["ABC", "99", "21", "22", "22"]))
 	var expected := [
 		"ABC UNKNOWN ITEM",
@@ -56,6 +59,16 @@ func test_refuses_unknown_queued_and_stored_items() -> void:
 		"22 ALREADY QUEUED",
 	]
 	assert_array(_out.calls).is_equal(expected)
+
+func test_fetches_a_damaged_copy_again_without_extra_space() -> void:
+	_ready_to_get()
+	var auth := _get.manifest.value[0] as ManifestItem
+	_get.storage.add(DownlinkFixture.stored(auth, [DownlinkModel.Grade.LOST]))
+	_get.storage.add(DownlinkFixture.stored(_get.manifest.value[2] as ManifestItem, []))
+	_get.storage.add(DownlinkFixture.stored(_get.manifest.value[1] as ManifestItem, []))
+	_get.run(PackedStringArray(["21"]))
+	assert_array(_out.calls).is_equal(["21 QUEUED AGAIN"])
+	assert_int(_get.download_queue.value.size()).is_equal(1)
 
 func test_refuses_items_that_do_not_fit() -> void:
 	_ready_to_get()

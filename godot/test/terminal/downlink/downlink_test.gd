@@ -117,6 +117,20 @@ func test_an_item_downloads_with_graded_rows() -> void:
 	assert_int(_rows.calls.size()).is_equal(16)
 	assert_str(_notices.calls[-1]).is_equal("21 RECEIVED 16/16. CLEAN 8 NOISY 8 LOST 0")
 
+func test_a_second_download_merges_into_the_stored_copy() -> void:
+	_receive_manifest()
+	var item := _downlink.manifest.value[0] as ManifestItem
+	var lost: Array[int] = []
+	lost.resize(16)
+	lost.fill(DownlinkModel.Grade.LOST)
+	_downlink.storage.add(DownlinkFixture.stored(item, lost))
+	_downlink.download_queue.add(item)
+	_run(15.2)
+	assert_int(_downlink.storage.value.size()).is_equal(1)
+	var stored := _downlink.storage.value[0] as StoredItem
+	assert_int(stored.clean()).is_equal(16)
+	assert_str(_notices.calls[-1]).is_equal("21 RECEIVED 16/16. CLEAN 16 NOISY 0 LOST 0")
+
 func test_rows_without_lock_are_lost() -> void:
 	_receive_manifest()
 	_downlink.download_queue.add(_downlink.manifest.value[0])

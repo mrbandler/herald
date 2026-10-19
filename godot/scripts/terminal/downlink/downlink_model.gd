@@ -73,6 +73,19 @@ func _tally(stored_item: StoredItem) -> String:
 func manifest_line(fraction: float) -> String:
 	return "RECV MANIFEST " + bar(fraction)
 
+## `kept` with each row at its better grade from `kept` and `again`, a second download of the
+## same item. A row only one copy sent keeps that copy's grade.
+func merged(kept: StoredItem, again: StoredItem) -> StoredItem:
+	var best := kept.duplicate() as StoredItem
+	var grades := PackedByteArray()
+	for row: int in range(maxi(kept.sent(), again.sent())):
+		var first: int = kept.grades[row] if row < kept.sent() else Grade.LOST
+		var second: int = again.grades[row] if row < again.sent() else Grade.LOST
+		grades.append(mini(first, second))
+
+	best.grades = grades
+	return best
+
 ## Units taken by a list of ManifestItems or StoredItems.
 func units(resources: Array[Resource]) -> int:
 	var total := 0

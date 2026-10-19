@@ -53,7 +53,9 @@ func _queue(token: String) -> void:
 		write("%s UNKNOWN ITEM" % token)
 		return
 
-	if model.stored(storage.value, token) != null:
+	# A damaged copy may be fetched again: the rows merge, so it needs no extra space.
+	var kept := model.stored(storage.value, token)
+	if kept != null and kept.clean() == item.rows:
 		write("%s ALREADY STORED" % token)
 		return
 
@@ -62,9 +64,10 @@ func _queue(token: String) -> void:
 		return
 
 	var used := model.units(storage.value) + model.units(download_queue.value)
-	if used + item.size > model.storage_capacity:
+	var needed := 0 if kept != null else item.size
+	if used + needed > model.storage_capacity:
 		write("%s NOT ENOUGH SPACE" % token)
 		return
 
 	download_queue.add(item)
-	write("%s QUEUED" % token)
+	write("%s QUEUED" % token if kept == null else "%s QUEUED AGAIN" % token)
