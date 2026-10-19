@@ -3,7 +3,7 @@
 shader_type spatial;
 render_mode unshaded;
 
-uniform sampler2D image : filter_linear, repeat_disable;
+uniform sampler2D image : source_color, filter_linear, repeat_disable;
 uniform sampler2D row_states : filter_nearest;
 uniform int mode = 0;
 uniform int rows = 120;
@@ -34,14 +34,13 @@ void fragment() {
 			float state = round(texelFetch(row_states, ivec2(int(row), 0), 0).r * 255.0);
 			float v = (row + fract(UV.y * float(rows))) / float(rows);
 			float lum = dot(textureLod(image, vec2(fract(s), v), 0.0).rgb, vec3(0.299, 0.587, 0.114));
-			if (state < 0.5) {
-				shade = lum;
-			} else if (state < 1.5) {
-				shade = mix(lum, snow, noise);
+			// Lost and unsent rows stay black at any CONTRAST.
+			if (state < 1.5) {
+				shade = state < 0.5 ? lum : mix(lum, snow, noise);
+				float gain = exp2((contrast - 0.5) * 2.0);
+				shade = clamp((shade - 0.5) * gain + 0.5 + (contrast - 0.5) * 0.3, 0.0, 1.0);
 			}
 		}
-		float gain = exp2((contrast - 0.5) * 2.0);
-		shade = clamp((shade - 0.5) * gain + 0.5 + (contrast - 0.5) * 0.3, 0.0, 1.0);
 		vec3 colour = tint * shade;
 		if (newest_row >= 0) {
 			float age = float(newest_row) - screen_row;
