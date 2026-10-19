@@ -11,7 +11,7 @@
 [resource]
 script = ExtResource("1_script")
 name = "UNLOCK"
-help = "UNLOCK <MOD> <ID> UNLOCK A MODULE WITH A KEY"
+help = "UNLOCK <NAME> <ID> OPEN A MODULE, VOLUME OR COMMAND"
 out = ExtResource("2_stdout")
 module_model = ExtResource("3_module_model")
 downlink_model = ExtResource("4_downlink_model")

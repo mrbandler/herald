@@ -1,8 +1,9 @@
 class_name UnlockCommand
 extends Command
 
-## UNLOCK <MODULE> <ID> unlocks a decoder module with a stored, valid AUTH key. The key is used
-## up and leaves storage; the module stays unlocked for the rest of the game.
+## UNLOCK <NAME> <ID> opens a decoder module, a volume or a HERALD command with a stored, valid
+## AUTH key. The key is used up and leaves storage; what it opened stays open for the rest of the
+## game.
 
 ## Supplies the modules, their banners and key validity.
 @export var module_model: ModuleModel
@@ -22,7 +23,7 @@ extends Command
 ## Checks the module and the key, then unlocks and prints the banner.
 func run(args: PackedStringArray) -> void:
 	if args.size() != 2:
-		write("USAGE: UNLOCK <MODULE> <ID>")
+		write("USAGE: UNLOCK <NAME> <ID>")
 		return
 
 	var module := args[0]
@@ -35,14 +36,14 @@ func run(args: PackedStringArray) -> void:
 	storage.remove(stored)
 	module_unlocked.raise(module)
 
-	write(" -- %s MODULE UNLOCKED --" % module)
+	write(" -- %s UNLOCKED --" % module)
 	for line: String in module_model.banner(module):
 		write(" " + line)
 
 ## The stored key `token` names if it can unlock `module`, or null after writing why not.
 func _usable_key(module: String, token: String) -> StoredItem:
 	if not module_model.modules.has(module):
-		write("%s UNKNOWN MODULE" % module)
+		write("%s CANNOT BE UNLOCKED" % module)
 		return null
 
 	if unlocked_modules.value.has(module):

@@ -128,3 +128,8 @@ func test_busy_guard() -> void:
 	_uplink.tx_requested.raise()
 	_uplink.tx_requested.raise()
 	assert_array(_out.calls).is_equal(["TRANSMISSION IN PROGRESS"])
+
+func test_a_silent_window_clears_what_the_last_one_sent() -> void:
+	_uplink.last_sent.value = PackedStringArray(["IMG 3 H"])
+	_uplink.los.raise()
+	assert_array(_uplink.last_sent.value).is_empty()
