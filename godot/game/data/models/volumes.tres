@@ -15,4 +15,7 @@
 
 [resource]
 script = ExtResource("1")
+seal_openers = Dictionary[String, PackedStringArray]({
+"ARC": PackedStringArray("VERDICT")
+})
 files = Array[ExtResource("2")]([ExtResource("3_file"), ExtResource("4_file"), ExtResource("5_file"), ExtResource("6_file"), ExtResource("7_file"), ExtResource("8_file"), ExtResource("9_file"), ExtResource("10_file"), ExtResource("11_file"), ExtResource("12_file")])

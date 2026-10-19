@@ -20,7 +20,7 @@ id = 22
 type = "TLM"
 rows = 32
 note = "AUTO"
-content = "HERALD TELEMETRY  T+214Y 077D
+content = "HERALD TELEMETRY  T+214Y 078D
 BUS      NOMINAL   BATTERY 61%
 POWER    18 / DRAW 10 / SURPLUS 8
 NAC      ON   WAC ON   SPC ON

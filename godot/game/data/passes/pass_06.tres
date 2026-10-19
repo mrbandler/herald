@@ -39,7 +39,7 @@ id = 63
 type = "TLM"
 rows = 32
 note = "AUTO"
-content = "HERALD TELEMETRY  T+214Y 122D
+content = "HERALD TELEMETRY  T+214Y 082D
 BUS      NOMINAL   BATTERY 53%
 POWER    17 / DRAW 12 / SURPLUS 5
 NAC      ON   WAC ON   SPC ON
@@ -125,6 +125,28 @@ image = ExtResource("7_tarba")
 line_length = 106.2
 phase = 0.81
 
+[sub_resource type="Resource" id="Item_43"]
+script = ExtResource("3")
+id = 43
+type = "IMG"
+size = 4
+rows = 120
+note = "REFFA WIDE"
+image = ExtResource("6_reffa")
+line_length = 98.6
+phase = 0.21
+
+[sub_resource type="Resource" id="Item_44"]
+script = ExtResource("3")
+id = 44
+type = "IMG"
+size = 4
+rows = 120
+note = "TARBA WIDE"
+image = ExtResource("7_tarba")
+line_length = 98.6
+phase = 0.66
+
 [sub_resource type="Resource" id="Paper_card"]
 script = ExtResource("3_paper")
 text = "TONIGHT'S PRAYER
@@ -150,6 +172,12 @@ card_seed = 6
 papers = Array[ExtResource("3_paper")]([SubResource("Paper_card"), ExtResource("9_letter")])
 manifest = Array[ExtResource("3")]([SubResource("Item_61"), SubResource("Item_62"), SubResource("Item_63")])
 requests = Dictionary[String, Resource]({
+"IMG 2": SubResource("Item_43"),
+"IMG 2 L": SubResource("Item_43"),
+"IMG 4": SubResource("Item_44"),
+"IMG 4 L": SubResource("Item_44"),
+"IMG 3": SubResource("Item_53"),
+"IMG 3 L": SubResource("Item_53"),
 "IMG 2 H": SubResource("Item_65"),
 "IMG 3 H": SubResource("Item_64"),
 "IMG 4 H": SubResource("Item_66"),

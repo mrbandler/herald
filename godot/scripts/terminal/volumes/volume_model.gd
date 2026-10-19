@@ -120,9 +120,20 @@ func _parent(directory: String) -> String:
 
 	return directory.get_slice(":", 0) + ":"
 
+
+## Other unlocked names that lift a volume's seal besides its own, e.g. VERDICT for ARC.
+@export var seal_openers: Dictionary[String, PackedStringArray] = { }
+
 ## True while `volume` is sealed and no AUTH key in `unlocked` has opened it.
 func is_sealed(volume: String, unlocked: PackedStringArray) -> bool:
-	return sealed.has(volume) and not unlocked.has(volume)
+	if not sealed.has(volume) or unlocked.has(volume):
+		return false
+
+	for opener: String in seal_openers.get(volume, PackedStringArray()):
+		if unlocked.has(opener):
+			return false
+
+	return true
 
 ## True when nothing unlocks `file`, or what unlocks it is in `unlocked`.
 func _unlocked(file: StationFile, unlocked: PackedStringArray) -> bool:

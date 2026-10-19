@@ -207,3 +207,11 @@ func test_the_file_commands_are_open_from_the_start() -> void:
 	var one: PassWindow = load(PASS_01)
 	for name: String in ["LS", "CD", "READ"]:
 		assert_bool(one.command_set.find(name).locked_in(one)).is_false()
+
+func test_plain_and_wide_picture_requests_are_answered() -> void:
+	for n: int in range(5, 9):
+		var window: PassWindow = load("res://game/data/passes/pass_0%d.tres" % n)
+		for request: String in ["IMG 2", "IMG 3 L", "IMG 4"]:
+			var item: ManifestItem = window.requests.get(request)
+			assert_object(item).override_failure_message("%d %s" % [n, request]).is_not_null()
+			assert_str(item.note).ends_with("WIDE")

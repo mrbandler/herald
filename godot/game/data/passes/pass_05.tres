@@ -47,7 +47,7 @@ id = 54
 type = "TLM"
 rows = 32
 note = "AUTO"
-content = "HERALD TELEMETRY  T+214Y 121D
+content = "HERALD TELEMETRY  T+214Y 081D
 BUS      NOMINAL   BATTERY 55%
 POWER    17 / DRAW 12 / SURPLUS 5
 NAC      ON   WAC ON   SPC ON
@@ -136,6 +136,12 @@ card_seed = 5
 papers = Array[ExtResource("3_paper")]([SubResource("Paper_card"), ExtResource("9_letter")])
 manifest = Array[ExtResource("3")]([SubResource("Item_51"), SubResource("Item_52"), SubResource("Item_53"), SubResource("Item_54")])
 requests = Dictionary[String, Resource]({
+"IMG 2": SubResource("Item_43"),
+"IMG 2 L": SubResource("Item_43"),
+"IMG 4": SubResource("Item_44"),
+"IMG 4 L": SubResource("Item_44"),
+"IMG 3": SubResource("Item_53"),
+"IMG 3 L": SubResource("Item_53"),
 "IMG 2 H": SubResource("Item_56"),
 "IMG 3 H": SubResource("Item_55"),
 "IMG 4 H": SubResource("Item_57"),
