@@ -120,6 +120,7 @@ vertical_alignment = 1
 script = ExtResource("4_link_status")
 pass_time = ExtResource("42_time")
 current_pass = ExtResource("23_current")
+receiver_model = ExtResource("62_m_receiver")
 signal_strength = ExtResource("41_strength")
 locked = ExtResource("35_locked")
 uplink_open = ExtResource("39_speak_open")

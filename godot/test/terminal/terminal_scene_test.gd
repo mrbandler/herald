@@ -41,6 +41,7 @@ func test_terminal_scene_is_wired() -> void:
 	assert_object(status.transmitting).is_same(uplink.transmitting)
 	assert_str(status.signal_strength.resource_path.get_file()).is_equal("signal_strength.tres")
 	assert_object(status.current_pass).is_same(terminal.current_pass)
+	assert_object(status.receiver_model).is_same(uplink.receiver_model)
 	assert_object(status.band).is_same(scene.get_node("Screen/StatusBand"))
 	assert_object(status.countdown).is_same(scene.get_node("Screen/StatusCountdown"))
 	assert_object(scene.get_node("Screen/KeyHints")).is_not_null()
