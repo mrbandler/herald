@@ -2,13 +2,14 @@
 
 [ext_resource type="Script" path="res://scripts/room/end_card.gd" id="1_card"]
 
-[node name="EndCard" type="CanvasLayer" node_paths=PackedStringArray("panel", "title", "body", "keys")]
+[node name="EndCard" type="CanvasLayer" node_paths=PackedStringArray("panel", "title", "body", "keys", "credits")]
 layer = 20
 script = ExtResource("1_card")
 panel = NodePath("Panel")
 title = NodePath("Panel/Column/Title")
 body = NodePath("Panel/Column/Body")
 keys = NodePath("Panel/Column/Keys")
+credits = NodePath("Panel/Column/Credits")
 
 [node name="Panel" type="ColorRect" parent="."]
 anchors_preset = 15
@@ -25,9 +26,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -360.0
-offset_top = -160.0
+offset_top = -340.0
 offset_right = 360.0
-offset_bottom = 160.0
+offset_bottom = 340.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 28
@@ -44,6 +45,12 @@ theme_override_colors/font_color = Color(0.85, 0.8, 0.7, 1)
 theme_override_font_sizes/font_size = 20
 horizontal_alignment = 1
 autowrap_mode = 3
+
+[node name="Credits" type="Label" parent="Panel/Column"]
+visible = false
+theme_override_colors/font_color = Color(0.85, 0.8, 0.7, 1)
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
 
 [node name="Keys" type="Label" parent="Panel/Column"]
 theme_override_colors/font_color = Color(0.6, 0.42, 0.14, 1)
