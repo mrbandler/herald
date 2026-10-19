@@ -1,5 +1,6 @@
 extends GdUnitTestSuite
 
+const PASS_04 := "res://game/data/passes/pass_04.tres"
 const PASS_01 := "res://game/data/passes/pass_01.tres"
 const PASS_02 := "res://game/data/passes/pass_02.tres"
 
@@ -140,7 +141,7 @@ func test_window_three_sends_pictures() -> void:
 	assert_float(three.papers[1].arrives_at).is_greater(0.0)
 
 func test_window_four_overflows_storage_and_keys_the_archive() -> void:
-	var four: PassWindow = load("res://game/data/passes/pass_04.tres")
+	var four: PassWindow = load(PASS_04)
 	assert_int(four.number).is_equal(4)
 	assert_str(four.manifest[0].key_for).is_equal("ARC")
 	var units := 0
@@ -150,3 +151,21 @@ func test_window_four_overflows_storage_and_keys_the_archive() -> void:
 		(load("res://game/data/models/downlink.tres") as DownlinkModel).storage_capacity
 	)
 	assert_str(four.papers[1].body()).contains("IMG 3 H")
+
+func test_window_five_answers_requests_and_resends() -> void:
+	var five: PassWindow = load("res://game/data/passes/pass_05.tres")
+	var four: PassWindow = load(PASS_04)
+	assert_int(five.number).is_equal(5)
+	var candra := five.requests["IMG 3 H"] as ManifestItem
+	assert_str(candra.note).is_equal("CANDRA NARROW")
+	var narrow_cal := five.manifest[0]
+	assert_str(narrow_cal.note).is_equal("NARROW")
+	assert_float(narrow_cal.line_length).is_equal(candra.line_length)
+	for id: int in [43, 44]:
+		var again := five.requests["RETX %d" % id] as ManifestItem
+		var first: ManifestItem
+		for item: ManifestItem in four.manifest:
+			if item.id == id:
+				first = item
+		assert_int(again.rows).is_equal(first.rows)
+		assert_float(again.line_length).is_equal(first.line_length)

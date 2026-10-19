@@ -89,6 +89,7 @@
 [ext_resource type="Material" path="res://game/data/materials/knob.tres" id="m_knob"]
 [ext_resource type="Material" path="res://game/data/materials/wall.tres" id="m_wall"]
 [ext_resource type="Resource" path="res://game/data/passes/pass_04.tres" id="124_pass_04"]
+[ext_resource type="Resource" path="res://game/data/passes/pass_05.tres" id="125_pass_05"]
 
 [sub_resource type="Environment" id="Environment_room"]
 background_mode = 1
@@ -134,7 +135,7 @@ atoms = Array[ExtResource("2_value")]([ExtResource("30_time"), ExtResource("40_a
 
 [node name="PassLoader" type="Node" parent="." unique_id=824546816]
 script = ExtResource("3_loader")
-passes = Array[ExtResource("4_window")]([ExtResource("20_pass_01"), ExtResource("25_pass_02"), ExtResource("113_pass_03"), ExtResource("124_pass_04")])
+passes = Array[ExtResource("4_window")]([ExtResource("20_pass_01"), ExtResource("25_pass_02"), ExtResource("113_pass_03"), ExtResource("124_pass_04"), ExtResource("125_pass_05")])
 window_number = ExtResource("22_window_number")
 current_pass = ExtResource("23_current")
 
