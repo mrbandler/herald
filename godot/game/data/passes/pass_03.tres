@@ -1,11 +1,11 @@
-[gd_resource type="Resource" script_class="PassWindow" format=3]
+[gd_resource type="Resource" script_class="PassWindow" format=3 uid="uid://boast3hrf6hhu"]
 
-[ext_resource type="Script" path="res://scripts/pass/pass_window.gd" id="1"]
+[ext_resource type="Script" uid="uid://c47dbxuo8d1i" path="res://scripts/pass/pass_window.gd" id="1"]
 [ext_resource type="Resource" path="res://game/data/commands/station.tres" id="2"]
-[ext_resource type="Script" path="res://scripts/terminal/downlink/manifest_item.gd" id="3"]
-[ext_resource type="Script" path="res://scripts/room/papers/paper.gd" id="3_paper"]
-[ext_resource type="Texture2D" path="res://assets/nasa/cal_bars.png" id="5_cal"]
-[ext_resource type="Texture2D" path="res://assets/nasa/prima.png" id="6_prima"]
+[ext_resource type="Script" uid="uid://brwtsdfx0ckf0" path="res://scripts/terminal/downlink/manifest_item.gd" id="3"]
+[ext_resource type="Script" uid="uid://yriiq0w5gpfr" path="res://scripts/room/papers/paper.gd" id="3_paper"]
+[ext_resource type="Texture2D" uid="uid://w1vsu1va2cet" path="res://assets/nasa/cal_bars.png" id="5_cal"]
+[ext_resource type="Texture2D" uid="uid://bk2pk2y4d6rrb" path="res://assets/nasa/prima.png" id="6_prima"]
 [ext_resource type="Resource" path="res://game/data/papers/window_03/capsule.tres" id="8_capsule"]
 
 [sub_resource type="Resource" id="Item_31"]

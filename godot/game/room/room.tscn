@@ -13,12 +13,12 @@
 [ext_resource type="PackedScene" path="res://game/player/player.tscn" id="11_player"]
 [ext_resource type="PackedScene" path="res://game/antenna/antenna.tscn" id="12_antenna"]
 [ext_resource type="PackedScene" path="res://game/terminal/terminal.tscn" id="13_terminal"]
-[ext_resource type="Resource" path="res://game/data/passes/pass_01.tres" id="20_pass_01"]
+[ext_resource type="Resource" uid="uid://c1y0eb3df3yoj" path="res://game/data/passes/pass_01.tres" id="20_pass_01"]
 [ext_resource type="Resource" path="res://game/data/tunables.tres" id="21_tunables"]
 [ext_resource type="Resource" path="res://game/data/atoms/campaign/window_number.tres" id="22_window_number"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/current_pass.tres" id="23_current"]
 [ext_resource type="Resource" path="res://game/data/models/sleep.tres" id="24_m_sleep"]
-[ext_resource type="Resource" path="res://game/data/passes/pass_02.tres" id="25_pass_02"]
+[ext_resource type="Resource" uid="uid://cb703ymmsb7yu" path="res://game/data/passes/pass_02.tres" id="25_pass_02"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/pass_time.tres" id="30_time"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/morning_bell.tres" id="31_bell"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/shift_ended.tres" id="32_shift_ended"]
@@ -61,6 +61,10 @@
 [ext_resource type="Resource" path="res://game/data/atoms/player/placing.tres" id="99_placing"]
 [ext_resource type="Resource" path="res://game/data/atoms/downlink/running_item.tres" id="100_running"]
 [ext_resource type="Resource" path="res://game/data/atoms/room/capsule_waiting.tres" id="101_waiting"]
+[ext_resource type="Script" uid="uid://cf3crd0so8det" path="res://scripts/antenna/lamp.gd" id="102_lamp"]
+[ext_resource type="Resource" path="res://game/data/models/lamp.tres" id="103_m_lamp"]
+[ext_resource type="Script" uid="uid://chfphy4xlrc4o" path="res://scripts/core/atoms/values/bool_value.gd" id="104_bool"]
+[ext_resource type="Script" uid="uid://bq7oc87c543yf" path="res://scripts/core/atoms/nodes/value_visibility.gd" id="105_visibility"]
 [ext_resource type="Resource" path="res://game/data/atoms/downlink/manifest_seen.tres" id="106_seen"]
 [ext_resource type="Resource" path="res://game/data/atoms/monitor/shown_item.tres" id="107_shown"]
 [ext_resource type="Resource" path="res://game/data/atoms/monitor/monitor_mode.tres" id="108_mode"]
@@ -72,10 +76,6 @@
 [ext_resource type="Resource" path="res://game/data/atoms/terminal/alert.tres" id="114_alert"]
 [ext_resource type="Resource" path="res://game/data/papers/window_01/letter.tres" id="115_letter"]
 [ext_resource type="Script" uid="uid://yriiq0w5gpfr" path="res://scripts/room/papers/paper.gd" id="116_paper"]
-[ext_resource type="Script" uid="uid://cf3crd0so8det" path="res://scripts/antenna/lamp.gd" id="102_lamp"]
-[ext_resource type="Resource" path="res://game/data/models/lamp.tres" id="103_m_lamp"]
-[ext_resource type="Script" uid="uid://chfphy4xlrc4o" path="res://scripts/core/atoms/values/bool_value.gd" id="104_bool"]
-[ext_resource type="Script" uid="uid://bq7oc87c543yf" path="res://scripts/core/atoms/nodes/value_visibility.gd" id="105_visibility"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/ack_heard.tres" id="117_ack_heard"]
 [ext_resource type="Resource" path="res://game/data/papers/guide/missed_ack.tres" id="118_missed_ack"]
 [ext_resource type="Resource" path="res://game/data/atoms/room/pinned.tres" id="119_pinned"]
@@ -227,8 +227,8 @@ script = ExtResource("105_visibility")
 source = ExtResource("101_waiting")
 target = NodePath("../Capsule")
 
-[node name="Monitor" parent="." instance=ExtResource("112_monitor")]
-transform = Transform3D(0.669, 0, -0.743, 0, 1, 0, 0.743, 0, 0.669, 0.85, 0.75, -0.9)
+[node name="Monitor" parent="." unique_id=1623078108 instance=ExtResource("112_monitor")]
+transform = Transform3D(0.57914954, 0, -0.81498206, 0, 1, 0, 0.81498206, 0, 0.57914954, 0.68761593, 0.75, -0.78268725)
 
 [node name="CapsuleSound" type="Node" parent="." unique_id=365854206 node_paths=PackedStringArray("sound")]
 script = ExtResource("92_event_sound")
@@ -264,7 +264,7 @@ shape = NodePath("Shape")
 shape = SubResource("Shape_desk_top")
 disabled = true
 
-[node name="PinWall" type="Area3D" parent="." node_paths=PackedStringArray("shape")]
+[node name="PinWall" type="Area3D" parent="." unique_id=1095389071 node_paths=PackedStringArray("shape")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, -1.598)
 script = ExtResource("91_desk_surface")
 reading = ExtResource("93_reading")
@@ -273,7 +273,7 @@ put_down = ExtResource("94_put_down")
 upright = true
 shape = NodePath("Shape")
 
-[node name="Shape" type="CollisionShape3D" parent="PinWall"]
+[node name="Shape" type="CollisionShape3D" parent="PinWall" unique_id=1492078458]
 shape = SubResource("Shape_pin_wall")
 disabled = true
 
