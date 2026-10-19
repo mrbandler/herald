@@ -19,6 +19,16 @@ extends Resource
 ## Camera pitch in degrees where a held paper is fully lowered, so the controls stay usable.
 @export var paper_lower_full := -20.0
 
+## Camera pitch in degrees where a held paper starts to dip straight down while the player
+## looks up, e.g. at the pin board.
+@export var paper_dip_start := 0.0
+
+## Camera pitch in degrees where a held paper has dipped all the way.
+@export var paper_dip_full := 6.0
+
+## Metres a fully dipped paper sinks, so the crosshair shows above it where it would be pinned.
+@export var paper_dip_drop := 0.14
+
 ## How quickly a held paper follows the look, per second. Lower trails more.
 @export var paper_follow_rate := 8.0
 
@@ -73,3 +83,8 @@ func look_scale(drowsy: float) -> float:
 ## between `paper_lower_start` and `paper_lower_full`.
 func paper_lowering(pitch: float) -> float:
 	return smoothstep(-paper_lower_start, -paper_lower_full, -pitch)
+
+## How far a held paper dips at camera `pitch` in degrees: 0 looking ahead, easing to 1 between
+## `paper_dip_start` and `paper_dip_full` looking up.
+func paper_dipping(pitch: float) -> float:
+	return smoothstep(paper_dip_start, paper_dip_full, pitch)

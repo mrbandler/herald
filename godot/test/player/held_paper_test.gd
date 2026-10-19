@@ -55,3 +55,12 @@ func test_leaning_in_lowers_it() -> void:
 	_held.lean_amount.value = 0.5
 	_held.tick(10.0)
 	assert_float(_held.lowered).is_equal_approx(1.0, 0.001)
+
+func test_looking_up_dips_the_paper_straight_down() -> void:
+	_held.reading.value = _letter()
+	_camera.rotation_degrees.x = 20.0
+	_held.tick(10.0)
+	assert_float(_held.lowered).is_equal_approx(0.0, 0.001)
+	assert_bool(_held.raised.value).is_false()
+	var dipped := Vector3(0.0, -_held.model.paper_dip_drop, -_held.model.paper_distance)
+	assert_vector(_held.position).is_equal_approx(dipped, Vector3.ONE * 0.001)
