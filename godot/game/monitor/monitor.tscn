@@ -206,5 +206,6 @@ light_color = Color(0.6, 0.65, 0.8, 1)
 light_energy = 0.1
 omni_range = 1.0
 script = ExtResource("20_glow")
+energy_scale = 2.0
 shown_item = ExtResource("7_shown")
 monitor_mode = ExtResource("8_mode")

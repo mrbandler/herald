@@ -88,6 +88,7 @@
 [ext_resource type="Material" path="res://game/data/materials/knob.tres" id="m_knob"]
 [ext_resource type="PackedScene" path="res://game/room/bankers_lamp.tscn" id="121_bankers_lamp"]
 [ext_resource type="PackedScene" path="res://game/room/arm_lamp.tscn" id="122_arm_lamp"]
+[ext_resource type="Material" path="res://game/data/materials/tube_paint.tres" id="123_tube_paint"]
 
 [sub_resource type="Environment" id="Environment_room"]
 background_mode = 1
@@ -215,12 +216,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.675, -0.08)
 radius = 0.07
 height = 1.85
 sides = 12
-material = ExtResource("m_device")
+material = ExtResource("123_tube_paint")
 
 [node name="Hatch" type="CSGBox3D" parent="Tube" unique_id=1017265470]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.84, -0.02)
 size = Vector3(0.16, 0.12, 0.04)
-material = ExtResource("m_device")
+material = ExtResource("123_tube_paint")
 
 [node name="Tray" type="Marker3D" parent="Tube" unique_id=1164226197]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.177, 0.753, 0.191)
