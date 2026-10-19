@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="PassWindow" format=3]
 
 [ext_resource type="Script" path="res://scripts/pass/pass_window.gd" id="1"]
-[ext_resource type="Resource" path="res://game/data/commands/window_01.tres" id="2"]
+[ext_resource type="Resource" path="res://game/data/commands/station.tres" id="2"]
 
 [resource]
 script = ExtResource("1")

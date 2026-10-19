@@ -4,10 +4,11 @@ const PASS_01 := "res://game/data/passes/pass_01.tres"
 const PASS_02 := "res://game/data/passes/pass_02.tres"
 const TERMINAL := "res://game/terminal/terminal.tscn"
 
-func test_both_windows_offer_the_same_commands() -> void:
+func test_both_windows_share_the_station_commands() -> void:
 	var window: PassWindow = load(PASS_01)
 	var two: PassWindow = load(PASS_02)
-	assert_array(window.command_set.names()).contains_exactly(two.command_set.names())
+	assert_object(window.command_set).is_same(two.command_set)
+	assert_str(window.command_set.resource_path.get_file()).is_equal("station.tres")
 	var tx := window.command_set.find("TX") as TxCommand
 	assert_object(tx.tx_requested).is_not_null()
 	assert_object(tx.out).is_same(window.command_set.find("SEQ").out)
