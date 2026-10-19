@@ -4,12 +4,12 @@
 
 [sub_resource type="AudioStreamWAV" id="Click"]
 script = ExtResource("1")
-duration = 0.03
-pitch = 1700.0
-level = 0.35
+duration = 0.014
+pitch = 3600.0
+level = 0.75
 
 [resource]
 streams_count = 1
 stream_0/stream = SubResource("Click")
-random_pitch = 1.15
-random_volume_offset_db = 2.0
+random_pitch = 1.1
+random_volume_offset_db = 1.5
