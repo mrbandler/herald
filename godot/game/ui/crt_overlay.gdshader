@@ -3,10 +3,10 @@
 shader_type canvas_item;
 
 // Scanlines over the screen's height.
-uniform float scanlines = 360.0;
+uniform float scanlines = 240.0;
 
 // How dark the gaps between scanlines get, 0..1.
-uniform float scanline_strength = 0.2;
+uniform float scanline_strength = 0.45;
 
 // How strongly the corners darken.
 uniform float vignette = 0.45;

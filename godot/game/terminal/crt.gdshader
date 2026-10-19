@@ -10,13 +10,16 @@ uniform sampler2D display : source_color, filter_linear, repeat_disable;
 uniform float curvature = 0.025;
 
 // How dark the gaps between scanlines get, 0..1.
-uniform float scanline_strength = 0.15;
+uniform float scanline_strength = 0.35;
 
 // Scanlines over the screen's height.
-uniform float scanlines = 480.0;
+uniform float scanlines = 240.0;
 
 // How strongly the corners darken.
 uniform float vignette = 0.1;
+
+// The faint glow of the phosphor even where the screen is black, so the scanlines show.
+uniform vec3 phosphor : source_color = vec3(0.045, 0.03, 0.012);
 
 // Overall brightness of the phosphor.
 uniform float glow = 1.3;
@@ -32,7 +35,7 @@ void fragment() {
 		vec2 texel = 1.0 / vec2(textureSize(display, 0));
 		vec3 colour = texture(display, uv).rgb;
 		vec3 bleed = texture(display, uv - vec2(texel.x, 0.0)).rgb;
-		colour = max(colour, bleed * 0.45);
+		colour = max(colour, bleed * 0.45) + phosphor;
 
 		float scan = 1.0 - scanline_strength * (0.5 + 0.5 * cos(uv.y * scanlines * TAU));
 		vec2 edge = uv * (1.0 - uv);
