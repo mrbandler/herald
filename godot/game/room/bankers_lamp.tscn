@@ -57,7 +57,7 @@ surface_material_override/0 = ExtResource("4_bulb")
 
 [node name="Light" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.29, 0.02)
-light_color = Color(1, 0.82, 0.55, 1)
-light_energy = 1.6
+light_color = Color(1, 0.7, 0.4, 1)
+light_energy = 0.8
 shadow_enabled = true
 omni_range = 2.2

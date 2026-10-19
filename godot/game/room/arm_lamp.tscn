@@ -51,8 +51,8 @@ surface_material_override/0 = ExtResource("3_bulb")
 [node name="Light" type="SpotLight3D" parent="."]
 position = Vector3(0, 0.512, 0.469)
 rotation = Vector3(-2.259, 0, 0)
-light_color = Color(1, 0.82, 0.55, 1)
-light_energy = 1.4
+light_color = Color(1, 0.7, 0.4, 1)
+light_energy = 0.75
 shadow_enabled = true
 spot_range = 2.2
 spot_angle = 38.0
