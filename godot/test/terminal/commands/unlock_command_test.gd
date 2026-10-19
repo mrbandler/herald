@@ -55,6 +55,8 @@ func test_refusals_in_order() -> void:
 	]
 	assert_array(_out.calls).is_equal(expected)
 	assert_array(_unlocked.calls).is_empty()
+	assert_int(_unlock.storage.value.size()).is_equal(3)
+	assert_array(_unlock.unlocked_modules.value).is_empty()
 
 func test_refuses_an_unlocked_module_and_prints_no_banner_without_one() -> void:
 	_unlock.unlocked_modules.value = PackedStringArray(["TLM"])

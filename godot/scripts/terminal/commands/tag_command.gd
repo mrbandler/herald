@@ -34,9 +34,8 @@ func run(args: PackedStringArray) -> void:
 	write(("%s TAGGED" % token) if not text.is_empty() else ("%s TAG CLEARED" % token))
 
 ## A copy of `stored` with `text` as its tag, so storage changes by assignment, never in place.
+## `duplicate()` carries every field over, including ones added later.
 func _tagged(stored: StoredItem, text: String) -> StoredItem:
-	var copy := StoredItem.new()
-	copy.item = stored.item
-	copy.grades = stored.grades.duplicate()
+	var copy := stored.duplicate() as StoredItem
 	copy.tag = text
 	return copy

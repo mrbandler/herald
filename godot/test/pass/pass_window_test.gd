@@ -88,5 +88,9 @@ func test_window_two_key_and_telemetry() -> void:
 	var two: PassWindow = load(PASS_02)
 	assert_str(two.manifest[0].note).is_equal("KEY TLM")
 	assert_str(two.manifest[0].key_for).is_equal("TLM")
-	assert_int(two.manifest[1].content.split("\n").size()).is_equal(8)
+	var clean: Array[int] = []
+	clean.resize(two.manifest[1].rows)
+	clean.fill(DownlinkModel.Grade.CLEAN)
+	var stored := DownlinkFixture.stored(two.manifest[1], clean)
+	assert_int(ModuleModel.new().decode_lines(stored).size()).is_equal(8)
 	assert_str(two.manifest[1].content).starts_with("HERALD TELEMETRY")

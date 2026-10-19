@@ -15,7 +15,7 @@ func before_test() -> void:
 func _run(words: Array[String]) -> void:
 	_tag.run(PackedStringArray(words))
 
-func test_tags_by_replacing_the_item_in_place() -> void:
+func test_tags_by_replacing_the_item() -> void:
 	var old := _tag.storage.value[0] as StoredItem
 	_run(["21", "FIRST", "KEY"])
 	var tagged := _tag.storage.value[0] as StoredItem
@@ -37,3 +37,7 @@ func test_refusals() -> void:
 	_run(["22", "A", "VERY", "LONG", "LABEL", "HERE"])
 	var expected := ["USAGE: TAG <ID> [TEXT]", "99 UNKNOWN ITEM", "TAG TOO LONG. 16 MAX"]
 	assert_array(_out.calls).is_equal(expected)
+
+func test_a_tag_of_exactly_the_limit_fits() -> void:
+	_run(["22", "ABCDEFGH", "IJKLMNO"])
+	assert_array(_out.calls).is_equal(["22 TAGGED"])
