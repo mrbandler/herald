@@ -21,6 +21,9 @@ func before_test() -> void:
 	_viewer.title = auto_free(Label.new())
 	_viewer.counter = auto_free(Label.new())
 	_viewer.body = auto_free(MarkdownLabel.new())
+	_viewer.track = auto_free(Control.new())
+	_viewer.track.size = Vector2(4.0, 100.0)
+	_viewer.thumb = auto_free(Control.new())
 	add_child(_viewer)
 
 func test_hidden_until_a_file_is_viewed() -> void:
@@ -75,5 +78,15 @@ func test_a_file_already_open_shows_on_ready() -> void:
 	fresh.title = auto_free(Label.new())
 	fresh.counter = auto_free(Label.new())
 	fresh.body = auto_free(MarkdownLabel.new())
+	fresh.track = auto_free(Control.new())
+	fresh.thumb = auto_free(Control.new())
 	add_child(fresh)
 	assert_bool(fresh.panel.visible).is_true()
+
+func test_the_scrollbar_shows_the_share_and_place() -> void:
+	assert_object(FileViewer.thumb_span(0, 11, 8)).is_equal(Vector2(0.0, 1.0))
+	assert_object(FileViewer.thumb_span(4, 3, 8)).is_equal(Vector2(0.5, 0.375))
+	_viewer.viewing.value = "USR:A.TXT"
+	assert_bool(_viewer.track.visible).is_true()
+	_viewer.handle_key(KEY_PAGEDOWN)
+	assert_float(_viewer.thumb.position.y).is_equal_approx(3.0 / 7.0 * 100.0, 0.01)

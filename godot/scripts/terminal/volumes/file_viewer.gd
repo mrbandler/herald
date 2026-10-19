@@ -38,6 +38,13 @@ extends Node
 ## Renders the visible lines of the file as Markdown.
 @export var body: MarkdownLabel
 
+## The scrollbar's track beside the body, shown only when the file is longer than a page.
+@export var track: Control
+
+## The scrollbar's thumb inside the track: its length is the share on show, its place the
+## position in the file.
+@export var thumb: Control
+
 ## The open file's lines, empty while closed.
 var _lines := PackedStringArray()
 
@@ -129,6 +136,19 @@ func _draw() -> void:
 	var last := mini(_top + _page(), _lines.size())
 	body.markdown_text = TextGlyphs.patch("\n".join(_lines.slice(_top, last)))
 	counter.text = "%d-%d/%d" % [mini(_top + 1, last), last, _lines.size()]
+
+	var span := FileViewer.thumb_span(_top, _page(), _lines.size())
+	track.visible = span.y < 1.0
+	thumb.position.y = span.x * track.size.y
+	thumb.size = Vector2(track.size.x, maxf(span.y * track.size.y, 2.0))
+
+## The scrollbar thumb as (start, length), both fractions of the track, for `page` lines from
+## `top` of `total`. A file that fits shows the whole track.
+static func thumb_span(top: int, page: int, total: int) -> Vector2:
+	if total <= page:
+		return Vector2(0.0, 1.0)
+
+	return Vector2(float(top) / total, float(page) / total)
 
 ## Redraws when a file opens or closes.
 func _on_viewing(_previous: Variant, _current: Variant) -> void:

@@ -261,7 +261,7 @@ color = Color(0.6, 0.42, 0.14, 1)
 [node name="Body" type="RichTextLabel" parent="Screen/FilePanel"]
 offset_left = 6.0
 offset_top = 36.0
-offset_right = 558.0
+offset_right = 550.0
 offset_bottom = 267.0
 mouse_filter = 2
 theme_override_colors/default_color = Color(0.8, 0.576, 0.2, 1)
@@ -278,6 +278,20 @@ bbcode_enabled = true
 scroll_active = false
 autowrap_mode = 0
 script = ExtResource("83_markdown")
+
+[node name="Track" type="ColorRect" parent="Screen/FilePanel"]
+offset_left = 554.0
+offset_top = 36.0
+offset_right = 558.0
+offset_bottom = 267.0
+mouse_filter = 2
+color = Color(0.3, 0.21, 0.07, 1)
+
+[node name="Thumb" type="ColorRect" parent="Screen/FilePanel/Track"]
+offset_right = 4.0
+offset_bottom = 40.0
+mouse_filter = 2
+color = Color(1, 0.72, 0.25, 1)
 
 [node name="KeyBand" type="ColorRect" parent="Screen/FilePanel"]
 offset_left = 1.0
@@ -421,7 +435,7 @@ clear = ExtResource("40_cleared")
 lean_amount = ExtResource("75_lean")
 directory = ExtResource("82_directory")
 
-[node name="FileViewer" type="Node" parent="." node_paths=PackedStringArray("panel", "title", "counter", "body")]
+[node name="FileViewer" type="Node" parent="." node_paths=PackedStringArray("panel", "title", "counter", "body", "track", "thumb")]
 script = ExtResource("79_file_viewer")
 terminal_model = ExtResource("10_m_terminal")
 volume_model = ExtResource("80_m_volumes")
@@ -433,6 +447,8 @@ panel = NodePath("../Screen/FilePanel")
 title = NodePath("../Screen/FilePanel/Title")
 counter = NodePath("../Screen/FilePanel/Counter")
 body = NodePath("../Screen/FilePanel/Body")
+track = NodePath("../Screen/FilePanel/Track")
+thumb = NodePath("../Screen/FilePanel/Track/Thumb")
 
 [node name="Uplink" type="Node" parent="."]
 script = ExtResource("2_uplink")
