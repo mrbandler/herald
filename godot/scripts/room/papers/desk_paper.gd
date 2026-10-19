@@ -7,7 +7,7 @@ extends Interactable
 ## Thickness of the click box in metres.
 const THICKNESS := 0.004
 
-## Metres a swapped-in paper lies above the one it replaced, so the two never share a spot.
+## Metres a swapped-in paper lies in front of the one it replaced, so the two never share a spot.
 const SWAP_LIFT := 0.001
 
 ## The paper it shows.
@@ -47,7 +47,7 @@ func _ready() -> void:
 ## Lifts its paper into the hand. A paper already in hand takes its place first.
 func grab() -> void:
 	if reading.value != null and reading.value != paper:
-		put_down.raise(global_transform.translated(Vector3.UP * SWAP_LIFT))
+		put_down.raise(global_transform.translated_local(Vector3.UP * SWAP_LIFT))
 
 	reading.value = paper
 

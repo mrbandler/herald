@@ -1,9 +1,10 @@
 class_name PaperDesk
 extends Node
 
-## Lays out the window's papers: a centred one in front of the keyboard, the kept ones and the
-## rest from the start on the stacks left and right, and the tube's in its tray once their time
-## has come, each with a capsule's thunk.
+## Lays out the window's papers: the pinned ones on the wall where they hang, a centred one in
+## front of the keyboard, the kept ones and the rest from the start on the stacks left and right,
+## and the tube's in its tray once their time has come, each with a capsule's thunk. Remembers
+## what the player hangs on the pin wall.
 
 ## Metres between stacked papers, on the desk and in the tray.
 const STACK := 0.003
@@ -37,6 +38,9 @@ const STACK := 0.003
 ## the heartbeat out.
 @export var missed_ack: Paper
 
+## Read and written. PinnedPaper entries on the pin wall. Kept across windows.
+@export var pinned: ResourceListValue
+
 ## Where a centred paper lies, in front of the keyboard.
 @export var centre: Node3D
 
@@ -58,6 +62,11 @@ func _ready() -> void:
 	if window == null:
 		return
 
+	var on_wall: Array[Paper] = []
+	for entry: PinnedPaper in pinned.value:
+		_place(entry.paper, entry.at)
+		on_wall.append(entry.paper)
+
 	var papers := kept + window.papers
 	if not ack_heard.value:
 		papers.append(missed_ack)
@@ -65,6 +74,9 @@ func _ready() -> void:
 	var heights: Dictionary[Node3D, int] = { }
 	var turn := 0
 	for paper: Paper in papers:
+		if on_wall.has(paper):
+			continue
+
 		if paper.arrives_at > 0.0:
 			_waiting.append(paper)
 			continue
@@ -77,6 +89,7 @@ func _ready() -> void:
 
 	_waiting.sort_custom(_earlier)
 	reading.updated.connect(_on_reading)
+	put_down.raised.connect(_on_put_down)
 
 ## Delivers papers as their time comes.
 func _process(_delta: float) -> void:
@@ -102,11 +115,28 @@ func _place(paper: Paper, at: Transform3D) -> void:
 	add_child(sheet)
 	sheet.global_transform = at
 
-## Stops the tube's lamp once a delivered paper is picked up.
+## Stops the tube's lamp once a delivered paper is picked up, and takes a paper picked off the
+## pin wall off the pinned list.
 func _on_reading(_previous: Variant, _current: Variant) -> void:
 	var paper := reading.value as Paper
 	if paper != null and _waiting.has(paper):
 		capsule_waiting.value = 0.0
+
+	for entry: PinnedPaper in pinned.value:
+		if entry.paper == paper:
+			pinned.remove(entry)
+
+## Pins the paper in hand when it is hung upright, i.e. put down on the pin wall.
+func _on_put_down(at: Variant) -> void:
+	var placed: Transform3D = at
+	var paper := reading.value as Paper
+	if paper == null or placed.basis.y.dot(Vector3.UP) > 0.5:
+		return
+
+	var entry := PinnedPaper.new()
+	entry.paper = paper
+	entry.at = placed
+	pinned.add(entry)
 
 ## True when `first` arrives before `second`.
 func _earlier(first: Paper, second: Paper) -> bool:

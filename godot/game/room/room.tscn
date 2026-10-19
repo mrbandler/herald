@@ -78,6 +78,7 @@
 [ext_resource type="Script" uid="uid://bq7oc87c543yf" path="res://scripts/core/atoms/nodes/value_visibility.gd" id="105_visibility"]
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/ack_heard.tres" id="117_ack_heard"]
 [ext_resource type="Resource" path="res://game/data/papers/guide/missed_ack.tres" id="118_missed_ack"]
+[ext_resource type="Resource" path="res://game/data/atoms/room/pinned.tres" id="119_pinned"]
 
 [sub_resource type="Environment" id="Environment_room"]
 background_mode = 1
@@ -95,6 +96,9 @@ script = ExtResource("104_bool")
 
 [sub_resource type="BoxShape3D" id="Shape_desk_top"]
 size = Vector3(1.65, 0.004, 0.31)
+
+[sub_resource type="BoxShape3D" id="Shape_pin_wall"]
+size = Vector3(2.4, 1.2, 0.004)
 
 [sub_resource type="SphereShape3D" id="Shape_bead"]
 radius = 0.05
@@ -242,6 +246,7 @@ capsule_waiting = ExtResource("101_waiting")
 kept = Array[ExtResource("116_paper")]([ExtResource("115_letter")])
 ack_heard = ExtResource("117_ack_heard")
 missed_ack = ExtResource("118_missed_ack")
+pinned = ExtResource("119_pinned")
 centre = NodePath("../PaperSlots/Centre")
 stacks = [NodePath("../PaperSlots/Left"), NodePath("../PaperSlots/Right")]
 tray = NodePath("../Tube/Tray")
@@ -257,6 +262,19 @@ shape = NodePath("Shape")
 
 [node name="Shape" type="CollisionShape3D" parent="DeskSurface" unique_id=1410978940]
 shape = SubResource("Shape_desk_top")
+disabled = true
+
+[node name="PinWall" type="Area3D" parent="." node_paths=PackedStringArray("shape")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, -1.598)
+script = ExtResource("91_desk_surface")
+reading = ExtResource("93_reading")
+aim_point = ExtResource("96_aim")
+put_down = ExtResource("94_put_down")
+upright = true
+shape = NodePath("Shape")
+
+[node name="Shape" type="CollisionShape3D" parent="PinWall"]
+shape = SubResource("Shape_pin_wall")
 disabled = true
 
 [node name="LampChain" type="Area3D" parent="." unique_id=1402926389]

@@ -43,3 +43,12 @@ func test_puts_the_paper_down_at_the_aim_turned_to_the_chair() -> void:
 	assert_vector(_put[0].origin).is_equal_approx(Vector3(0.0, 0.752, -0.75), Vector3.ONE * 0.0001)
 	var foot := _put[0].basis * Vector3.BACK
 	assert_vector(foot).is_equal_approx(Vector3.BACK, Vector3.ONE * 0.0001)
+
+func test_the_pin_wall_hangs_the_paper_upright_foot_down() -> void:
+	_surface.upright = true
+	_surface.reading.value = Paper.new()
+	_surface.aim_point.value = Vector3(0.0, 1.5, -1.6)
+	_surface.grab()
+	assert_vector(_put[0].origin).is_equal_approx(Vector3(0.0, 1.5, -1.598), Vector3.ONE * 0.0001)
+	assert_vector(_put[0].basis.y).is_equal_approx(Vector3.BACK, Vector3.ONE * 0.0001)
+	assert_vector(_put[0].basis * Vector3.BACK).is_equal_approx(Vector3.DOWN, Vector3.ONE * 0.0001)

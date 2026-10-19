@@ -8,7 +8,12 @@ func _paper(arrives_at: float) -> Paper:
 	paper.arrives_at = arrives_at
 	return paper
 
-func _build(papers: Array[Paper], kept: Array[Paper] = [], heard := true) -> void:
+func _build(
+	papers: Array[Paper],
+	kept: Array[Paper] = [],
+	heard := true,
+	pinned: Array[Resource] = [],
+) -> void:
 	var window := PassFixture.window_one()
 	window.papers = papers
 	_desk = auto_free(PaperDesk.new())
@@ -16,6 +21,8 @@ func _build(papers: Array[Paper], kept: Array[Paper] = [], heard := true) -> voi
 	_desk.ack_heard = BoolValue.new()
 	_desk.ack_heard.value = heard
 	_desk.missed_ack = _paper(5.0)
+	_desk.pinned = ResourceListValue.new()
+	_desk.pinned.value = pinned
 	_desk.current_pass = ResourceValue.new()
 	_desk.current_pass.value = window
 	_desk.pass_time = FloatValue.new()
@@ -105,3 +112,27 @@ func test_no_insider_letter_after_a_heard_ack() -> void:
 	_desk.pass_time.value = 5.0
 	_desk.tick()
 	assert_int(_sheets().size()).is_equal(0)
+
+func test_a_paper_hung_on_the_wall_is_pinned_until_picked_off() -> void:
+	_build([])
+	var letter := _paper(0.0)
+	_desk.reading.value = letter
+	_desk.put_down.raise(Transform3D.IDENTITY)
+	assert_array(_desk.pinned.value).is_empty()
+	var hung := Transform3D(Basis(Vector3.RIGHT, PI / 2.0), Vector3(0.0, 1.5, -1.6))
+	_desk.put_down.raise(hung)
+	_desk.reading.value = null
+	assert_int(_desk.pinned.value.size()).is_equal(1)
+	assert_object((_desk.pinned.value[0] as PinnedPaper).paper).is_same(letter)
+	_desk.reading.value = letter
+	assert_array(_desk.pinned.value).is_empty()
+
+func test_a_pinned_paper_hangs_where_it_was_and_leaves_the_stack() -> void:
+	var letter := _paper(0.0)
+	var entry := PinnedPaper.new()
+	entry.paper = letter
+	entry.at = Transform3D(Basis(Vector3.RIGHT, PI / 2.0), Vector3(0.0, 2.0, 0.0))
+	_build([], [letter], true, [entry])
+	var sheets := _sheets()
+	assert_int(sheets.size()).is_equal(1)
+	assert_vector(sheets[0].global_position).is_equal(Vector3(0.0, 2.0, 0.0))
