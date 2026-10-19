@@ -54,6 +54,7 @@ func test_papers_desk_and_tube_are_wired() -> void:
 	var picker := room.get_node("Player/Picker") as Picker
 	assert_object(papers.current_pass).is_same(loader.current_pass)
 	assert_int(papers.desk_slots.size()).is_equal(3)
+	assert_str(papers.kept[0].body()).contains("SEQ ADD ACK")
 	assert_object(papers.tray).is_same(room.get_node("Tube/Tray"))
 	assert_object(sound.event).is_same(papers.capsule_arrived)
 	var lamp := room.get_node("Tube/Lamp") as Lamp

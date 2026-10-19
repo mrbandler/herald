@@ -51,9 +51,8 @@ func test_shipped_window_two_loads_with_ascending_marks() -> void:
 func test_window_papers_carry_the_letter_the_prayer_and_a_capsule() -> void:
 	var one: PassWindow = load(PASS_01)
 	var two: PassWindow = load(PASS_02)
-	assert_int(one.papers.size()).is_equal(2)
-	assert_str(one.papers[0].body()).contains("SEQ ADD ACK")
-	var prayer := one.papers[1].text_for(one)
+	assert_int(one.papers.size()).is_equal(1)
+	var prayer := one.papers[0].text_for(one)
 	assert_str(prayer).contains("AZ 214.6  EL 38.2")
 	assert_str(prayer).contains("DIAL 52")
 	assert_str(two.papers[0].text_for(two)).contains("AZ 221.3  EL 41.7")

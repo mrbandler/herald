@@ -70,6 +70,8 @@
 [ext_resource type="PackedScene" path="res://game/monitor/monitor.tscn" id="112_monitor"]
 [ext_resource type="Resource" path="res://game/data/passes/pass_03.tres" id="113_pass_03"]
 [ext_resource type="Resource" path="res://game/data/atoms/terminal/alert.tres" id="114_alert"]
+[ext_resource type="Resource" path="res://game/data/papers/window_01/letter.tres" id="115_letter"]
+[ext_resource type="Script" uid="uid://yriiq0w5gpfr" path="res://scripts/room/papers/paper.gd" id="116_paper"]
 [ext_resource type="Script" uid="uid://cf3crd0so8det" path="res://scripts/antenna/lamp.gd" id="102_lamp"]
 [ext_resource type="Resource" path="res://game/data/models/lamp.tres" id="103_m_lamp"]
 [ext_resource type="Script" uid="uid://chfphy4xlrc4o" path="res://scripts/core/atoms/values/bool_value.gd" id="104_bool"]
@@ -235,6 +237,7 @@ reading = ExtResource("93_reading")
 put_down = ExtResource("94_put_down")
 capsule_arrived = ExtResource("95_capsule")
 capsule_waiting = ExtResource("101_waiting")
+kept = Array[ExtResource("116_paper")]([ExtResource("115_letter")])
 desk_slots = [NodePath("../PaperSlots/Letter"), NodePath("../PaperSlots/Card"), NodePath("../PaperSlots/Note")]
 tray = NodePath("../Tube/Tray")
 

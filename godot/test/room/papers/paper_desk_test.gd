@@ -8,10 +8,11 @@ func _paper(arrives_at: float) -> Paper:
 	paper.arrives_at = arrives_at
 	return paper
 
-func _build(papers: Array[Paper], slots: int) -> void:
+func _build(papers: Array[Paper], slots: int, kept: Array[Paper] = []) -> void:
 	var window := PassFixture.window_one()
 	window.papers = papers
 	_desk = auto_free(PaperDesk.new())
+	_desk.kept = kept
 	_desk.current_pass = ResourceValue.new()
 	_desk.current_pass.value = window
 	_desk.pass_time = FloatValue.new()
@@ -44,6 +45,14 @@ func test_start_papers_land_on_the_slots_and_extras_are_left_out() -> void:
 	var sheets := _sheets()
 	assert_int(sheets.size()).is_equal(2)
 	assert_vector(sheets[1].global_position).is_equal(Vector3(1.0, 0.0, 0.0))
+
+func test_kept_papers_lie_first_in_every_window() -> void:
+	var letter := _paper(0.0)
+	_build([_paper(0.0)], 2, [letter])
+	var sheets := _sheets()
+	assert_int(sheets.size()).is_equal(2)
+	assert_object(sheets[0].paper).is_same(letter)
+	assert_vector(sheets[0].global_position).is_equal(Vector3.ZERO)
 
 func test_a_tube_paper_arrives_once_its_time_has_come() -> void:
 	_build([_paper(40.0)], 1)

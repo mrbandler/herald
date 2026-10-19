@@ -1,8 +1,8 @@
 class_name PaperDesk
 extends Node
 
-## Lays out the window's papers: those from the start on the desk slots, the rest in the tube's
-## tray once their time has come, each with a capsule's thunk.
+## Lays out the window's papers: the kept ones and those from the start on the desk slots, the
+## rest in the tube's tray once their time has come, each with a capsule's thunk.
 
 ## Metres between papers stacked in the tray.
 const STACK := 0.003
@@ -26,6 +26,9 @@ const STACK := 0.003
 ## tube's lamp blinks on it.
 @export var capsule_waiting: FloatValue
 
+## Papers on the desk in every window, before the window's own, e.g. the handover letter.
+@export var kept: Array[Paper] = []
+
 ## Where papers from the start lie, in order.
 @export var desk_slots: Array[Node3D] = []
 
@@ -46,7 +49,7 @@ func _ready() -> void:
 
 	var taken: Array[int] = []
 	var loose: Array[Paper] = []
-	for paper: Paper in window.papers:
+	for paper: Paper in kept + window.papers:
 		if paper.arrives_at > 0.0:
 			_waiting.append(paper)
 		elif paper.slot >= 0 and paper.slot < desk_slots.size() and not taken.has(paper.slot):
