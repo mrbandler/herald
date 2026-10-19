@@ -17,12 +17,16 @@ uniform float afterglow_rows = 6.0;
 uniform vec3 tint : source_color = vec3(0.78, 0.86, 1.0);
 uniform vec3 glow : source_color = vec3(0.75, 1.0, 0.45);
 
-float hash(vec2 p) {
-	return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+// Noise per pixel cell and frame. The frame is its own input, so each frame is fresh noise
+// rather than the last one shifted.
+float hash(vec3 p) {
+	p = fract(p * vec3(0.1031, 0.1030, 0.0973));
+	p += dot(p, p.yzx + 33.33);
+	return fract((p.x + p.y) * p.z);
 }
 
 void fragment() {
-	float snow = hash(floor(UV * vec2(320.0, 240.0)) + vec2(floor(TIME * 30.0)));
+	float snow = hash(vec3(floor(UV * vec2(320.0, 240.0)), floor(TIME * 30.0)));
 	if (mode == 0) {
 		ALBEDO = tint * snow * 0.25;
 	} else {
