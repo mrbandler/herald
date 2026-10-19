@@ -38,6 +38,7 @@ func test_terminal_scene_is_wired() -> void:
 	assert_object(status.transmitting).is_same(uplink.transmitting)
 	assert_str(status.signal_strength.resource_path.get_file()).is_equal("signal_strength.tres")
 	assert_object(status.current_pass).is_same(terminal.current_pass)
+	assert_object(status.band).is_same(scene.get_node("Screen/StatusBand"))
 	assert_object(scene.get_node("Screen/KeyHints")).is_not_null()
 	var crt := scene.get_node("Crt") as MeshInstance3D
 	var material := crt.material_override as StandardMaterial3D

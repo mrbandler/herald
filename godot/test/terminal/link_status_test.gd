@@ -61,3 +61,36 @@ func test_a_new_notice_restarts_the_timer() -> void:
 	_status.status_notice.raise("22 RECEIVED 32/32")
 	_status.tick(3.0)
 	assert_str(_status.text).is_equal("22 RECEIVED 32/32")
+
+func test_a_held_link_lights_the_band() -> void:
+	_status.band = auto_free(ColorRect.new())
+	_status.locked.value = true
+	_status.refresh()
+	assert_object(_status.band.color).is_equal(_status.lit_color)
+	assert_object(_status.get_theme_color("font_color")).is_equal(_status.ink_color)
+
+func test_no_lock_darkens_the_band_and_no_carrier_dims_the_text() -> void:
+	_status.band = auto_free(ColorRect.new())
+	_status.signal_strength.value = 0.3
+	_status.refresh()
+	assert_object(_status.band.color).is_equal(_status.dark_color)
+	assert_object(_status.get_theme_color("font_color")).is_equal(_status.lit_color)
+	_status.signal_strength.value = 0.0
+	_status.tick(0.0)
+	_status.tick(2.0)
+	assert_object(_status.get_theme_color("font_color")).is_equal(_status.dim_color)
+
+func test_a_mode_change_blinks_the_band() -> void:
+	_status.band = auto_free(ColorRect.new())
+	_status.refresh()
+	assert_object(_status.band.color).is_equal(_status.dark_color)
+	_status.locked.value = true
+	_status.tick(0.0)
+	assert_object(_status.band.color).is_equal(_status.ink_color)
+	assert_object(_status.get_theme_color("font_color")).is_equal(_status.lit_color)
+	_status.tick(0.2)
+	assert_object(_status.band.color).is_equal(_status.lit_color)
+	_status.tick(0.15)
+	assert_object(_status.band.color).is_equal(_status.ink_color)
+	_status.tick(1.0)
+	assert_object(_status.band.color).is_equal(_status.lit_color)
