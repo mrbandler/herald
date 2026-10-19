@@ -22,9 +22,9 @@ script = ExtResource("3")
 id = 32
 type = "CAL"
 rows = 60
-note = "CAL"
+note = "WIDE"
 image = ExtResource("5_cal")
-line_length = 96.2
+line_length = 103.4
 phase = 0.12
 
 [sub_resource type="Resource" id="Item_33"]
@@ -33,7 +33,7 @@ id = 33
 type = "IMG"
 size = 4
 rows = 120
-note = "PRIMA"
+note = "PRIMA WIDE"
 image = ExtResource("6_prima")
 line_length = 103.4
 phase = 0.37

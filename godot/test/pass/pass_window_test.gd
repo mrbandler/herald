@@ -105,6 +105,24 @@ func test_window_two_key_and_telemetry() -> void:
 	assert_int(ModuleModel.new().decode_lines(stored).size()).is_equal(8)
 	assert_str(two.manifest[1].content).starts_with("HERALD TELEMETRY")
 
+func test_one_cal_per_camera_covers_its_pictures() -> void:
+	for file: String in DirAccess.get_files_at("res://game/data/passes"):
+		var window: PassWindow = load("res://game/data/passes/" + file)
+		var cals := { }
+		for item: ManifestItem in window.manifest:
+			if item.type == "CAL":
+				assert_bool(cals.has(_camera(item))).override_failure_message(file).is_false()
+				cals[_camera(item)] = item.line_length
+
+		for item: ManifestItem in window.manifest:
+			if item.type == "IMG":
+				assert_bool(cals.has(_camera(item))).override_failure_message(file).is_true()
+				assert_float(cals.get(_camera(item), 0.0)).is_equal(item.line_length)
+
+func _camera(item: ManifestItem) -> String:
+	var words := item.note.split(" ")
+	return words[words.size() - 1]
+
 func test_window_three_sends_pictures() -> void:
 	var three: PassWindow = load("res://game/data/passes/pass_03.tres")
 	assert_int(three.number).is_equal(3)
