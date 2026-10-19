@@ -87,13 +87,30 @@ func merged(kept: StoredItem, again: StoredItem) -> StoredItem:
 	best.grades = grades
 	return best
 
-## Units taken by a list of ManifestItems or StoredItems.
+## Units a list of ManifestItems or StoredItems takes.
 func units(resources: Array[Resource]) -> int:
 	var total := 0
 	for resource: Resource in resources:
-		var kept := resource as StoredItem
-		var item := kept.item if kept != null else resource as ManifestItem
-		total += item.size
+		total += size_of(resource)
+
+	return total
+
+## Units one ManifestItem or StoredItem takes: 1 for a decoded image, its size otherwise.
+func size_of(resource: Resource) -> int:
+	var kept := resource as StoredItem
+	if kept != null:
+		return 1 if kept.decoded else kept.item.size
+
+	return (resource as ManifestItem).size
+
+## Units the queue adds on top of storage: an item already stored is fetched again into the same
+## place, so it adds nothing.
+func queued_units(queue: Array[Resource], storage: Array[Resource]) -> int:
+	var total := 0
+	for resource: Resource in queue:
+		var item := resource as ManifestItem
+		if stored(storage, str(item.id)) == null:
+			total += item.size
 
 	return total
 

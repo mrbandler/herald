@@ -23,3 +23,12 @@ extends Resource
 
 ## For a text item: what DECODE shows, one line per line break.
 @export_multiline var content := ""
+
+## For an IMG or CAL item: the picture HERALD sends, row by row.
+@export var image: Texture2D
+
+## For an IMG or CAL item: the true line length, in LINE knob units (85 to 115).
+@export var line_length := 100.0
+
+## For an IMG or CAL item: where a line truly starts, 0..1, found with OFFSET.
+@export var phase := 0.0

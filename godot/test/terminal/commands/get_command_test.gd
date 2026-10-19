@@ -76,3 +76,10 @@ func test_refuses_items_that_do_not_fit() -> void:
 	_get.manifest.add(DownlinkFixture.item(24, "TLM", 1, 32))
 	_get.run(PackedStringArray(["21", "22", "24"]))
 	assert_array(_out.calls).is_equal(["21 QUEUED", "22 QUEUED", "24 NOT ENOUGH SPACE"])
+
+func test_a_refetch_in_the_queue_does_not_count_twice() -> void:
+	_ready_to_get()
+	var image := _get.manifest.value[2] as ManifestItem
+	_get.storage.add(DownlinkFixture.stored(image, [DownlinkModel.Grade.LOST]))
+	_get.run(PackedStringArray(["23", "22"]))
+	assert_array(_out.calls).is_equal(["23 QUEUED AGAIN", "22 QUEUED"])

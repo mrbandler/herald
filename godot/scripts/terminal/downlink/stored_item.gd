@@ -13,6 +13,12 @@ extends Resource
 ## The player's label, set with TAG. Empty for none.
 @export var tag := ""
 
+## True once the image was committed on the monitor. A decoded image takes 1 unit.
+@export var decoded := false
+
+## LINE, OFFSET and CONTRAST at commit, so SHOW draws the picture as it was tuned.
+@export var tuning := Vector3.ZERO
+
 ## Rows HERALD sent so far, arrived or lost.
 func sent() -> int:
 	return grades.size()
