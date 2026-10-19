@@ -23,6 +23,9 @@ extends Node3D
 ## 0 raised in front, 1 lowered to the bottom of the view.
 var lowered := 0.0
 
+## 0 raised in front, 1 dipped straight down while looking up.
+var dipped := 0.0
+
 ## The paper's look, upright toward the camera.
 var _sheet := PaperSheet.new()
 
@@ -40,8 +43,9 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	tick(delta)
 
-## Eases the paper down as the camera looks down, fully while the player leans, and back up
-## when looking ahead. It trails the look a little, so the change never snaps.
+## Eases the paper down as the camera looks down, fully while the player leans, straight down a
+## little while looking up, and back up when looking ahead. It trails the look a little, so the
+## change never snaps.
 func tick(delta: float) -> void:
 	if reading.value == null:
 		raised.value = false
@@ -49,12 +53,15 @@ func tick(delta: float) -> void:
 
 	var pitch := rad_to_deg(asin(clampf(-get_parent_node_3d().global_basis.z.y, -1.0, 1.0)))
 	var goal := 1.0 if lean_amount.value > 0.0 else model.paper_lowering(pitch)
-	lowered = lerpf(lowered, goal, 1.0 - exp(-model.paper_follow_rate * delta))
+	var follow := 1.0 - exp(-model.paper_follow_rate * delta)
+	lowered = lerpf(lowered, goal, follow)
+	dipped = lerpf(dipped, model.paper_dipping(pitch), follow)
 
 	var centre := Vector3(0.0, 0.0, -model.paper_distance)
-	position = centre.lerp(model.paper_lowered_offset, lowered)
+	var drop := Vector3.DOWN * model.paper_dip_drop * dipped
+	position = centre.lerp(model.paper_lowered_offset, lowered) + drop
 	rotation_degrees.x = -model.paper_lowered_tilt * lowered
-	raised.value = lowered < 0.5
+	raised.value = lowered < 0.5 and dipped < 0.5
 
 ## Shows the paper that came into hand, rising from below the view, or hides when none.
 func _on_reading(_previous: Variant, _current: Variant) -> void:
