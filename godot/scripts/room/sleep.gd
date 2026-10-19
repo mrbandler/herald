@@ -25,6 +25,9 @@ extends Node
 ## Stops the blinking so the fall takes over.
 @export var shift_ended: Event
 
+## Darkens and blurs the view as the Listener nods off. Its material takes `amount` 0..1.
+@export var haze: CanvasItem
+
 ## Written. How sleepy the Listener is, 0..1, so the look can slow down.
 @export var drowsiness: FloatValue
 
@@ -34,9 +37,11 @@ var _cycle := 0.0
 ## False once the shift has ended and the fall has taken over.
 var _awake := true
 
-## Listens for the end of the shift.
+## Listens for the end of the shift, and opens the sound and the view again after a reload.
 func _ready() -> void:
 	shift_ended.raised.connect(_on_shift_ended)
+	_muffle(0.0)
+	_set_haze(0.0)
 
 ## Blinks every frame.
 func _process(delta: float) -> void:
@@ -50,6 +55,7 @@ func tick(delta: float) -> void:
 
 	var drowsy := model.drowsiness(pass_time.value, window.bell)
 	drowsiness.value = drowsy
+	_set_haze(model.haze(drowsy))
 	if drowsy <= 0.0:
 		_cycle = 0.0
 		_pose(0.0, 0.0, Vector3.ZERO)
@@ -66,6 +72,26 @@ func fall(amount: float) -> void:
 	var drop := model.asleep_drop(amount)
 
 	_pose(model.asleep_closure(amount), model.drop_degrees * drop, model.drop_offset * drop)
+	_muffle(amount)
+	_set_haze(lerpf(model.haze_at_bell, 1.0, amount))
+
+## Muffles every sound at `amount` 0..1 through falling asleep: the master bus' low-pass closes
+## and its volume sinks.
+func _muffle(amount: float) -> void:
+	for i: int in range(AudioServer.get_bus_effect_count(0)):
+		var low_pass := AudioServer.get_bus_effect(0, i) as AudioEffectLowPassFilter
+		if low_pass != null:
+			low_pass.cutoff_hz = model.muffled_cutoff(amount)
+
+	AudioServer.set_bus_volume_db(0, model.muffled_db * amount)
+
+## Darkens and blurs the view by `amount` 0..1, and hides the haze while clear.
+func _set_haze(amount: float) -> void:
+	if haze == null:
+		return
+
+	haze.visible = amount > 0.0
+	(haze.material as ShaderMaterial).set_shader_parameter("amount", amount)
 
 ## Sets the lids to `closure` 0..1 and the head to `pitch_down` degrees and `offset` metres.
 func _pose(closure: float, pitch_down: float, offset: Vector3) -> void:

@@ -24,6 +24,18 @@ extends Resource
 ## Share of the fall after which the eyes are fully shut.
 @export var eyes_shut_at := 0.8
 
+## Low-pass cutoff in Hz on the master bus once asleep; awake it lets everything through.
+@export var muffled_hz := 300.0
+
+## Master volume in dB once asleep.
+@export var muffled_db := -18.0
+
+## Cutoff in Hz that lets every sound through.
+@export var open_hz := 20000.0
+
+## How strongly the view darkens and blurs at full drowsiness, 0..1. The fall takes it to 1.
+@export var haze_at_bell := 0.7
+
 ## 0 until the warning starts, rising to 1 at the `bell`, `t` seconds into the pass.
 func drowsiness(t: float, bell: float) -> float:
 	return clampf((t - (bell - warning_seconds)) / warning_seconds, 0.0, 1.0)
@@ -47,3 +59,11 @@ func asleep_closure(amount: float) -> float:
 ## Share 0..1 of the head drop at `amount` through falling asleep: slow at first, then it falls.
 func asleep_drop(amount: float) -> float:
 	return amount * amount
+
+## The master low-pass cutoff at `amount` 0..1 through falling asleep, eased in pitch.
+func muffled_cutoff(amount: float) -> float:
+	return exp(lerpf(log(open_hz), log(muffled_hz), amount))
+
+## The haze 0..1 over the view at a `drowsiness`, while blinking before the bell.
+func haze(drowsy: float) -> float:
+	return haze_at_bell * drowsy

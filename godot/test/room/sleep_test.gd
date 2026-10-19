@@ -59,3 +59,19 @@ func test_publishes_the_drowsiness() -> void:
 	_sleep.pass_time.value = 172.0
 	_sleep.tick(1.0 / 60.0)
 	assert_float(_sleep.drowsiness.value).is_greater(0.0)
+
+func test_the_view_hazes_while_drowsy_and_fully_in_the_fall() -> void:
+	var haze: ColorRect = auto_free(ColorRect.new())
+	haze.material = ShaderMaterial.new()
+	_sleep.haze = haze
+	_sleep.tick(0.1)
+	assert_bool(haze.visible).is_false()
+	_sleep.pass_time.value = 175.0
+	_sleep.tick(0.1)
+	assert_bool(haze.visible).is_true()
+	var amount: float = (haze.material as ShaderMaterial).get_shader_parameter("amount")
+	assert_float(amount).is_equal_approx(_sleep.model.haze_at_bell, 0.001)
+	_sleep.fall(1.0)
+	amount = (haze.material as ShaderMaterial).get_shader_parameter("amount")
+	assert_float(amount).is_equal_approx(1.0, 0.001)
+	_sleep.fall(0.0)

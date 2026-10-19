@@ -24,3 +24,10 @@ func test_asleep_closes_the_eyes_before_the_head_lands() -> void:
 	assert_float(model.asleep_closure(0.9)).is_equal(1.0)
 	assert_float(model.asleep_drop(0.5)).is_less(0.5)
 	assert_float(model.asleep_drop(1.0)).is_equal(1.0)
+
+func test_sound_muffles_from_open_to_muffled() -> void:
+	var model := SleepModel.new()
+	assert_float(model.muffled_cutoff(0.0)).is_equal_approx(model.open_hz, 0.5)
+	assert_float(model.muffled_cutoff(1.0)).is_equal_approx(model.muffled_hz, 0.5)
+	assert_float(model.muffled_cutoff(0.5)).is_less(model.open_hz / 2.0)
+	assert_float(model.haze(1.0)).is_equal(model.haze_at_bell)

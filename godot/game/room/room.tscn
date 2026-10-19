@@ -102,6 +102,7 @@
 [ext_resource type="Resource" path="res://game/data/passes/pass_08.tres" id="135_pass_08"]
 [ext_resource type="Resource" path="res://game/data/models/ending.tres" id="136_ending"]
 [ext_resource type="PackedScene" path="res://game/music/music.tscn" id="137_music"]
+[ext_resource type="Shader" path="res://game/room/haze.gdshader" id="138_haze"]
 
 [sub_resource type="Environment" id="Environment_room"]
 background_mode = 1
@@ -138,6 +139,10 @@ size = Vector3(1.65, 0.004, 0.31)
 
 [sub_resource type="BoxShape3D" id="Shape_pin_wall"]
 size = Vector3(2.4, 0.85, 0.004)
+
+
+[sub_resource type="ShaderMaterial" id="Material_haze"]
+shader = ExtResource("138_haze")
 
 [node name="Room" type="Node3D" unique_id=1331904615]
 
@@ -345,12 +350,13 @@ on = ExtResource("33_los")
 off = ExtResource("31_bell")
 target = ExtResource("70_chain_unlocked")
 
-[node name="Sleep" type="Node" parent="." unique_id=1364885553 node_paths=PackedStringArray("camera", "top_lid", "bottom_lid")]
+[node name="Sleep" type="Node" parent="." unique_id=1364885553 node_paths=PackedStringArray("camera", "top_lid", "bottom_lid", "haze")]
 script = ExtResource("9_sleep")
 model = ExtResource("24_m_sleep")
 camera = NodePath("../Player/Pivot/Camera3D")
 top_lid = NodePath("../Eyelids/Top")
 bottom_lid = NodePath("../Eyelids/Bottom")
+haze = NodePath("../Eyelids/Haze")
 pass_time = ExtResource("30_time")
 current_pass = ExtResource("23_current")
 shift_ended = ExtResource("32_shift_ended")
@@ -385,6 +391,14 @@ window_number = ExtResource("22_window_number")
 
 [node name="Eyelids" type="CanvasLayer" parent="." unique_id=1413141727]
 layer = 10
+
+[node name="Haze" type="ColorRect" parent="Eyelids"]
+visible = false
+material = SubResource("Material_haze")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
 
 [node name="Top" type="ColorRect" parent="Eyelids" unique_id=1223867091]
 anchors_preset = 10

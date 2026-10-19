@@ -1,5 +1,9 @@
 [gd_resource type="AudioBusLayout" format=3 uid="uid://dj313fgf05yx7"]
 
+[sub_resource type="AudioEffectLowPassFilter" id="AudioEffectLowPassFilter_sleep"]
+resource_name = "LowPassFilter"
+cutoff_hz = 20000.0
+
 [sub_resource type="AudioEffectReverb" id="AudioEffectReverb_music"]
 resource_name = "Reverb"
 damping = 0.6
@@ -14,6 +18,8 @@ release_ms = 400.0
 sidechain = &"Antenna"
 
 [resource]
+bus/0/effect/0/effect = SubResource("AudioEffectLowPassFilter_sleep")
+bus/0/effect/0/enabled = true
 bus/1/name = &"Antenna"
 bus/1/solo = false
 bus/1/mute = false
