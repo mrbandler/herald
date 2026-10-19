@@ -1,0 +1,3 @@
+Key press sounds: Keyboard Soundpack #1 [Typing and Single Keystrokes] by unicaegames, CC0.
+Cherry KC 1000 keyboard. Source: https://opengameart.org/content/keyboard-soundpack-1-typing-and-single-keystrokes
+key_01..06 are keypress-001, 006, 011, 016, 021 and 026 from the pack's Single Keys folder.
