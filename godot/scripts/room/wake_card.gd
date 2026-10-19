@@ -26,6 +26,9 @@ extends CanvasLayer
 ## Shows the power bar.
 @export var bar: Label
 
+## Plays the station booting while the power comes back. Optional.
+@export var boot_sound: AudioStreamPlayer
+
 ## The wall's mission clock. The card counts up to its time as the room fades in.
 @export var wall_clock: WallClock
 
@@ -37,6 +40,9 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	get_tree().paused = true
 	panel.visible = true
+	if boot_sound != null:
+		boot_sound.play()
+
 	tick(0.0)
 
 ## Brings the power back every frame.

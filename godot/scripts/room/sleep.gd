@@ -43,7 +43,9 @@ func _ready() -> void:
 	shift_ended.raised.connect(_on_shift_ended)
 	_set_haze(0.0)
 	_muffle(1.0)
-	create_tween().tween_method(_muffle, 1.0, 0.0, model.wake_seconds)
+	# Runs while the standby card holds the room paused, so the station's sound rises with it.
+	var rise := create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	rise.tween_method(_muffle, 1.0, 0.0, model.wake_seconds)
 
 ## Blinks every frame.
 func _process(delta: float) -> void:

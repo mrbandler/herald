@@ -1,0 +1,4 @@
+boot.ogg is mixed for HERALD from:
+- spaceEngineLow_000.ogg, Sci-Fi Sounds by Kenney (www.kenney.nl), CC0, as the fan hum
+- key_02, key_04 and key_05 from assets/keyboard (Keyboard Soundpack #1 by unicaegames, CC0) as drive seeks
+- a generated hard drive spin-up whine and a 1 kHz POST beep

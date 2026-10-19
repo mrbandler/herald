@@ -3,16 +3,18 @@
 [ext_resource type="Script" path="res://scripts/room/wake_card.gd" id="1_wake"]
 [ext_resource type="Theme" path="res://game/data/ui/crt.tres" id="2_theme"]
 [ext_resource type="Shader" path="res://game/ui/crt_overlay.gdshader" id="3_overlay"]
+[ext_resource type="AudioStream" path="res://assets/boot/boot.ogg" id="4_boot"]
 
 [sub_resource type="ShaderMaterial" id="Material_overlay"]
 shader = ExtResource("3_overlay")
 
-[node name="WakeCard" type="CanvasLayer" node_paths=PackedStringArray("panel", "clock", "bar")]
+[node name="WakeCard" type="CanvasLayer" node_paths=PackedStringArray("panel", "clock", "bar", "boot_sound")]
 layer = 30
 script = ExtResource("1_wake")
 panel = NodePath("Panel")
 clock = NodePath("Panel/Column/Clock")
 bar = NodePath("Panel/Column/Power/Bar")
+boot_sound = NodePath("BootSound")
 
 [node name="Panel" type="ColorRect" parent="."]
 anchors_preset = 15
@@ -71,3 +73,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="BootSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_boot")
+volume_db = -4.0
