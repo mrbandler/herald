@@ -27,6 +27,9 @@ extends Node
 ## Written. True while aiming at a spot that puts down what is in hand. Optional.
 @export var placing: BoolValue
 
+## Written. True while aiming at something that cannot be used yet. Optional.
+@export var blocked: BoolValue
+
 ## Written. True while aiming at a button with nothing held. Optional.
 @export var pointing: BoolValue
 
@@ -53,6 +56,8 @@ func _physics_process(_delta: float) -> void:
 		placing.value = hovering.value and _aimed.is_placement()
 	if pointing != null:
 		pointing.value = hovering.value and _aimed.is_button()
+	if blocked != null:
+		blocked.value = hovering.value and not _aimed.is_usable()
 
 ## Passes this frame's drag to what is held.
 func _process(_delta: float) -> void:

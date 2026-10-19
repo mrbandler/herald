@@ -21,6 +21,10 @@ func release() -> void:
 func is_placement() -> bool:
 	return false
 
+## False while it cannot be used yet, so the crosshair shows a lock instead of a hand.
+func is_usable() -> bool:
+	return true
+
 ## True for something pressed with a click, so the crosshair shows the pointer.
 func is_button() -> bool:
 	return false

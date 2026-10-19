@@ -28,6 +28,8 @@
 [ext_resource type="Texture2D" path="res://assets/kenney/cursors/hand_closed.png" id="32_grab"]
 [ext_resource type="Texture2D" path="res://assets/kenney/cursors/hand_point.png" id="36_point"]
 [ext_resource type="Resource" path="res://game/data/atoms/player/pointing.tres" id="37_pointing"]
+[ext_resource type="Resource" path="res://game/data/atoms/player/blocked.tres" id="38_blocked"]
+[ext_resource type="Texture2D" path="res://assets/kenney/cursors/lock.png" id="39_lock"]
 
 [node name="Player" type="Node3D"]
 
@@ -69,6 +71,7 @@ grabbing = ExtResource("21_grabbing")
 aim_point = ExtResource("28_aim")
 placing = ExtResource("35_placing")
 pointing = ExtResource("37_pointing")
+blocked = ExtResource("38_blocked")
 
 [node name="Lean" type="Node" parent="." node_paths=PackedStringArray("pivot")]
 script = ExtResource("3_lean")
@@ -108,3 +111,5 @@ placing = ExtResource("35_placing")
 place_icon = ExtResource("33_place")
 pointing = ExtResource("37_pointing")
 point_icon = ExtResource("36_point")
+blocked = ExtResource("38_blocked")
+lock_icon = ExtResource("39_lock")
