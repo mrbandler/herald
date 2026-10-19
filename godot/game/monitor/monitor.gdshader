@@ -25,10 +25,8 @@ uniform float curvature = 0.02;
 uniform float vignette = 0.1;
 
 // The hum bar: a soft brighter band rolling up the picture, as on old sets.
-uniform float hum_strength = 0.1;
+uniform float hum_strength = 0.15;
 
-// The hum bar's own glow, added where it passes, so it shows over black too.
-uniform vec3 hum_glow : source_color = vec3(0.025, 0.028, 0.035);
 
 // Seconds the hum bar takes to roll once over the picture.
 uniform float hum_seconds = 7.0;
@@ -67,7 +65,7 @@ void fragment() {
 	if (outside) {
 		ALBEDO = vec3(0.0);
 	} else if (mode == 0) {
-		ALBEDO = (tint * snow * 0.25 * (1.0 + hum_strength * band) + hum_glow * band) * shade_corners;
+		ALBEDO = tint * snow * 0.25 * (1.0 + hum_strength * band) * shade_corners;
 	} else {
 		float screen_row = floor(uv.y * float(rows));
 		float s = (screen_row + uv.x) * k + phase - offset;
@@ -91,7 +89,7 @@ void fragment() {
 			colour = mix(colour, glow * shade, fresh);
 		}
 		float scan = 0.88 + 0.12 * step(0.5, fract(uv.y * float(rows)));
-		colour = colour * (1.0 + hum_strength * band) + hum_glow * band;
+		colour = colour * (1.0 + hum_strength * band);
 		ALBEDO = colour * scan * shade_corners * brightness;
 	}
 }

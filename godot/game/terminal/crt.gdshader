@@ -21,12 +21,10 @@ uniform float vignette = 0.1;
 // The faint glow of the phosphor even where the screen is black, so the scanlines show.
 uniform vec3 phosphor : source_color = vec3(0.045, 0.03, 0.012);
 
-// The hum bar: a soft brighter band rolling up the picture, as on old sets. It lifts the picture
-// by this share and adds its own glow, so it shows over black too.
-uniform float hum_strength = 0.1;
+// The hum bar: a thin band rolling up the picture, as on old sets, that lifts the glow beneath
+// it by this share. Black stays black.
+uniform float hum_strength = 0.15;
 
-// The hum bar's own glow, added where it passes.
-uniform vec3 hum_glow : source_color = vec3(0.035, 0.025, 0.01);
 
 // Seconds the hum bar takes to roll once over the picture.
 uniform float hum_seconds = 7.0;
@@ -61,6 +59,6 @@ void fragment() {
 		vec2 edge = uv * (1.0 - uv);
 		float shade = pow(clamp(edge.x * edge.y * 16.0, 0.0, 1.0), vignette);
 		float band = hum_bar(uv.y, TIME, hum_seconds, hum_width);
-		ALBEDO = (colour * (1.0 + hum_strength * band) + hum_glow * band) * scan * shade * glow;
+		ALBEDO = colour * (1.0 + hum_strength * band) * scan * shade * glow;
 	}
 }

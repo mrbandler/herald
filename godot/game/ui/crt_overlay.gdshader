@@ -11,8 +11,9 @@ uniform float scanline_strength = 0.3;
 // How strongly the corners darken.
 uniform float vignette = 0.45;
 
-// The hum bar: a soft band rolling up the screen. Outside it the screen sits this much darker.
-uniform float hum_strength = 0.2;
+// The hum bar: a thin band rolling up the screen that lifts the glow beneath it by thinning the
+// veil this much, 0..1.
+uniform float hum_strength = 0.5;
 
 // Seconds the hum bar takes to roll once over the screen.
 uniform float hum_seconds = 7.0;
@@ -27,6 +28,7 @@ void fragment() {
 	float centre = 1.0 - fract(TIME / hum_seconds);
 	float distance = abs(fract(SCREEN_UV.y - centre + 0.5) - 0.5);
 	float band = smoothstep(hum_width, 0.0, distance);
-	float light = (1.0 - scanline_strength * scan) * corners * (1.0 - hum_strength * (1.0 - band));
+	float light = (1.0 - scanline_strength * scan) * corners;
+	light = mix(light, 1.0, hum_strength * band);
 	COLOR = vec4(0.0, 0.0, 0.0, 1.0 - light);
 }
