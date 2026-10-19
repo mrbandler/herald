@@ -28,7 +28,7 @@ func test_refusals_in_order() -> void:
 	_run(["30"])
 	_run(["22"])
 	var expected := [
-		"USAGE: DECODE <ID>",
+		"USAGE: DECODE <ID> [CAL <ID>]",
 		"99 UNKNOWN ITEM",
 		"21 IS AN AUTH BLOCK. USE UNLOCK",
 		"NO DECODER FOR CAL",
@@ -45,6 +45,7 @@ func test_prints_the_decoded_lines() -> void:
 func _monitor() -> StoredItem:
 	_decode.module_model.modules = PackedStringArray(["TLM", "IMG"])
 	_decode.unlocked_modules.value = PackedStringArray(["IMG"])
+	_decode.monitor_model = MonitorModel.new()
 	_decode.shown_item = ResourceValue.new()
 	_decode.monitor_mode = IntValue.new()
 	_decode.knob_line = FloatValue.new()
@@ -66,6 +67,36 @@ func test_a_raw_image_keeps_the_knobs_where_they_are() -> void:
 	_decode.knob_line.value = 103.4
 	_run(["33"])
 	assert_float(_decode.knob_line.value).is_equal(103.4)
+
+func test_a_cal_presets_the_knobs_roughly() -> void:
+	var image := _monitor()
+	image.item.phase = 0.37
+	var cal := DownlinkFixture.item(32, "CAL", 1, 2)
+	cal.line_length = 103.4
+	_decode.storage.add(DownlinkFixture.stored(cal, [0, 0]))
+	_decode.knob_contrast.value = 0.7
+	_run(["33", "CAL", "32"])
+	var model := _decode.monitor_model
+	assert_float(_decode.knob_line.value).is_equal_approx(103.4 + model.cal_line_error, 0.0001)
+	assert_float(_decode.knob_offset.value).is_equal_approx(0.37 + model.cal_offset_error, 0.0001)
+	assert_float(_decode.knob_contrast.value).is_equal(0.7)
+	assert_int(_decode.monitor_mode.value).is_equal(MonitorModel.Mode.TUNE)
+
+func test_cal_refusals() -> void:
+	_monitor()
+	_decode.unlocked_modules.value = PackedStringArray(["IMG", "TLM"])
+	_run(["33", "CAL"])
+	_run(["33", "CAL", "99"])
+	_run(["33", "CAL", "22"])
+	_run(["22", "CAL", "30"])
+	var expected := [
+		"USAGE: DECODE <ID> [CAL <ID>]",
+		"99 UNKNOWN ITEM",
+		"22 IS NOT A CAL",
+		"22 IS NOT AN IMAGE",
+	]
+	assert_array(_out.calls).is_equal(expected)
+	assert_object(_decode.shown_item.value).is_null()
 
 func test_a_decoded_image_starts_from_its_tuning() -> void:
 	var image := _monitor()

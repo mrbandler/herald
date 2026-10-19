@@ -20,6 +20,12 @@ enum RowState {
 	UNSENT,
 }
 
+## LINE a CAL preset is off by, in knob units: the old decoder sets the knobs close, never exact.
+@export var cal_line_error := 0.15
+
+## OFFSET a CAL preset is off by, as a share of a line.
+@export var cal_offset_error := 0.04
+
 ## How much snow a noisy row mixes into the picture, 0..1.
 @export var noise := 0.6
 
@@ -52,3 +58,8 @@ func source(u: float, v: float, rows: int, k: float, phase: float, offset: float
 ## otherwise, so a stream arrives as slanted as the monitor is set.
 func settings(mode: Mode, stored: StoredItem, knobs: Vector3) -> Vector3:
 	return stored.tuning if mode == Mode.SHOW else knobs
+
+## LINE and OFFSET a stored `cal` presets for `image`: the CAL's line and the image's offset, each a
+## little off. A CAL from the other camera brings that camera's line.
+func from_cal(image: ManifestItem, cal: ManifestItem) -> Vector2:
+	return Vector2(cal.line_length + cal_line_error, fposmod(image.phase + cal_offset_error, 1.0))

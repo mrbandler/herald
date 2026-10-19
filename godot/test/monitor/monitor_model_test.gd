@@ -30,6 +30,16 @@ func test_rows_past_the_stream_are_unsent() -> void:
 	assert_float(_model.source(0.9, 0.95, 10, 1.2, 0.0, 0.0).y).is_equal(-1.0)
 	assert_float(_model.source(0.1, 0.0, 10, 1.0, 0.0, 0.5).y).is_equal(-1.0)
 
+func test_a_cal_presets_close_but_not_exact() -> void:
+	var image := DownlinkFixture.item(33, "IMG", 4, 4)
+	image.phase = 0.98
+	var cal := DownlinkFixture.item(32, "CAL", 1, 2)
+	cal.line_length = 103.4
+	var preset := _model.from_cal(image, cal)
+	assert_float(preset.x).is_equal_approx(103.4 + _model.cal_line_error, 0.0001)
+	assert_float(preset.y).is_equal_approx(fposmod(0.98 + _model.cal_offset_error, 1.0), 0.0001)
+	assert_float(_model.cal_line_error).is_not_equal(0.0)
+
 func test_settings_per_mode() -> void:
 	var stored := _image(4)
 	var knobs := Vector3(97.0, 0.6, 0.8)
