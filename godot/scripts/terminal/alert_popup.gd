@@ -5,8 +5,11 @@ extends Node
 ## dimmed screen, until the Listener acknowledges it with Enter. Every other key but Esc is
 ## swallowed while it is up.
 
-## The warning triangle over every alert, one centred line per row.
-const TRIANGLE := ("/\\\n/  \\\n/ !! \\\n/  !!  \\\n/        \\\n/   !!   \\\n" + "/__________\\")
+## The warning triangle over every alert. The label centres each row on its own, so every row
+## is two characters wider than the one above.
+const TRIANGLE := (
+	"/\\\n/  \\\n/ !! \\\n/  !!  \\\n/        \\\n/    !!    \\\n" + "/____________\\"
+)
 
 ## Read and cleared. The `Alert` on show, null while none is up.
 @export var alert: ResourceValue

@@ -40,3 +40,8 @@ func test_the_shipped_alert_fits_the_box() -> void:
 	assert_str(model.ack_missed_alert.title).is_equal("NO ACK SENT")
 	for line: String in AlertPopup.text_for(model.ack_missed_alert).split("\n"):
 		assert_int(line.length()).is_less_equal(40)
+
+func test_each_triangle_row_is_two_wider_so_centring_keeps_it_straight() -> void:
+	var rows := AlertPopup.TRIANGLE.split("\n")
+	for i: int in range(rows.size()):
+		assert_int(rows[i].length()).is_equal(2 * i + 2)
