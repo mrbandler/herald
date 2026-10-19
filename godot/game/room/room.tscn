@@ -169,9 +169,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.137, 0.753, -0.457)
 [node name="Note" type="Marker3D" parent="PaperSlots" unique_id=459254378]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.33, 0.753, -0.5)
 
-[node name="Monitor" type="Marker3D" parent="PaperSlots"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.72, 0.753, -0.7)
-
 [node name="Tube" type="Node3D" parent="." unique_id=1291727052]
 transform = Transform3D(0.8560807, 0, -0.5168421, 0, 1, 0, 0.5168421, 0, 0.8560807, 0.38654506, 0, -0.9400423)
 
@@ -237,7 +234,7 @@ reading = ExtResource("93_reading")
 put_down = ExtResource("94_put_down")
 capsule_arrived = ExtResource("95_capsule")
 capsule_waiting = ExtResource("101_waiting")
-desk_slots = [NodePath("../PaperSlots/Letter"), NodePath("../PaperSlots/Card"), NodePath("../PaperSlots/Note"), NodePath("../PaperSlots/Monitor")]
+desk_slots = [NodePath("../PaperSlots/Letter"), NodePath("../PaperSlots/Card"), NodePath("../PaperSlots/Note")]
 tray = NodePath("../Tube/Tray")
 
 [node name="DeskSurface" type="Area3D" parent="." unique_id=539147498 node_paths=PackedStringArray("shape")]

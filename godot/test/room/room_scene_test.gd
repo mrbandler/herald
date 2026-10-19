@@ -53,7 +53,7 @@ func test_papers_desk_and_tube_are_wired() -> void:
 	var held := room.get_node("Player/Pivot/Camera3D/HeldPaper") as HeldPaper
 	var picker := room.get_node("Player/Picker") as Picker
 	assert_object(papers.current_pass).is_same(loader.current_pass)
-	assert_int(papers.desk_slots.size()).is_equal(4)
+	assert_int(papers.desk_slots.size()).is_equal(3)
 	assert_object(papers.tray).is_same(room.get_node("Tube/Tray"))
 	assert_object(sound.event).is_same(papers.capsule_arrived)
 	var lamp := room.get_node("Tube/Lamp") as Lamp
@@ -85,5 +85,3 @@ func test_the_monitor_stands_in_the_room_with_window_three() -> void:
 	assert_int(loader.passes[2].number).is_equal(3)
 	var driver := room.get_node("Monitor/Driver") as Monitor
 	assert_str(driver.shown_item.resource_path.get_file()).is_equal("shown_item.tres")
-	var papers := room.get_node("Papers") as PaperDesk
-	assert_int(papers.desk_slots.size()).is_equal(4)

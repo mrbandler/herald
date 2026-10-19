@@ -6,7 +6,6 @@
 [ext_resource type="Script" path="res://scripts/room/papers/paper.gd" id="3_paper"]
 [ext_resource type="Texture2D" path="res://assets/nasa/cal_bars.png" id="5_cal"]
 [ext_resource type="Texture2D" path="res://assets/nasa/prima.png" id="6_prima"]
-[ext_resource type="Resource" path="res://game/data/papers/window_03/sticky.tres" id="7_sticky"]
 [ext_resource type="Resource" path="res://game/data/papers/window_03/capsule.tres" id="8_capsule"]
 
 [sub_resource type="Resource" id="Item_31"]
@@ -74,6 +73,6 @@ card_azimuth = 226.8
 card_elevation = 44.1
 card_tuning = 58.0
 card_seed = 3
-papers = Array[ExtResource("3_paper")]([SubResource("Paper_card"), ExtResource("7_sticky"), ExtResource("8_capsule")])
+papers = Array[ExtResource("3_paper")]([SubResource("Paper_card"), ExtResource("8_capsule")])
 manifest = Array[ExtResource("3")]([SubResource("Item_31"), SubResource("Item_32"), SubResource("Item_33"), SubResource("Item_34")])
 command_set = ExtResource("2")

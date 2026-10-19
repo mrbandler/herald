@@ -133,5 +133,5 @@ func test_window_three_sends_pictures() -> void:
 	assert_str(three.manifest[0].key_for).is_equal("IMG")
 	assert_object(three.manifest[2].image).is_not_null()
 	assert_str(three.papers[0].text_for(three)).contains("AZ 226.8  EL 44.1")
-	assert_int(three.papers[1].slot).is_equal(3)
-	assert_float(three.papers[2].arrives_at).is_greater(0.0)
+	assert_int(three.papers.size()).is_equal(2)
+	assert_float(three.papers[1].arrives_at).is_greater(0.0)
