@@ -35,7 +35,7 @@ func test_prints_the_list_with_each_items_state() -> void:
 		" HERALD QUEUE - 4 ITEMS",
 		" ID   TYPE  SIZE  STATE    NOTE",
 		" 21   AUTH  1     DAMAGED  PHASE 2",
-		" 22   TLM   1              AUTO",
+		" 22   TLM   1     NONE     AUTO",
 		" 23   IMG   6     QUEUED",
 		" 24   TLM   1     STORED",
 	]

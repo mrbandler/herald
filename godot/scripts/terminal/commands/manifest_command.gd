@@ -34,13 +34,13 @@ func run(_args: PackedStringArray) -> void:
 		write((" %-4d %-5s %-5d %-8s %s" % columns).rstrip(" "))
 
 ## QUEUED while waiting or downloading, STORED for a clean copy, DAMAGED for one GET can fetch
-## again, and empty otherwise.
+## again, and NONE before any of that.
 func _state(item: ManifestItem) -> String:
 	if download_queue.value.has(item):
 		return "QUEUED"
 
 	var kept := model.stored(storage.value, str(item.id))
 	if kept == null:
-		return ""
+		return "NONE"
 
 	return "STORED" if kept.clean() == item.rows else "DAMAGED"
