@@ -16,6 +16,7 @@ func before_test() -> void:
 	_terminal.leave = GUIDEAction.new()
 	_terminal.terminal_context = GUIDEMappingContext.new()
 	_terminal.clear = Event.new()
+	_terminal.lean_amount = FloatValue.new()
 	_out = AtomSpy.events(_terminal.out)
 	_seq = SeqCommand.new()
 	_seq.name = "SEQ"
@@ -96,7 +97,7 @@ func test_the_wheel_scrolls_three_lines() -> void:
 	assert_int(_terminal.editor.scroll).is_equal(0)
 	assert_bool(_terminal.handle_wheel(MOUSE_BUTTON_LEFT)).is_false()
 
-func test_the_wheel_scrolls_only_while_focused() -> void:
+func test_the_wheel_scrolls_only_fully_leaned_in() -> void:
 	for n: int in 30:
 		_terminal.out.raise("LINE %d" % n)
 	_terminal.focused.value = false
@@ -106,5 +107,9 @@ func test_the_wheel_scrolls_only_while_focused() -> void:
 	get_viewport().push_input(wheel)
 	assert_int(_terminal.editor.scroll).is_equal(0)
 	_terminal.focused.value = true
+	_terminal.lean_amount.value = 0.8
+	get_viewport().push_input(wheel)
+	assert_int(_terminal.editor.scroll).is_equal(0)
+	_terminal.lean_amount.value = 1.0
 	get_viewport().push_input(wheel)
 	assert_int(_terminal.editor.scroll).is_equal(3)

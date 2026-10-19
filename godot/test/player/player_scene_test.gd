@@ -20,6 +20,7 @@ func test_player_scene_is_wired() -> void:
 	assert_object(picker.fine).is_not_null()
 	assert_object(lean.focused).is_not_null()
 	assert_object(lean.focus_point).is_not_null()
+	assert_str(lean.lean_amount.resource_path.get_file()).is_equal("lean_amount.tres")
 	assert_object(crosshair.grab_icon).is_not_null()
 	assert_int(crosshair.mouse_filter).is_equal(Control.MOUSE_FILTER_IGNORE)
 	assert_object(scene.get_node("Pivot/Camera3D")).is_not_null()

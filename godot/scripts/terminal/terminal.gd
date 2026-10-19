@@ -38,6 +38,9 @@ const GREETING := "LISTENING POST 4 - HTB MODULE - TYPE HELP"
 ## Raised by CLR. Empties the screen; the history is kept.
 @export var clear: Event
 
+## Read. The wheel scrolls only at 1, fully leaned in, not while looking around.
+@export var lean_amount: FloatValue
+
 ## Wrapped stdout lines, oldest first, capped at the model's scrollback.
 var lines := PackedStringArray()
 
@@ -72,10 +75,11 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if viewing.value.is_empty() and not chord and handle_key(key.keycode, key.unicode):
 		get_viewport().set_input_as_handled()
 
-## Feeds wheel steps to `handle_wheel` while focused and no file popup is open.
+## Feeds wheel steps to `handle_wheel` while fully leaned in and no file popup is open.
 func _unhandled_input(event: InputEvent) -> void:
 	var button := event as InputEventMouseButton
-	if not focused.value or button == null or not button.pressed or not viewing.value.is_empty():
+	var leaned_in := focused.value and lean_amount.value >= 1.0
+	if not leaned_in or button == null or not button.pressed or not viewing.value.is_empty():
 		return
 
 	if handle_wheel(button.button_index):

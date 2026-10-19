@@ -14,6 +14,7 @@
 [ext_resource type="Resource" path="res://game/data/atoms/player/grabbing.tres" id="21_grabbing"]
 [ext_resource type="Resource" path="res://game/data/atoms/player/terminal_focused.tres" id="22_focused"]
 [ext_resource type="Resource" path="res://game/data/atoms/player/terminal_focus_point.tres" id="23_point"]
+[ext_resource type="Resource" path="res://game/data/atoms/player/lean_amount.tres" id="24_lean"]
 [ext_resource type="Texture2D" path="res://assets/kenney/cursors/cross_small.png" id="30_idle"]
 [ext_resource type="Texture2D" path="res://assets/kenney/cursors/hand_open.png" id="31_hover"]
 [ext_resource type="Texture2D" path="res://assets/kenney/cursors/hand_closed.png" id="32_grab"]
@@ -53,6 +54,7 @@ model = ExtResource("10_model")
 pivot = NodePath("../Pivot")
 focused = ExtResource("22_focused")
 focus_point = ExtResource("23_point")
+lean_amount = ExtResource("24_lean")
 
 [node name="Hud" type="CanvasLayer" parent="."]
 

@@ -29,6 +29,7 @@ func test_terminal_scene_is_wired() -> void:
 	assert_object(clr.cleared).is_same(terminal.clear)
 	var focus := scene.get_node("FocusTarget") as FocusTarget
 	assert_object(focus.focused).is_same(terminal.focused)
+	assert_str(terminal.lean_amount.resource_path.get_file()).is_equal("lean_amount.tres")
 	assert_str(focus.focus_point.resource_path.get_file()).is_equal("terminal_focus_point.tres")
 	var status := scene.get_node("Screen/StatusBar") as LinkStatus
 	assert_object(status.locked).is_same(locked)

@@ -16,6 +16,9 @@ extends Node
 ## Read. World position to lean toward.
 @export var focus_point: Vector3Value
 
+## Written every tick with `amount`, so others can tell a full lean from a partial one.
+@export var lean_amount: FloatValue
+
 ## Current lean blend, 0 seated to 1 fully leaned.
 var amount := 0.0
 
@@ -39,6 +42,7 @@ func tick(delta: float) -> void:
 		goal = model.lean_amount(rad_to_deg(view.angle_to(to_focus)))
 
 	amount = move_toward(amount, goal, model.lean_speed * delta)
+	lean_amount.value = amount
 
 	var leaned := pivot.get_parent_node_3d().to_local(focus_point.value + model.lean_offset)
 	pivot.position = _seated.lerp(leaned, amount)

@@ -14,6 +14,7 @@ func before_test() -> void:
 	_lean.focused = BoolValue.new()
 	_lean.focus_point = Vector3Value.new()
 	_lean.focus_point.value = Vector3(0.0, 1.0, -1.0)
+	_lean.lean_amount = FloatValue.new()
 	add_child(player)
 	_lean.set_process(false)
 
@@ -21,6 +22,7 @@ func test_leans_in_while_focused_and_looking_at_it() -> void:
 	_lean.focused.value = true
 	_lean.tick(1.0)
 	assert_float(_lean.amount).is_equal(1.0)
+	assert_float(_lean.lean_amount.value).is_equal(1.0)
 	var leaned := _lean.focus_point.value + _lean.model.lean_offset
 	assert_vector(_lean.pivot.position).is_equal_approx(leaned, Vector3.ONE * 0.0001)
 
