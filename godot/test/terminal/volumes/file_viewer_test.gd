@@ -21,25 +21,20 @@ func before_test() -> void:
 	_viewer.title = auto_free(Label.new())
 	_viewer.counter = auto_free(Label.new())
 	_viewer.body = auto_free(Label.new())
-	_viewer.hints = auto_free(Label.new())
-	_viewer.hints.text = "ESC LEAVE"
 	add_child(_viewer)
 
 func test_hidden_until_a_file_is_viewed() -> void:
 	assert_bool(_viewer.panel.visible).is_false()
-	assert_str(_viewer.hints.text).is_equal("ESC LEAVE")
 	assert_bool(_viewer.handle_key(KEY_DOWN)).is_false()
 
-func test_shows_the_file_and_swaps_the_hints() -> void:
+func test_shows_the_file() -> void:
 	_viewer.viewing.value = "USR:A.TXT"
 	assert_bool(_viewer.panel.visible).is_true()
 	assert_str(_viewer.title.text).is_equal("USR:A.TXT")
 	assert_str(_viewer.body.text).is_equal("1\n2\n3")
 	assert_str(_viewer.counter.text).is_equal("1-3/7")
-	assert_str(_viewer.hints.text).is_equal(FileViewer.HINTS)
 	_viewer.viewing.value = ""
 	assert_bool(_viewer.panel.visible).is_false()
-	assert_str(_viewer.hints.text).is_equal("ESC LEAVE")
 
 func test_scrolls_within_the_file() -> void:
 	_viewer.viewing.value = "USR:A.TXT"
@@ -80,7 +75,5 @@ func test_a_file_already_open_shows_on_ready() -> void:
 	fresh.title = auto_free(Label.new())
 	fresh.counter = auto_free(Label.new())
 	fresh.body = auto_free(Label.new())
-	fresh.hints = auto_free(Label.new())
 	add_child(fresh)
 	assert_bool(fresh.panel.visible).is_true()
-	assert_str(fresh.hints.text).is_equal(FileViewer.HINTS)

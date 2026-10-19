@@ -203,17 +203,26 @@ vertical_alignment = 1
 [node name="FilePanel" type="ColorRect" parent="Screen"]
 visible = false
 offset_left = 38.0
-offset_top = 99.0
+offset_top = 92.0
 offset_right = 602.0
-offset_bottom = 397.0
+offset_bottom = 400.0
 mouse_filter = 2
 color = Color(1, 0.72, 0.25, 1)
+
+[node name="Dim" type="ColorRect" parent="Screen/FilePanel"]
+show_behind_parent = true
+offset_left = -38.0
+offset_top = -92.0
+offset_right = 602.0
+offset_bottom = 388.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0.55)
 
 [node name="Inside" type="ColorRect" parent="Screen/FilePanel"]
 offset_left = 1.0
 offset_top = 1.0
 offset_right = 563.0
-offset_bottom = 297.0
+offset_bottom = 307.0
 mouse_filter = 2
 color = Color(0.02, 0.015, 0.01, 1)
 
@@ -221,30 +230,59 @@ color = Color(0.02, 0.015, 0.01, 1)
 offset_left = 6.0
 offset_top = 1.0
 offset_right = 558.0
-offset_bottom = 22.0
+offset_bottom = 29.0
 theme_override_colors/font_color = Color(1, 0.72, 0.25, 1)
 theme_override_fonts/font = SubResource("Font_mono")
 theme_override_font_sizes/font_size = 15
+vertical_alignment = 1
 
 [node name="Counter" type="Label" parent="Screen/FilePanel"]
 offset_left = 6.0
 offset_top = 1.0
 offset_right = 558.0
-offset_bottom = 22.0
+offset_bottom = 29.0
 theme_override_colors/font_color = Color(0.6, 0.42, 0.14, 1)
 theme_override_fonts/font = SubResource("Font_mono")
 theme_override_font_sizes/font_size = 15
 horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Rule" type="ColorRect" parent="Screen/FilePanel"]
+offset_left = 6.0
+offset_top = 29.0
+offset_right = 558.0
+offset_bottom = 30.0
+mouse_filter = 2
+color = Color(0.6, 0.42, 0.14, 1)
 
 [node name="Body" type="Label" parent="Screen/FilePanel"]
 offset_left = 6.0
-offset_top = 23.0
+offset_top = 36.0
 offset_right = 558.0
-offset_bottom = 296.0
+offset_bottom = 267.0
 theme_override_colors/font_color = Color(0.8, 0.576, 0.2, 1)
 theme_override_constants/line_spacing = 0
 theme_override_fonts/font = SubResource("Font_mono")
 theme_override_font_sizes/font_size = 15
+
+[node name="KeyBand" type="ColorRect" parent="Screen/FilePanel"]
+offset_left = 1.0
+offset_top = 284.0
+offset_right = 563.0
+offset_bottom = 306.0
+mouse_filter = 2
+color = Color(1, 0.72, 0.25, 1)
+
+[node name="Keys" type="Label" parent="Screen/FilePanel"]
+offset_left = 6.0
+offset_top = 284.0
+offset_right = 558.0
+offset_bottom = 306.0
+theme_override_colors/font_color = Color(0.1, 0.07, 0.02, 1)
+theme_override_fonts/font = SubResource("Font_mono")
+theme_override_font_sizes/font_size = 15
+text = "ESC CLOSE   UP/DOWN/PGUP/PGDN/WHEEL SCROLL"
+vertical_alignment = 1
 
 [node name="Bezel" type="CSGBox3D" parent="."]
 position = Vector3(0, 0, -0.06)
@@ -369,7 +407,7 @@ clear = ExtResource("40_cleared")
 lean_amount = ExtResource("75_lean")
 directory = ExtResource("82_directory")
 
-[node name="FileViewer" type="Node" parent="." node_paths=PackedStringArray("panel", "title", "counter", "body", "hints")]
+[node name="FileViewer" type="Node" parent="." node_paths=PackedStringArray("panel", "title", "counter", "body")]
 script = ExtResource("79_file_viewer")
 terminal_model = ExtResource("10_m_terminal")
 volume_model = ExtResource("80_m_volumes")
@@ -381,7 +419,6 @@ panel = NodePath("../Screen/FilePanel")
 title = NodePath("../Screen/FilePanel/Title")
 counter = NodePath("../Screen/FilePanel/Counter")
 body = NodePath("../Screen/FilePanel/Body")
-hints = NodePath("../Screen/KeyHints")
 
 [node name="Uplink" type="Node" parent="."]
 script = ExtResource("2_uplink")

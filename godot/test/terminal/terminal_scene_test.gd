@@ -134,5 +134,7 @@ func test_volumes_are_wired() -> void:
 	assert_object(viewer.title).is_same(scene.get_node("Screen/FilePanel/Title"))
 	assert_object(viewer.counter).is_same(scene.get_node("Screen/FilePanel/Counter"))
 	assert_object(viewer.body).is_same(scene.get_node("Screen/FilePanel/Body"))
-	assert_object(viewer.hints).is_same(scene.get_node("Screen/KeyHints"))
+	var dim := scene.get_node("Screen/FilePanel/Dim") as ColorRect
+	assert_bool(dim.show_behind_parent).is_true()
+	assert_object(scene.get_node("Screen/FilePanel/Keys")).is_not_null()
 	assert_bool(viewer.panel.visible).is_false()

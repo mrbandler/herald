@@ -1,18 +1,15 @@
 class_name FileViewer
 extends Node
 
-## The file popup on the CRT: shows the file `viewing` names over the text area, scrolls it,
-## and swaps the keybindings band while open. Esc stays with the Terminal, which clears
-## `viewing` before it leaves.
-
-## The keybindings band's text while a file is open.
-const HINTS := "ESC CLOSE   UP/DOWN/PGUP/PGDN/WHEEL SCROLL"
+## The file popup on the CRT: shows the file `viewing` names over the dimmed text area and
+## scrolls it. The popup carries its own keybindings bar. Esc stays with the Terminal, which
+## clears `viewing` before it leaves.
 
 ## Supplies the wheel step.
 @export var terminal_model: TerminalModel
 
 ## Body lines on one page. Matches the Body label's height in the scene.
-@export var page_lines := 13
+@export var page_lines := 11
 
 ## Turns `viewing` back into a file.
 @export var volume_model: VolumeModel
@@ -41,21 +38,14 @@ const HINTS := "ESC CLOSE   UP/DOWN/PGUP/PGDN/WHEEL SCROLL"
 ## Shows the visible lines of the file.
 @export var body: Label
 
-## The keybindings band, swapped to `HINTS` while open.
-@export var hints: Label
-
 ## The open file's lines, empty while closed.
 var _lines := PackedStringArray()
 
 ## Index of the first line on show.
 var _top := 0
 
-## The keybindings band's text while closed, restored on close.
-var _closed_hints := ""
-
-## Remembers the band's text, listens for files opening and closing, and draws the start state.
+## Listens for files opening and closing, and draws the start state.
 func _ready() -> void:
-	_closed_hints = hints.text
 	viewing.updated.connect(_on_viewing)
 	refresh()
 
@@ -124,7 +114,6 @@ func refresh() -> void:
 	var open := file != null
 
 	panel.visible = open
-	hints.text = HINTS if open else _closed_hints
 	title.text = file.path if open else ""
 	_lines = volume_model.lines(file) if open else PackedStringArray()
 	_top = 0
