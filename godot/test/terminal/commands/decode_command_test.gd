@@ -45,7 +45,6 @@ func test_prints_the_decoded_lines() -> void:
 func _monitor() -> StoredItem:
 	_decode.module_model.modules = PackedStringArray(["TLM", "IMG"])
 	_decode.unlocked_modules.value = PackedStringArray(["IMG"])
-	_decode.monitor_model = MonitorModel.new()
 	_decode.shown_item = ResourceValue.new()
 	_decode.monitor_mode = IntValue.new()
 	_decode.knob_line = FloatValue.new()
@@ -60,8 +59,13 @@ func test_an_image_goes_on_the_monitor_to_tune() -> void:
 	_run(["33"])
 	assert_object(_decode.shown_item.value).is_same(image)
 	assert_int(_decode.monitor_mode.value).is_equal(MonitorModel.Mode.TUNE)
-	assert_float(_decode.knob_line.value).is_equal(_decode.monitor_model.start_tuning.x)
 	assert_array(_out.calls).is_equal(["TUNE THE MONITOR. COMMIT TO DECODE"])
+
+func test_a_raw_image_keeps_the_knobs_where_they_are() -> void:
+	_monitor()
+	_decode.knob_line.value = 103.4
+	_run(["33"])
+	assert_float(_decode.knob_line.value).is_equal(103.4)
 
 func test_a_decoded_image_starts_from_its_tuning() -> void:
 	var image := _monitor()

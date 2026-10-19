@@ -30,13 +30,14 @@ func test_snow_without_an_item() -> void:
 	_monitor.tick()
 	assert_int(_material.get_shader_parameter("mode")).is_equal(MonitorModel.Mode.SNOW)
 
-func test_streams_at_the_truth_and_marks_the_newest_row() -> void:
+func test_streams_through_the_knobs_and_marks_the_newest_row() -> void:
 	_monitor.shown_item.value = _image()
 	_monitor.monitor_mode.value = MonitorModel.Mode.STREAM
 	_monitor.knob_line.value = 90.0
+	_monitor.knob_offset.value = 0.1
 	_monitor.tick()
-	assert_float(_material.get_shader_parameter("k")).is_equal(1.0)
-	assert_float(_material.get_shader_parameter("offset")).is_equal(0.25)
+	assert_float(_material.get_shader_parameter("k")).is_equal_approx(0.9, 0.0001)
+	assert_float(_material.get_shader_parameter("offset")).is_equal_approx(0.1, 0.0001)
 	assert_int(_material.get_shader_parameter("newest_row")).is_equal(1)
 	assert_int(_material.get_shader_parameter("rows")).is_equal(4)
 

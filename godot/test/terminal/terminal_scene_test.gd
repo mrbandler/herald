@@ -166,4 +166,3 @@ func test_decode_and_show_drive_the_monitor() -> void:
 	assert_object(decode.shown_item).is_same(driver.shown_item)
 	assert_object(decode.knob_line).is_same(driver.knob_line)
 	assert_object(show.monitor_mode).is_same(driver.monitor_mode)
-	assert_str(decode.monitor_model.resource_path.get_file()).is_equal("monitor.tres")

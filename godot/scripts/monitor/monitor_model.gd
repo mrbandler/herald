@@ -20,12 +20,6 @@ enum RowState {
 	UNSENT,
 }
 
-## LINE, OFFSET and CONTRAST the knobs start at for an image never decoded.
-@export var start_tuning := Vector3(100.0, 0.0, 0.5)
-
-## CONTRAST that leaves the picture as sent.
-@export var neutral_contrast := 0.5
-
 ## How much snow a noisy row mixes into the picture, 0..1.
 @export var noise := 0.6
 
@@ -54,13 +48,7 @@ func source(u: float, v: float, rows: int, k: float, phase: float, offset: float
 
 	return Vector2(position - row, row)
 
-## LINE, OFFSET and CONTRAST the screen uses in `mode`: the truth while streaming, the knobs
-## while tuning, the committed tuning on SHOW.
+## LINE, OFFSET and CONTRAST the screen uses in `mode`: the committed tuning on SHOW, the knobs
+## otherwise, so a stream arrives as slanted as the monitor is set.
 func settings(mode: Mode, stored: StoredItem, knobs: Vector3) -> Vector3:
-	match mode:
-		Mode.STREAM:
-			return Vector3(stored.item.line_length, stored.item.phase, neutral_contrast)
-		Mode.SHOW:
-			return stored.tuning
-
-	return knobs
+	return stored.tuning if mode == Mode.SHOW else knobs

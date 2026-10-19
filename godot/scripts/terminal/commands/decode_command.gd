@@ -16,9 +16,6 @@ extends Command
 ## Read. The modules unlocked so far.
 @export var unlocked_modules: StringListValue
 
-## Supplies the knobs' start for an image never decoded.
-@export var monitor_model: MonitorModel
-
 ## Written. The image put on the monitor to tune.
 @export var shown_item: ResourceValue
 
@@ -72,16 +69,18 @@ func run(args: PackedStringArray) -> void:
 	for line: String in lines:
 		write(" " + line)
 
-## Puts an image on the monitor to tune, the knobs at its stored tuning or at the start.
+## Puts an image on the monitor to tune. A decoded image sets the knobs to its tuning; a raw one
+## keeps them where they are, e.g. at a LINE found on a CAL.
 func _tune(stored: StoredItem) -> void:
 	if monitor_mode.value == MonitorModel.Mode.STREAM:
 		write("MONITOR BUSY")
 		return
 
-	var start := stored.tuning if stored.decoded else monitor_model.start_tuning
-	knob_line.value = start.x
-	knob_offset.value = start.y
-	knob_contrast.value = start.z
+	if stored.decoded:
+		knob_line.value = stored.tuning.x
+		knob_offset.value = stored.tuning.y
+		knob_contrast.value = stored.tuning.z
+
 	shown_item.value = stored
 	monitor_mode.value = MonitorModel.Mode.TUNE
 	write("TUNE THE MONITOR. COMMIT TO DECODE")

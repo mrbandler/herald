@@ -17,6 +17,8 @@ func test_the_monitor_scene_is_wired() -> void:
 	assert_object(line.target).is_same(driver.knob_line)
 	assert_object(offset.target).is_same(driver.knob_offset)
 	assert_object(contrast.target).is_same(driver.knob_contrast)
+	assert_float(driver.knob_line.default).is_equal(100.0)
+	assert_float(driver.knob_contrast.default).is_equal(0.5)
 	assert_float(line.model.minimum).is_equal(80.0)
 	assert_bool(offset.model.wraps).is_true()
 	assert_str(handler.storage.resource_path.get_file()).is_equal("storage.tres")

@@ -33,8 +33,7 @@ func test_rows_past_the_stream_are_unsent() -> void:
 func test_settings_per_mode() -> void:
 	var stored := _image(4)
 	var knobs := Vector3(97.0, 0.6, 0.8)
-	var stream := _model.settings(MonitorModel.Mode.STREAM, stored, knobs)
-	assert_vector(stream).is_equal(Vector3(100.0, 0.25, _model.neutral_contrast))
+	assert_vector(_model.settings(MonitorModel.Mode.STREAM, stored, knobs)).is_equal(knobs)
 	assert_vector(_model.settings(MonitorModel.Mode.TUNE, stored, knobs)).is_equal(knobs)
 	stored.tuning = Vector3(99.9, 0.2, 0.4)
 	assert_vector(_model.settings(MonitorModel.Mode.SHOW, stored, knobs)).is_equal(stored.tuning)
