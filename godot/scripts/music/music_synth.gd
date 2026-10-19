@@ -7,8 +7,8 @@ extends RefCounted
 ## Supplies notes, levels and the stress curves.
 var _model: MusicModel
 
-## Draws pluck notes, pluck gaps and breath noise, whatever the levels are, so the same seed
-## gives the same timing at any knob setting.
+## Draws pluck notes and pluck gaps, whatever the levels are, so the same seed gives the same
+## timing at any knob setting.
 var _rng := RandomNumberGenerator.new()
 
 ## Seconds per sample.
@@ -34,6 +34,16 @@ var _pluck_next := 0
 
 ## Seconds until the next pluck.
 var _pluck_wait := 0.0
+
+## The motif cycle being rendered. -1 before the first sample.
+var _cycle := -1
+
+## True when the current cycle plays the motif. Decided once at the cycle's start, so a stress
+## change never cuts a phrase in half.
+var _motif_on := false
+
+## How many motifs have started, minus one: picks the phrase. -1 before the first.
+var _phrase := -1
 
 ## Low-pass filter state.
 var _filter := 0.0
@@ -89,22 +99,31 @@ func render(frames: int, bed: float, melody: float, stress: float) -> PackedVect
 func _sample(alpha: float) -> float:
 	var t := _time
 	var cycle := floori(t / _model.cycle_seconds)
+	if cycle != _cycle:
+		_start_cycle(cycle)
+
 	var in_cycle := t - cycle * _model.cycle_seconds
-	var motif_on := cycle % 2 == 0 or _model.motif_every_cycle(_stress)
-	var noise := _rng.randf_range(-1.0, 1.0)
 
 	_pluck_wait -= _step
 	if _pluck_wait <= 0.0:
 		_start_pluck()
 
-	var bed_part := (_pad_voice(t) + _bass_voice(t, in_cycle, motif_on)) * _bed
-	var motif := _motif_voice(in_cycle, noise) if motif_on else 0.0
+	var bed_part := (_pad_voice(t) + _bass_voice(t, in_cycle)) * _bed
+	var motif := _motif_voice(in_cycle) if _motif_on else 0.0
 	var melody_part := (_pluck_voice() + motif) * _melody
 	var tension_part := _tension_voice(t) * _bed
 
 	_filter += alpha * (bed_part + melody_part + tension_part - _filter)
 
 	return clampf(_filter * _model.music_level, -1.0, 1.0)
+
+## Enters motif cycle `cycle`: decides whether it plays the motif and, if so, takes the next
+## phrase. Every other cycle plays below `motif_dense_from`, every cycle from it.
+func _start_cycle(cycle: int) -> void:
+	_cycle = cycle
+	_motif_on = cycle % 2 == 0 or _model.motif_every_cycle(_stress)
+	if _motif_on:
+		_phrase += 1
 
 ## The detuned pad pairs and the colour notes at `t`, with the slow wobble.
 func _pad_voice(t: float) -> float:
@@ -122,11 +141,11 @@ func _pad_voice(t: float) -> float:
 
 	return mix * wobble
 
-## The bass at `t`: ducks after a motif start `in_cycle` seconds ago when `motif_on`, more the
-## louder the melody, and pulses by stress.
-func _bass_voice(t: float, in_cycle: float, motif_on: bool) -> float:
+## The bass at `t`: ducks after a motif start `in_cycle` seconds ago when this cycle plays the
+## motif, more the louder the melody, and pulses by stress.
+func _bass_voice(t: float, in_cycle: float) -> float:
 	var duck := 1.0
-	if motif_on:
+	if _motif_on:
 		duck = lerpf(1.0, smoothstep(0.0, _model.bass_duck_seconds, in_cycle), _melody)
 
 	var dip := _model.bass_pulse(_stress)
@@ -162,26 +181,30 @@ func _pluck_voice() -> float:
 
 	return sum * _model.pluck_level
 
-## The motif note playing `in_cycle` seconds into the cycle, with harmonics and `noise` as
-## breath, or 0 after the last note.
-func _motif_voice(in_cycle: float, noise: float) -> float:
-	var length := _model.motif_note_seconds
-	var note := floori(in_cycle / length)
-	if note >= _model.motif_notes.size():
+## The current phrase's bells `in_cycle` seconds into the cycle. Each note rings on under the
+## next one; after the last note, its tail fades out.
+func _motif_voice(in_cycle: float) -> float:
+	var notes := _model.phrase(_phrase)
+	if notes.is_empty():
 		return 0.0
 
-	var local := in_cycle - note * length
-	var fade := _model.motif_fade_seconds
-	var fade_in := smoothstep(0.0, fade, local)
-	var fade_out := 1.0 - smoothstep(length - fade, length, local)
-	var envelope := fade_in * fade_out
+	var length := _model.motif_note_seconds
+	var current := mini(floori(in_cycle / length), notes.size() - 1)
+	var sum := 0.0
+	for note: int in range(maxi(current - 1, 0), current + 1):
+		sum += _bell(notes[note], in_cycle - note * length)
 
-	var phase := TAU * _model.motif_notes[note] * _time
-	var over := _model.motif_overtones
-	var tone := sin(phase) + over.x * sin(2.0 * phase) + over.y * sin(3.0 * phase)
-	tone /= 1.0 + over.x + over.y
+	return sum * _model.motif_level
 
-	return (tone + noise * _model.breath_level) * envelope * _model.motif_level
+## One bell note of `freq` Hz, `age` seconds after its strike: a sine with a short, brighter
+## partial on top, both fading out.
+func _bell(freq: float, age: float) -> float:
+	var envelope := minf(age / _model.bell_attack, 1.0) * exp(-age / _model.bell_decay)
+	var phase := TAU * freq * age
+	var bright := exp(-age / _model.bell_partial_decay)
+	var partial := _model.bell_partial_level * sin(_model.bell_partial_ratio * phase) * bright
+
+	return (sin(phase) + partial) * envelope / (1.0 + _model.bell_partial_level)
 
 ## The F against the E and the low throb on E2 at `t`, by the tension of the current stress.
 func _tension_voice(t: float) -> float:

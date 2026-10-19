@@ -73,6 +73,13 @@ func test_motif_plays_every_cycle_from_its_threshold() -> void:
 	assert_bool(_model.motif_every_cycle(_model.motif_dense_from - 0.01)).is_false()
 	assert_bool(_model.motif_every_cycle(_model.motif_dense_from)).is_true()
 
+func test_phrases_take_turns_and_wrap() -> void:
+	var count := _model.motif_phrases.size()
+	assert_bool(_model.phrase(0) == _model.phrase(1)).is_false()
+	assert_bool(_model.phrase(count) == _model.phrase(0)).is_true()
+	_model.motif_phrases = []
+	assert_int(_model.phrase(3).size()).is_equal(0)
+
 func test_tension_is_silent_below_its_start() -> void:
 	assert_float(_model.tension(0.5)).is_equal(0.0)
 	assert_float(_model.tension(_model.tension_start)).is_equal(0.0)
@@ -84,6 +91,7 @@ func test_every_note_stays_below_the_carrier() -> void:
 	notes.append_array(_model.pad_notes)
 	notes.append_array(_model.color_notes)
 	notes.append_array(_model.pluck_notes)
-	notes.append_array(_model.motif_notes)
+	for phrase: PackedFloat32Array in _model.motif_phrases:
+		notes.append_array(phrase)
 	for note: float in notes:
 		assert_float(note).is_less(700.0)

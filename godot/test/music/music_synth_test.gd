@@ -12,6 +12,14 @@ func _peak(frames: PackedVector2Array) -> float:
 
 	return peak
 
+func _crossings(frames: PackedVector2Array) -> int:
+	var count := 0
+	for i: int in range(1, frames.size()):
+		if signf(frames[i].x) != signf(frames[i - 1].x):
+			count += 1
+
+	return count
+
 func test_samples_keep_headroom() -> void:
 	for bed: float in [0.0, 1.0]:
 		for melody: float in [0.0, 1.0]:
@@ -36,6 +44,17 @@ func test_the_melody_alone_is_heard() -> void:
 	var melody := MusicSynth.new(_model, 1).render(44100, 0.0, 1.0, 0.0)
 	assert_float(_peak(quiet)).is_equal(0.0)
 	assert_float(_peak(melody)).is_greater(0.01)
+
+func test_each_played_motif_takes_the_next_phrase() -> void:
+	# One low and one high single-note phrase, no plucks and no bed: only the bells sound.
+	_model.motif_phrases = [PackedFloat32Array([200.0]), PackedFloat32Array([600.0])]
+	_model.pluck_level = 0.0
+	var cycle := int(_model.cycle_seconds * _model.mix_rate)
+	# Stress 1 plays the motif every cycle.
+	var frames := MusicSynth.new(_model, 1).render(cycle + 11025, 0.0, 1.0, 1.0)
+	var low := _crossings(frames.slice(5512, 11025))
+	var high := _crossings(frames.slice(cycle + 5512, cycle + 11025))
+	assert_int(high).is_greater(low * 2)
 
 func test_the_bed_alone_is_heard() -> void:
 	var synth := MusicSynth.new(_model, 1)

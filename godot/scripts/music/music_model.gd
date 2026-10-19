@@ -26,8 +26,14 @@ extends Resource
 ## Pluck notes in Hz, picked at random: G4, B4.
 @export var pluck_notes := PackedFloat32Array([392.0, 493.88])
 
-## Motif notes in Hz, in play order: D5, E5.
-@export var motif_notes := PackedFloat32Array([587.33, 659.26])
+## Motif phrases, played one per motif in turn. Notes in Hz from the E minor pentatonic:
+## a rise and fall, a descent, a climb, and a resolve down to E4.
+@export var motif_phrases: Array[PackedFloat32Array] = [
+	PackedFloat32Array([493.88, 587.33, 659.26, 587.33]),
+	PackedFloat32Array([659.26, 587.33, 493.88, 440.0, 493.88]),
+	PackedFloat32Array([392.0, 440.0, 493.88, 587.33, 493.88]),
+	PackedFloat32Array([587.33, 493.88, 440.0, 392.0, 329.63]),
+]
 
 ## Tension note in Hz: F3, a half step above the E.
 @export var tension_note := 174.61
@@ -69,17 +75,24 @@ extends Resource
 ## Motif loudness, 0..1.
 @export var motif_level := 0.15
 
-## Seconds each motif note lasts.
-@export var motif_note_seconds := 0.75
+## Seconds from one motif note to the next.
+@export var motif_note_seconds := 0.6
 
-## Seconds each motif note takes to swell in and to fade out.
-@export var motif_fade_seconds := 0.2
+## Seconds a bell note takes to reach full loudness.
+@export var bell_attack := 0.005
 
-## Loudness of the motif's second (x) and third (y) harmonic against its fundamental.
-@export var motif_overtones := Vector2(0.5, 0.33)
+## Seconds for a bell note to fade to about a third.
+@export var bell_decay := 0.9
 
-## Breath noise on the motif, 0..1 of the motif's loudness.
-@export var breath_level := 0.3
+## Frequency of the bell's bright partial, as a multiple of the note.
+@export var bell_partial_ratio := 3.0
+
+## Loudness of the bright partial against the note, 0..1.
+@export var bell_partial_level := 0.25
+
+## Seconds for the bright partial to fade to about a third: faster than the note, so the strike
+## is bright and the tail is pure.
+@export var bell_partial_decay := 0.3
 
 ## Tension loudness at full tension, 0..1.
 @export var tension_level := 0.12
@@ -195,6 +208,14 @@ func pulse_seconds() -> float:
 ## True when the motif plays every cycle at stress `level`, false for every other cycle.
 func motif_every_cycle(level: float) -> bool:
 	return level >= motif_dense_from
+
+## The phrase for the `index`th motif played, cycling through `motif_phrases`. Empty when there
+## are none.
+func phrase(index: int) -> PackedFloat32Array:
+	if motif_phrases.is_empty():
+		return PackedFloat32Array()
+
+	return motif_phrases[posmod(index, motif_phrases.size())]
 
 ## Tension amount 0..1 at stress `level`: silent up to `tension_start`, full at 1.
 func tension(level: float) -> float:
