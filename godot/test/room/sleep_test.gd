@@ -81,3 +81,15 @@ func test_the_sound_rises_out_of_the_muffle_as_a_window_starts() -> void:
 	assert_float(AudioServer.get_bus_volume_db(0)).is_less(0.0)
 	await get_tree().create_timer(_sleep.model.wake_seconds + 0.2).timeout
 	assert_float(AudioServer.get_bus_volume_db(0)).is_equal_approx(0.0, 0.01)
+
+func test_the_lids_soften_as_the_listener_nods_off() -> void:
+	var lid_material := ShaderMaterial.new()
+	_sleep.top_lid.material = lid_material
+	_sleep.fall(0.5)
+	var feather: float = lid_material.get_shader_parameter("feather")
+	assert_float(feather).is_equal_approx(_sleep.model.lid_feather, 0.001)
+	var edge: float = lid_material.get_shader_parameter("edge")
+	assert_float(_sleep.top_lid.anchor_bottom).is_greater(edge)
+	_sleep.fall(0.0)
+	feather = lid_material.get_shader_parameter("feather")
+	assert_float(feather).is_equal(0.0)

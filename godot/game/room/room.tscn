@@ -105,6 +105,7 @@
 [ext_resource type="PackedScene" path="res://game/music/music.tscn" id="137_music"]
 [ext_resource type="Shader" path="res://game/room/haze.gdshader" id="138_haze"]
 [ext_resource type="PackedScene" path="res://game/room/wake_card.tscn" id="140_wake"]
+[ext_resource type="Shader" path="res://game/room/eyelid.gdshader" id="141_eyelid"]
 
 [sub_resource type="Environment" id="Environment_room"]
 background_mode = 1
@@ -145,6 +146,15 @@ size = Vector3(2.4, 0.85, 0.004)
 
 [sub_resource type="ShaderMaterial" id="Material_haze"]
 shader = ExtResource("138_haze")
+
+
+[sub_resource type="ShaderMaterial" id="Material_lid_top"]
+shader = ExtResource("141_eyelid")
+
+[sub_resource type="ShaderMaterial" id="Material_lid_bottom"]
+shader = ExtResource("141_eyelid")
+shader_parameter/edge = 1.0
+shader_parameter/from_top = false
 
 [node name="Room" type="Node3D" unique_id=1331904615]
 
@@ -403,12 +413,14 @@ anchor_bottom = 1.0
 mouse_filter = 2
 
 [node name="Top" type="ColorRect" parent="Eyelids" unique_id=1223867091]
+material = SubResource("Material_lid_top")
 anchors_preset = 10
 anchor_right = 1.0
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
 [node name="Bottom" type="ColorRect" parent="Eyelids" unique_id=442364640]
+material = SubResource("Material_lid_bottom")
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0

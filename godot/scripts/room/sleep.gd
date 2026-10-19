@@ -34,6 +34,9 @@ extends Node
 ## Blink cycles since the warning started; the fraction is the place in the current blink.
 var _cycle := 0.0
 
+## How soft the lids' edges are, 0..1: the drowsiness while blinking, 1 while falling asleep.
+var _softness := 0.0
+
 ## False once the shift has ended and the fall has taken over.
 var _awake := true
 
@@ -66,6 +69,7 @@ func tick(delta: float) -> void:
 
 		return
 
+	_softness = drowsy
 	_cycle += delta / model.blink_period(drowsy)
 	var closure := model.lid_closure(fposmod(_cycle, 1.0), drowsy)
 	_set_haze(model.haze(drowsy, closure))
@@ -75,6 +79,7 @@ func tick(delta: float) -> void:
 ## Poses the lids and the head at `amount` 0..1 through falling asleep.
 func fall(amount: float) -> void:
 	var drop := model.asleep_drop(amount)
+	_softness = 1.0
 
 	_pose(model.asleep_closure(amount), model.drop_degrees * drop, model.drop_offset * drop)
 	_muffle(amount)
@@ -100,12 +105,26 @@ func _set_haze(amount: float) -> void:
 
 ## Sets the lids to `closure` 0..1 and the head to `pitch_down` degrees and `offset` metres.
 func _pose(closure: float, pitch_down: float, offset: Vector3) -> void:
-	# Slightly past half, so the lids overlap when shut.
-	top_lid.anchor_bottom = 0.52 * closure
-	bottom_lid.anchor_top = 1.0 - 0.52 * closure
+	# Slightly past half, so the lids overlap when shut. The rects reach past the edge by the
+	# feather, which the lid shader fades out; open lids draw nothing.
+	var edge := 0.52 * closure
+	var feather := model.lid_feather * _softness if closure > 0.0 else 0.0
+	top_lid.anchor_bottom = minf(edge + feather, 1.0)
+	bottom_lid.anchor_top = maxf(1.0 - edge - feather, 0.0)
+	_shade(top_lid, edge, feather)
+	_shade(bottom_lid, 1.0 - edge, feather)
 	camera.rotation_degrees.x = -pitch_down
 	camera.position = offset
 
 ## Stops the blinking.
 func _on_shift_ended(_payload: Variant) -> void:
 	_awake = false
+
+## Hands a lid's soft-edge shader its edge and feather, if the lid has one.
+func _shade(lid: Control, edge: float, feather: float) -> void:
+	var material := lid.material as ShaderMaterial
+	if material == null:
+		return
+
+	material.set_shader_parameter("edge", edge)
+	material.set_shader_parameter("feather", feather)

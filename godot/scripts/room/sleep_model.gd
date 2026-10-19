@@ -33,6 +33,9 @@ extends Resource
 ## Cutoff in Hz that lets every sound through.
 @export var open_hz := 20000.0
 
+## Half the height of a lid's soft edge at full drowsiness and asleep, as a share of the screen.
+@export var lid_feather := 0.12
+
 ## Seconds the sound takes to rise out of the muffle when a window starts.
 @export var wake_seconds := 3.0
 
