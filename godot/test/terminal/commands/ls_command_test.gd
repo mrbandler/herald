@@ -14,6 +14,7 @@ func before_test() -> void:
 	_ls = LsCommand.new()
 	_ls.out = StringEvent.new()
 	_ls.unlocked_modules = StringListValue.new()
+	_ls.directory = StringValue.new()
 	_ls.volume_model = VolumeModel.new()
 	_ls.volume_model.files = [
 		_file("HTB:HEARTBEAT.LOG", "A"),
@@ -23,32 +24,43 @@ func before_test() -> void:
 	]
 	_out = AtomSpy.events(_ls.out)
 
-func test_lists_the_volumes() -> void:
+func test_lists_the_volumes_at_the_top() -> void:
 	_ls.run(PackedStringArray())
-	var expected := [" HTB:  1 FILE", " USR:  2 FILES", " SYS:  NO FILES", " ARC:  SEALED"]
+	var expected := [" HTB:  1 FILE(S)", " USR:  2 FILE(S)", " SYS:  0 FILE(S)", " ARC:  SEALED"]
 	assert_array(_out.calls).is_equal(expected)
 
-func test_lists_a_volumes_files() -> void:
+func test_lists_a_directory_one_level_deep() -> void:
 	_ls.run(PackedStringArray(["USR"]))
+	_ls.run(PackedStringArray(["USR:OKONJO"]))
 	var expected := [
-		" USR:OKONJO/NIGHTS.TXT            2 LINES",
-		" USR:OKONJO/WAKE.TXT              3 LINES",
+		" OKONJO/                        2 FILE(S)",
+		" NIGHTS.TXT                     2 LINE(S)",
+		" WAKE.TXT                       3 LINE(S)",
 	]
 	assert_array(_out.calls).is_equal(expected)
 
-func test_a_prefix_narrows_the_files() -> void:
-	_ls.run(PackedStringArray(["USR:OKONJO/W"]))
-	_ls.run(PackedStringArray(["USR:NOBODY"]))
-	assert_array(_out.calls).is_equal([" USR:OKONJO/WAKE.TXT              3 LINES", " NO FILES"])
+func test_lists_the_working_directory_and_relative_names() -> void:
+	_ls.directory.value = "USR:"
+	_ls.run(PackedStringArray())
+	_ls.run(PackedStringArray(["OKONJO"]))
+	assert_str(_out.calls[0]).is_equal(" OKONJO/                        2 FILE(S)")
+	assert_int(_out.calls.size()).is_equal(3)
 
-func test_sealed_unknown_and_usage() -> void:
+func test_sealed_unknown_missing_and_usage() -> void:
 	_ls.run(PackedStringArray(["ARC:"]))
 	_ls.run(PackedStringArray(["DAT:"]))
+	_ls.run(PackedStringArray(["USR:NOBODY"]))
 	_ls.run(PackedStringArray(["A", "B"]))
-	assert_array(_out.calls).is_equal([" ARC: SEALED", "DAT UNKNOWN VOLUME", "USAGE: LS [<VOL:>]"])
+	var expected := [
+		" ARC: SEALED",
+		"DAT UNKNOWN VOLUME",
+		"USR:NOBODY NOT FOUND",
+		"USAGE: LS [<DIR>]",
+	]
+	assert_array(_out.calls).is_equal(expected)
 
 func test_a_file_appears_with_its_module() -> void:
 	_ls.run(PackedStringArray(["SYS:"]))
 	_ls.unlocked_modules.value = PackedStringArray(["TLM"])
 	_ls.run(PackedStringArray(["SYS:"]))
-	assert_array(_out.calls).is_equal([" NO FILES", " SYS:TLM.MAN                      1 LINE"])
+	assert_array(_out.calls).is_equal([" NO FILES", " TLM.MAN                        1 LINE(S)"])

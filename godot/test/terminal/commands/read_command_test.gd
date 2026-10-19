@@ -8,6 +8,7 @@ func before_test() -> void:
 	_read.out = StringEvent.new()
 	_read.unlocked_modules = StringListValue.new()
 	_read.viewing = StringValue.new()
+	_read.directory = StringValue.new()
 	_read.volume_model = VolumeModel.new()
 	var wake := StationFile.new()
 	wake.path = "USR:OKONJO/WAKE.TXT"
@@ -27,6 +28,11 @@ func test_missing_and_locked_files_are_not_found() -> void:
 	_read.run(PackedStringArray(["SYS:TLM.MAN"]))
 	assert_str(_read.viewing.value).is_empty()
 	assert_array(_out.calls).is_equal(["USR:NOPE.TXT NOT FOUND", "SYS:TLM.MAN NOT FOUND"])
+
+func test_reads_relative_to_the_working_directory() -> void:
+	_read.directory.value = "USR:OKONJO/"
+	_read.run(PackedStringArray(["WAKE.TXT"]))
+	assert_str(_read.viewing.value).is_equal("USR:OKONJO/WAKE.TXT")
 
 func test_usage() -> void:
 	_read.run(PackedStringArray())

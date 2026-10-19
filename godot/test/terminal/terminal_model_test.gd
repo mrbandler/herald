@@ -44,6 +44,15 @@ func test_the_rules_mark_lines_below_and_above() -> void:
 	assert_int(model.lines_above(10, 2)).is_equal(5)
 	assert_int(model.lines_above(2, 0)).is_equal(0)
 
+func test_the_prompt_shows_the_directory_and_commands_keep_their_colour() -> void:
+	var model := TerminalModel.new()
+	assert_str(model.prompt_in("")).is_equal("LP4> ")
+	assert_str(model.prompt_in("USR:OKONJO/")).is_equal("LP4 USR:OKONJO> ")
+	assert_int(model.max_input("USR:")).is_equal(model.columns - "LP4 USR:> ".length() - 1)
+	var screen := model.compose(PackedStringArray(["LP4 USR:> LS"]), "", 0, "USR:")
+	assert_str(screen).starts_with("[color=")
+	assert_str(screen).ends_with("LP4 USR:> _[/color]")
+
 func test_max_input_leaves_room_for_prompt_and_cursor() -> void:
 	var model := TerminalModel.new()
 	assert_int(model.max_input()).is_equal(model.columns - model.prompt.length() - 1)

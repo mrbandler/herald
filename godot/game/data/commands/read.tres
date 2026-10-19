@@ -5,6 +5,7 @@
 [ext_resource type="Resource" path="res://game/data/models/volumes.tres" id="3_volumes"]
 [ext_resource type="Resource" path="res://game/data/atoms/modules/unlocked_modules.tres" id="4_unlocked"]
 [ext_resource type="Resource" path="res://game/data/atoms/terminal/viewing.tres" id="5_viewing"]
+[ext_resource type="Resource" path="res://game/data/atoms/terminal/directory.tres" id="9_directory"]
 
 [resource]
 script = ExtResource("1_script")
@@ -14,3 +15,4 @@ out = ExtResource("2_stdout")
 volume_model = ExtResource("3_volumes")
 unlocked_modules = ExtResource("4_unlocked")
 viewing = ExtResource("5_viewing")
+directory = ExtResource("9_directory")

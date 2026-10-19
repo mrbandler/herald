@@ -48,6 +48,9 @@ const GREETING := "LISTENING POST 4 - HTB MODULE - TYPE HELP"
 ## Read. The wheel scrolls only at 1, fully leaned in, not while looking around.
 @export var lean_amount: FloatValue
 
+## Read. The working directory, shown in the prompt. CD writes it.
+@export var directory: StringValue
+
 ## Wrapped stdout lines, oldest first, capped at the model's scrollback.
 var lines := PackedStringArray()
 
@@ -60,6 +63,7 @@ func _ready() -> void:
 	focused.updated.connect(_on_focused)
 	leave.just_triggered.connect(leave_pressed)
 	clear.raised.connect(_on_clear)
+	directory.updated.connect(_on_directory)
 
 	out.raise(GREETING)
 
@@ -127,7 +131,7 @@ func handle_key(keycode: Key, unicode: int) -> bool:
 			if unicode < 32 or unicode >= 127:
 				return false
 
-			editor.insert(char(unicode), model.max_input())
+			editor.insert(char(unicode), model.max_input(directory.value))
 
 	_refresh()
 
@@ -140,7 +144,7 @@ func submit(line: String) -> void:
 		return
 
 	var echo := line.to_upper().strip_edges()
-	out.raise(model.prompt + echo)
+	out.raise(model.prompt_in(directory.value) + echo)
 
 	_remember(echo)
 
@@ -190,12 +194,16 @@ func _on_focused(_previous: bool, current: bool) -> void:
 	else:
 		GUIDE.disable_mapping_context(terminal_context)
 
+## Redraws the prompt when the working directory changes.
+func _on_directory(_previous: Variant, _current: Variant) -> void:
+	_refresh()
+
 ## Redraws the screen from the lines, the input line and the scroll.
 func _refresh() -> void:
 	if screen == null:
 		return
 
-	screen.text = model.compose(lines, editor.text, editor.scroll)
+	screen.text = model.compose(lines, editor.text, editor.scroll, directory.value)
 	if scroll_rule != null:
 		scroll_rule.text = model.rule_below(editor.scroll)
 

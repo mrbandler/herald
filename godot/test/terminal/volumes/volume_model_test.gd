@@ -36,11 +36,37 @@ func test_lines_drop_the_trailing_break() -> void:
 	assert_array(_model.lines(_file("X:Y", ""))).is_empty()
 	assert_str(_model.files[1].volume()).is_equal("USR")
 
+func test_resolves_directories_from_where_you_are() -> void:
+	assert_str(_model.resolve("", "usr")).is_equal("USR:")
+	assert_str(_model.resolve("", "USR:OKONJO")).is_equal("USR:OKONJO/")
+	assert_str(_model.resolve("USR:", "OKONJO")).is_equal("USR:OKONJO/")
+	assert_str(_model.resolve("USR:OKONJO/", "..")).is_equal("USR:")
+	assert_str(_model.resolve("USR:", "..")).is_empty()
+	assert_str(_model.resolve("USR:OKONJO/", "")).is_empty()
+	assert_str(_model.file_path("USR:OKONJO/", "WAKE.TXT")).is_equal("USR:OKONJO/WAKE.TXT")
+	assert_str(_model.file_path("USR:", "SYS:BOOT.LOG")).is_equal("SYS:BOOT.LOG")
+
+func test_directories_exist_when_they_hold_a_file() -> void:
+	var none := PackedStringArray()
+	assert_bool(_model.exists("", none)).is_true()
+	assert_bool(_model.exists("SYS:", none)).is_true()
+	assert_bool(_model.exists("USR:OKONJO/", none)).is_true()
+	assert_bool(_model.exists("USR:NOBODY/", none)).is_false()
+	assert_bool(_model.exists("DAT:", none)).is_false()
+
+func test_entries_list_one_level() -> void:
+	var none := PackedStringArray()
+	assert_array(_model.entries("USR:", none)).is_equal(PackedStringArray(["OKONJO/"]))
+	var inside := PackedStringArray(["NIGHTS.TXT", "WAKE.TXT"])
+	assert_array(_model.entries("USR:OKONJO/", none)).is_equal(inside)
+
 func test_the_game_files_fit_the_popup_and_their_volumes() -> void:
 	var game: VolumeModel = load("res://game/data/models/volumes.tres")
 	var paths := PackedStringArray()
 	for file: StationFile in game.files:
 		paths.append(file.path)
+		var depth := file.path.get_slice(":", 1).count("/")
+		assert_int(depth).override_failure_message(file.path).is_less_equal(1)
 		assert_bool(game.volumes.has(file.volume())).override_failure_message(file.path).is_true()
 		for line: String in game.lines(file):
 			var message := "%s: %s" % [file.path, line]

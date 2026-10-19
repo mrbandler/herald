@@ -9,7 +9,8 @@ extends Resource
 ## Rows in the text area, the prompt line included.
 @export var rows := 18
 
-## Shown before the input line and before each echoed command.
+## Shown before the input line and before each echoed command at the top directory. Its first
+## word, the station name, marks command lines.
 @export var prompt := "LP4> "
 
 ## Commands kept in the history.
@@ -24,9 +25,16 @@ extends Resource
 ## Lines one mouse wheel step scrolls.
 @export var wheel_lines := 3
 
-## The longest input that fits beside the prompt and the cursor.
-func max_input() -> int:
-	return columns - prompt.length() - 1
+## The prompt in `directory`: `LP4> ` at the top, `LP4 USR:OKONJO> ` inside a directory.
+func prompt_in(directory: String) -> String:
+	if directory.is_empty():
+		return prompt
+
+	return "%s %s> " % [_station(), directory.trim_suffix("/")]
+
+## The longest input that fits beside the prompt in `directory` and the cursor.
+func max_input(directory := "") -> int:
+	return columns - prompt_in(directory).length() - 1
 
 ## How far back `line_count` lines can scroll. The screen shows `rows - 1` of them.
 func max_scroll(line_count: int) -> int:
@@ -52,6 +60,10 @@ func _rule(marker: String) -> String:
 	var start := floori((columns - marker.length()) / 2.0)
 	return line.left(start) + marker + line.substr(start + marker.length())
 
+## The station name: the prompt's first word, e.g. `LP4`.
+func _station() -> String:
+	return prompt.get_slice(" ", 0).trim_suffix(">")
+
 ## Splits a line into chunks that fit the screen width.
 func wrap_line(line: String) -> PackedStringArray:
 	if line.is_empty():
@@ -65,10 +77,10 @@ func wrap_line(line: String) -> PackedStringArray:
 
 ## The text area as BBCode: scrollback above, the prompt line last, commands in
 ## `command_color`.
-func compose(lines: PackedStringArray, input: String, scroll: int) -> String:
+func compose(lines: PackedStringArray, input: String, scroll: int, directory := "") -> String:
 	var end := maxi(lines.size() - scroll, 0)
 	var shown := lines.slice(maxi(end - (rows - 1), 0), end)
-	shown.append(prompt + input + "_")
+	shown.append(prompt_in(directory) + input + "_")
 
 	var marked := PackedStringArray()
 	for line: String in shown:
@@ -77,10 +89,10 @@ func compose(lines: PackedStringArray, input: String, scroll: int) -> String:
 	return "\n".join(marked)
 
 ## `line` with its brackets escaped, coloured when it is a command. A command always fits one
-## row, so only command rows start with the prompt.
+## row, so only command rows start with the station name.
 func _marked(line: String) -> String:
 	var escaped := line.replace("[", "[lb]")
-	if not line.begins_with(prompt):
+	if not line.begins_with(_station()):
 		return escaped
 
 	return "[color=#%s]%s[/color]" % [command_color.to_html(false), escaped]

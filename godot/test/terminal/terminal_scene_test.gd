@@ -126,6 +126,10 @@ func test_volumes_are_wired() -> void:
 	assert_object(viewer.unlocked_modules).is_same(unlock.unlocked_modules)
 	assert_object(ls.unlocked_modules).is_same(unlock.unlocked_modules)
 	assert_object(read.unlocked_modules).is_same(unlock.unlocked_modules)
+	var cd := two.command_set.find("CD") as CdCommand
+	assert_object(cd.directory).is_same(terminal.directory)
+	assert_object(ls.directory).is_same(terminal.directory)
+	assert_object(read.directory).is_same(terminal.directory)
 	assert_object(viewer.panel).is_same(scene.get_node("Screen/FilePanel"))
 	assert_object(viewer.title).is_same(scene.get_node("Screen/FilePanel/Title"))
 	assert_object(viewer.counter).is_same(scene.get_node("Screen/FilePanel/Counter"))

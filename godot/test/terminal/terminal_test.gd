@@ -17,6 +17,7 @@ func before_test() -> void:
 	_terminal.terminal_context = GUIDEMappingContext.new()
 	_terminal.clear = Event.new()
 	_terminal.lean_amount = FloatValue.new()
+	_terminal.directory = StringValue.new()
 	_terminal.scroll_rule = auto_free(Label.new())
 	_terminal.top_rule = auto_free(Label.new())
 	_out = AtomSpy.events(_terminal.out)
@@ -113,3 +114,9 @@ func test_the_wheel_scrolls_only_fully_leaned_in() -> void:
 	_terminal.lean_amount.value = 1.0
 	get_viewport().push_input(wheel)
 	assert_int(_terminal.editor.scroll).is_equal(3)
+
+func test_echoes_commands_with_the_working_directory() -> void:
+	_terminal.directory.value = "USR:"
+	_terminal.submit("seq")
+	assert_str(_terminal.lines[0]).is_equal("LP4 USR:> SEQ")
+	assert_str(_terminal.screen.text).contains("LP4 USR:> _")

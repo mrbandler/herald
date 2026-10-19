@@ -50,6 +50,7 @@
 [ext_resource type="Resource" path="res://game/data/atoms/downlink/downlink_open.tres" id="85_dl_open"]
 [ext_resource type="Resource" path="res://game/data/atoms/player/lean_amount.tres" id="86_lean"]
 [ext_resource type="Resource" path="res://game/data/atoms/player/drowsiness.tres" id="87_drowsy"]
+[ext_resource type="Resource" path="res://game/data/atoms/terminal/directory.tres" id="88_directory"]
 
 [sub_resource type="Environment" id="Environment_room"]
 background_mode = 1
@@ -74,7 +75,7 @@ height = 0.04
 
 [node name="Resetter" type="Node" parent="." unique_id=221681823]
 script = ExtResource("1_resetter")
-atoms = Array[ExtResource("2_value")]([ExtResource("30_time"), ExtResource("40_az"), ExtResource("41_el"), ExtResource("42_tune"), ExtResource("43_strength"), ExtResource("44_quality"), ExtResource("45_carrier"), ExtResource("46_locked"), ExtResource("48_force"), ExtResource("50_hovering"), ExtResource("51_grabbing"), ExtResource("52_focused"), ExtResource("60_viewing"), ExtResource("62_sequence"), ExtResource("63_speak_open"), ExtResource("64_acked"), ExtResource("65_transmitting"), ExtResource("70_chain_unlocked"), ExtResource("80_manifest"), ExtResource("81_manifest_received"), ExtResource("82_queue"), ExtResource("83_dl_received"), ExtResource("84_progress"), ExtResource("85_dl_open"), ExtResource("86_lean"), ExtResource("87_drowsy")])
+atoms = Array[ExtResource("2_value")]([ExtResource("30_time"), ExtResource("40_az"), ExtResource("41_el"), ExtResource("42_tune"), ExtResource("43_strength"), ExtResource("44_quality"), ExtResource("45_carrier"), ExtResource("46_locked"), ExtResource("48_force"), ExtResource("50_hovering"), ExtResource("51_grabbing"), ExtResource("52_focused"), ExtResource("60_viewing"), ExtResource("62_sequence"), ExtResource("63_speak_open"), ExtResource("64_acked"), ExtResource("65_transmitting"), ExtResource("70_chain_unlocked"), ExtResource("80_manifest"), ExtResource("81_manifest_received"), ExtResource("82_queue"), ExtResource("83_dl_received"), ExtResource("84_progress"), ExtResource("85_dl_open"), ExtResource("86_lean"), ExtResource("87_drowsy"), ExtResource("88_directory")])
 
 [node name="PassLoader" type="Node" parent="." unique_id=824546816]
 script = ExtResource("3_loader")
