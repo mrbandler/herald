@@ -64,6 +64,7 @@
 [ext_resource type="Script" path="res://scripts/antenna/lamp.gd" id="102_lamp"]
 [ext_resource type="Resource" path="res://game/data/models/lamp.tres" id="103_m_lamp"]
 [ext_resource type="Script" path="res://scripts/core/atoms/values/bool_value.gd" id="104_bool"]
+[ext_resource type="Script" path="res://scripts/core/atoms/nodes/value_visibility.gd" id="105_visibility"]
 [ext_resource type="AudioStream" path="res://game/data/audio/capsule.tres" id="97_capsule_audio"]
 
 [sub_resource type="SphereMesh" id="Mesh_tube_lamp"]
@@ -162,18 +163,33 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.137, 0.753, -0.457)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.33, 0.753, -0.5)
 
 [node name="Tube" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55, 0, -1)
+transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, 0.43, 0, -0.98)
 
-[node name="Column" type="CSGBox3D" parent="Tube"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.075, -0.05)
-size = Vector3(0.14, 0.65, 0.14)
+[node name="Column" type="CSGCylinder3D" parent="Tube"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, -0.08)
+radius = 0.07
+height = 0.7
+sides = 12
 
-[node name="TrayBox" type="CSGBox3D" parent="Tube"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.765, 0.1)
-size = Vector3(0.2, 0.03, 0.26)
+[node name="Hatch" type="CSGBox3D" parent="Tube"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.84, -0.02)
+size = Vector3(0.16, 0.12, 0.04)
 
 [node name="Tray" type="Marker3D" parent="Tube"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.782, 0.1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.177, 0.753, 0.191)
+
+[node name="Capsule" type="CSGCylinder3D" parent="Tube"]
+visible = false
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0.788, 0.06)
+radius = 0.035
+height = 0.2
+sides = 12
+
+[node name="Cap" type="CSGCylinder3D" parent="Tube/Capsule"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09, 0)
+radius = 0.038
+height = 0.03
+sides = 12
 
 [node name="Thunk" type="AudioStreamPlayer3D" parent="Tube"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
@@ -182,13 +198,18 @@ volume_db = 6.0
 unit_size = 4.0
 
 [node name="Lamp" type="MeshInstance3D" parent="Tube"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0.025)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0.0)
 mesh = SubResource("Mesh_tube_lamp")
 script = ExtResource("102_lamp")
 model = ExtResource("103_m_lamp")
 source = SubResource("Never_on")
 blink_source = ExtResource("101_waiting")
 color = Color(1, 0.55, 0.15, 1)
+
+[node name="CapsuleShown" type="Node" parent="Tube" node_paths=PackedStringArray("target")]
+script = ExtResource("105_visibility")
+source = ExtResource("101_waiting")
+target = NodePath("../Capsule")
 
 [node name="CapsuleSound" type="Node" parent="." node_paths=PackedStringArray("sound")]
 script = ExtResource("92_event_sound")
