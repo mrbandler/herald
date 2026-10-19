@@ -66,6 +66,11 @@ func test_no_push_without_lock_or_downlink() -> void:
 	assert_bool(_downlink.manifest_received.value).is_false()
 	assert_str(_downlink.progress_line.value).is_empty()
 
+func test_a_shut_downlink_leaves_the_line_to_the_uplink() -> void:
+	_downlink.progress_line.value = "XMIT SEQ [#---------] 0/1"
+	_run(1.0)
+	assert_str(_downlink.progress_line.value).is_equal("XMIT SEQ [#---------] 0/1")
+
 func test_push_completes_after_its_seconds() -> void:
 	_open_and_lock()
 	_run(1.5)

@@ -240,6 +240,7 @@ sequence = ExtResource("32_sequence")
 locked = ExtResource("35_locked")
 transmitting = ExtResource("33_transmitting")
 out = ExtResource("20_stdout")
+progress_line = ExtResource("55_progress")
 
 [node name="Downlink" type="Node" parent="."]
 script = ExtResource("60_downlink")

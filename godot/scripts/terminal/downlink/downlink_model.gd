@@ -40,10 +40,14 @@ func rows_due(item: ManifestItem, elapsed: float) -> int:
 	var due := floori(elapsed * item.rows / seconds_for(item) + 0.0001)
 	return clampi(due, 0, item.rows)
 
-## A progress bar such as `[######----]` for `fraction` 0..1.
+## A progress bar such as `[######----]` for `fraction` 0..1, `bar_width` wide.
 func bar(fraction: float) -> String:
-	var filled := clampi(floori(fraction * bar_width), 0, bar_width)
-	return "[" + "#".repeat(filled) + "-".repeat(bar_width - filled) + "]"
+	return DownlinkModel.draw_bar(fraction, bar_width)
+
+## A progress bar `width` characters inside its brackets. The uplink draws with it too.
+static func draw_bar(fraction: float, width: int) -> String:
+	var filled := clampi(floori(fraction * width), 0, width)
+	return "[" + "#".repeat(filled) + "-".repeat(width - filled) + "]"
 
 ## The running item's progress line, e.g. `RECV 21 AUTH [######----] 9/16`: the bar shows the
 ## rows sent, the count the rows that arrived.

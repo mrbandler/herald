@@ -93,8 +93,11 @@ func tick(delta: float) -> void:
 ## Advances the push while the downlink is open and locked. A lost lock restarts it.
 func _advance_push(window: PassWindow, delta: float) -> void:
 	if not downlink_open.value or not locked.value:
-		_push_elapsed = 0.0
-		progress_line.value = ""
+		# Clear only a push in progress: the uplink writes the line while the downlink is shut.
+		if _push_elapsed > 0.0:
+			_push_elapsed = 0.0
+			progress_line.value = ""
+
 		return
 
 	_push_elapsed += delta
