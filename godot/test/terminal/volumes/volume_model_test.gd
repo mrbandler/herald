@@ -98,3 +98,8 @@ func test_an_unlocked_archive_is_no_longer_sealed() -> void:
 	assert_bool(model.is_sealed("ARC", PackedStringArray())).is_true()
 	assert_bool(model.is_sealed("ARC", PackedStringArray(["ARC"]))).is_false()
 	assert_bool(model.is_sealed("USR", PackedStringArray())).is_false()
+
+func test_a_trailing_slash_names_the_same_directory() -> void:
+	assert_str(_model.resolve("USR:", "OKONJO/")).is_equal("USR:OKONJO/")
+	assert_str(_model.resolve("", "USR/")).is_equal("USR:")
+	assert_str(_model.resolve("", "USR:OKONJO/")).is_equal("USR:OKONJO/")

@@ -42,7 +42,9 @@ func resolve(directory: String, target: String) -> String:
 		return _parent(directory)
 
 	if not upper.contains(":"):
-		return upper + ":" if directory.is_empty() else directory + upper + "/"
+		# A trailing slash, as Tab completion types it, names the same directory.
+		var name := upper.trim_suffix("/")
+		return name + ":" if directory.is_empty() else directory + name + "/"
 
 	return upper if upper.ends_with(":") or upper.ends_with("/") else upper + "/"
 
