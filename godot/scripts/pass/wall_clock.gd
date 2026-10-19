@@ -37,9 +37,13 @@ func _on_time(_previous: Variant, _current: Variant) -> void:
 ## Shows the mission time, and nothing without a pass.
 func _refresh() -> void:
 	var window := current_pass.value as PassWindow
+	text = "" if window == null else WallClock.format_mission(mission_seconds())
+
+## Seconds since launch at the current pass time; one day per window. 0 without a pass.
+func mission_seconds() -> float:
+	var window := current_pass.value as PassWindow
 	if window == null:
-		text = ""
-		return
+		return 0.0
 
 	var days := epoch_days + window.number - 1
-	text = WallClock.format_mission(days * DAY + window.station_time(pass_time.value))
+	return days * DAY + window.station_time(pass_time.value)

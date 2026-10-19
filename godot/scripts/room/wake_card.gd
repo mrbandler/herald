@@ -22,8 +22,8 @@ extends CanvasLayer
 ## Shows the power bar.
 @export var bar: Label
 
-## The wall's mission clock, read for its text.
-@export var wall_clock: Label3D
+## The wall's mission clock. The card counts up to its time as the room fades in.
+@export var wall_clock: WallClock
 
 ## Seconds since the card came up.
 var _elapsed := 0.0
@@ -46,7 +46,9 @@ func tick(delta: float) -> void:
 
 	var was_warm := _elapsed >= warm_seconds
 	_elapsed += delta
-	clock.text = wall_clock.text if wall_clock != null else ""
+	var lead := warm_seconds - minf(_elapsed, warm_seconds)
+	var seconds := wall_clock.mission_seconds() - lead if wall_clock != null else 0.0
+	clock.text = WallClock.format_mission(seconds) if wall_clock != null else ""
 	bar.text = DownlinkModel.draw_bar(_elapsed / warm_seconds, bar_width)
 	if was_warm or _elapsed < warm_seconds:
 		return
