@@ -46,8 +46,9 @@ func test_terminal_scene_is_wired() -> void:
 	assert_object(status.countdown).is_same(scene.get_node("Screen/StatusCountdown"))
 	assert_object(scene.get_node("Screen/KeyHints")).is_not_null()
 	var crt := scene.get_node("Crt") as MeshInstance3D
-	var material := crt.material_override as StandardMaterial3D
-	assert_vector(material.albedo_texture.get_size()).is_equal(Vector2(640, 480))
+	var material := crt.material_override as ShaderMaterial
+	var display: Texture2D = material.get_shader_parameter("display")
+	assert_vector(display.get_size()).is_equal(Vector2(640, 480))
 
 func test_downlink_is_wired() -> void:
 	var scene: Node = auto_free((load(TERMINAL) as PackedScene).instantiate())

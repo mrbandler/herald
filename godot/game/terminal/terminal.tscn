@@ -65,6 +65,7 @@
 [ext_resource type="Resource" path="res://game/data/atoms/uplink/ack_heard.tres" id="93_ack_heard"]
 [ext_resource type="Resource" path="res://game/data/atoms/downlink/held_keys.tres" id="94_held_keys"]
 [ext_resource type="Material" path="res://game/data/materials/plastic_grey.tres" id="m_grey"]
+[ext_resource type="Shader" path="res://game/terminal/crt.gdshader" id="m_crt"]
 
 [sub_resource type="SystemFont" id="Font_mono"]
 font_names = PackedStringArray("monospace")
@@ -72,10 +73,10 @@ font_names = PackedStringArray("monospace")
 [sub_resource type="ViewportTexture" id="Texture_screen"]
 viewport_path = NodePath("Screen")
 
-[sub_resource type="StandardMaterial3D" id="Material_crt"]
+[sub_resource type="ShaderMaterial" id="Material_crt"]
 resource_local_to_scene = true
-shading_mode = 0
-albedo_texture = SubResource("Texture_screen")
+shader = ExtResource("m_crt")
+shader_parameter/display = SubResource("Texture_screen")
 
 [sub_resource type="QuadMesh" id="Mesh_crt"]
 size = Vector2(0.48, 0.36)
@@ -383,6 +384,12 @@ position = Vector3(0, 0, -0.06)
 size = Vector3(0.6, 0.48, 0.1)
 material = ExtResource("m_grey")
 
+[node name="Inset" type="CSGBox3D" parent="Bezel"]
+position = Vector3(0, 0, 0.05)
+operation = 2
+size = Vector3(0.5, 0.38, 0.05)
+material = ExtResource("m_grey")
+
 [node name="DriveUnit" type="CSGBox3D" parent="."]
 position = Vector3(0, -0.29, -0.06)
 size = Vector3(0.6, 0.08, 0.24)
@@ -466,7 +473,7 @@ size = Vector3(0.44, 0.03, 0.15)
 material = ExtResource("m_grey")
 
 [node name="Crt" type="MeshInstance3D" parent="."]
-position = Vector3(0, 0, 0.001)
+position = Vector3(0, 0, -0.033)
 mesh = SubResource("Mesh_crt")
 material_override = SubResource("Material_crt")
 

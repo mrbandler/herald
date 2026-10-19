@@ -32,5 +32,5 @@ script = ExtResource("3_wall")
 pass_time = ExtResource("4_time")
 current_pass = ExtResource("6_current")
 modulate = Color(1, 0.35, 0.2, 1)
-font_size = 32
+font_size = 24
 text = "T+ 214Y 117D\n02:40:00"

@@ -148,7 +148,7 @@ size = Vector3(3.2, 0.1, 3.2)
 material = ExtResource("m_floor")
 
 [node name="BackWall" type="CSGBox3D" parent="Geometry" unique_id=2020507245]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, -1.65)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, -1.27)
 size = Vector3(3.2, 2.6, 0.1)
 material = ExtResource("m_wall")
 
@@ -162,18 +162,23 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 1.3, -0.4)
 size = Vector3(0.1, 2.6, 3.2)
 material = ExtResource("m_wall")
 
+[node name="Ceiling" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.65, -0.4)
+size = Vector3(3.2, 0.1, 3.2)
+material = ExtResource("m_wall")
+
 [node name="Desk" type="CSGBox3D" parent="Geometry" unique_id=1352032104]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.725, -0.75)
 size = Vector3(2.2, 0.05, 0.8)
 material = ExtResource("m_desk")
 
 [node name="PinBoard" type="CSGBox3D" parent="Geometry"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.32, -1.597)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.32, -1.217)
 size = Vector3(2.4, 0.85, 0.006)
 material = ExtResource("m_cork")
 
 [node name="Pass" parent="." unique_id=1557326940 instance=ExtResource("10_pass")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.95, -1.59)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 1.95, -1.21)
 
 [node name="Player" parent="." unique_id=2125880003 instance=ExtResource("11_player")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.15)
@@ -199,9 +204,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.33, 0.753, -0.5)
 transform = Transform3D(0.8560807, 0, -0.5168421, 0, 1, 0, 0.5168421, 0, 0.8560807, 0.38654506, 0, -0.9400423)
 
 [node name="Column" type="CSGCylinder3D" parent="Tube" unique_id=1261077741]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, -0.08)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.675, -0.08)
 radius = 0.07
-height = 0.7
+height = 1.85
 sides = 12
 material = ExtResource("m_device")
 
@@ -286,7 +291,7 @@ shape = SubResource("Shape_desk_top")
 disabled = true
 
 [node name="PinWall" type="Area3D" parent="." unique_id=1095389071 node_paths=PackedStringArray("shape")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.32, -1.592)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.32, -1.212)
 script = ExtResource("91_desk_surface")
 reading = ExtResource("93_reading")
 aim_point = ExtResource("96_aim")

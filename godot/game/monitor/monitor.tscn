@@ -19,7 +19,7 @@
 [ext_resource type="Resource" path="res://game/data/models/downlink.tres" id="17_m_downlink"]
 [ext_resource type="Resource" path="res://game/data/atoms/terminal/stdout.tres" id="18_stdout"]
 [ext_resource type="AudioStream" path="res://game/data/audio/click.tres" id="19_click"]
-[ext_resource type="Material" path="res://game/data/materials/plastic_grey.tres" id="m_grey"]
+[ext_resource type="Material" path="res://game/data/materials/monitor_grey.tres" id="m_grey"]
 [ext_resource type="Material" path="res://game/data/materials/plastic_dark.tres" id="m_dark"]
 [ext_resource type="Material" path="res://game/data/materials/knob.tres" id="m_knob"]
 
@@ -53,8 +53,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.19, -0.05)
 size = Vector3(0.42, 0.38, 0.25)
 material = ExtResource("m_grey")
 
+[node name="Inset" type="CSGBox3D" parent="Bezel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0.125)
+operation = 2
+size = Vector3(0.34, 0.26, 0.04)
+material = ExtResource("m_grey")
+
 [node name="Screen" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0.076)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0.057)
 mesh = SubResource("Mesh_screen")
 material_override = SubResource("Material_screen")
 
