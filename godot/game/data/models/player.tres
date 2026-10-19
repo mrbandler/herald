@@ -4,5 +4,5 @@
 
 [resource]
 script = ExtResource("1")
-yaw_limit = 65.0
+yaw_limit = 85.0
 pitch_max = 25.0

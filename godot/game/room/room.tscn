@@ -87,6 +87,7 @@
 [ext_resource type="Material" path="res://game/data/materials/device_dark.tres" id="m_device"]
 [ext_resource type="Material" path="res://game/data/materials/knob.tres" id="m_knob"]
 [ext_resource type="PackedScene" path="res://game/room/bankers_lamp.tscn" id="121_bankers_lamp"]
+[ext_resource type="PackedScene" path="res://game/room/arm_lamp.tscn" id="122_arm_lamp"]
 
 [sub_resource type="Environment" id="Environment_room"]
 background_mode = 1
@@ -139,8 +140,9 @@ current_pass = ExtResource("23_current")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1842271000]
 environment = SubResource("Environment_room")
 
-[node name="LeftLamp" parent="." instance=ExtResource("121_bankers_lamp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.95, 0.75, -1.06)
+[node name="ArmLamp" parent="." instance=ExtResource("122_arm_lamp")]
+position = Vector3(-0.95, 0.75, -1.06)
+rotation = Vector3(0, 0.817, 0)
 
 [node name="RightLamp" parent="." instance=ExtResource("121_bankers_lamp")]
 transform = Transform3D(0.37, 0, -0.93, 0, 1, 0, 0.93, 0, 0.37, 1.0, 0.75, -0.55)
@@ -348,7 +350,7 @@ morning_bell = ExtResource("31_bell")
 shift_ended = ExtResource("32_shift_ended")
 window_number = ExtResource("22_window_number")
 sleep = NodePath("../Sleep")
-lamps = [NodePath("../LeftLamp/Light"), NodePath("../RightLamp/Light")]
+lamps = [NodePath("../ArmLamp/Light"), NodePath("../RightLamp/Light")]
 
 [node name="DebugCommands" type="Node" parent="." unique_id=1370657304]
 script = ExtResource("6_debug")
