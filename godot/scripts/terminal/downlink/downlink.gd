@@ -52,6 +52,12 @@ extends Node
 ## Written. The terminal's progress line; empty while nothing arrives.
 @export var progress_line: StringValue
 
+## Receives the manifest's arrival line, so it stays in the scrollback. Usually stdout.
+@export var out: StringEvent
+
+## Raised when the manifest arrives, for its bell.
+@export var manifest_arrived: Event
+
 ## Raised with short notices for the status bar.
 @export var status_notice: StringEvent
 
@@ -115,6 +121,8 @@ func _advance_push(window: PassWindow, delta: float) -> void:
 	manifest_received.value = true
 	progress_line.value = ""
 	status_notice.raise("MANIFEST RECEIVED. %d ITEMS" % items.size())
+	out.raise("-- MANIFEST RECEIVED. %d ITEM(S). TYPE MANIFEST --" % items.size())
+	manifest_arrived.raise()
 
 ## Grades every row that came due, and stores the item once its last row arrived.
 func _advance_item(delta: float) -> void:

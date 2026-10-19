@@ -19,6 +19,19 @@ extends Label
 ## Shown while nothing runs.
 @export var idle_text := "NO TRANSFER"
 
+## Read. True once the manifest arrived.
+@export var manifest_received: BoolValue
+
+## Read. The manifest's items, counted in the hint.
+@export var manifest: ResourceListValue
+
+## Read. True once the player listed the manifest; the hint stops then.
+@export var manifest_seen: BoolValue
+
+## Shown in the bright colour while nothing runs and the arrived manifest was not listed yet,
+## filled with its item count.
+@export var manifest_hint := "MANIFEST: %d ITEM(S). TYPE MANIFEST"
+
 ## Filled with the units in use and the capacity.
 @export var storage_format := "STORAGE %d/%d"
 
@@ -32,13 +45,18 @@ extends Label
 func _ready() -> void:
 	progress_line.updated.connect(_on_changed)
 	storage.updated.connect(_on_changed)
+	manifest_received.updated.connect(_on_changed)
+	manifest_seen.updated.connect(_on_changed)
 	refresh()
 
 ## Draws the progress line, or the idle text while it is empty, and the storage in use.
 func refresh() -> void:
 	var idle := progress_line.value.is_empty()
-	var color := idle_color if idle else active_color
-	text = idle_text if idle else progress_line.value
+	var hint := idle and manifest_received.value and not manifest_seen.value
+	var color := idle_color if idle and not hint else active_color
+	text = progress_line.value
+	if idle:
+		text = manifest_hint % manifest.value.size() if hint else idle_text
 	add_theme_color_override("font_color", color)
 
 	if storage_readout != null:

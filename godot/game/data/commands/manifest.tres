@@ -7,6 +7,7 @@
 [ext_resource type="Resource" path="res://game/data/atoms/downlink/download_queue.tres" id="5_queue"]
 [ext_resource type="Resource" path="res://game/data/atoms/downlink/storage.tres" id="6_storage"]
 [ext_resource type="Resource" path="res://game/data/models/downlink.tres" id="7_model"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/manifest_seen.tres" id="8_seen"]
 
 [resource]
 script = ExtResource("1_script")
@@ -18,3 +19,4 @@ manifest = ExtResource("4_manifest")
 download_queue = ExtResource("5_queue")
 storage = ExtResource("6_storage")
 model = ExtResource("7_model")
+manifest_seen = ExtResource("8_seen")

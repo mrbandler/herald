@@ -38,6 +38,8 @@ func before_test() -> void:
 	_downlink.running_item = ResourceValue.new()
 	_downlink.progress_line = StringValue.new()
 	_downlink.status_notice = StringEvent.new()
+	_downlink.out = StringEvent.new()
+	_downlink.manifest_arrived = Event.new()
 	_downlink.row_received = Event.new()
 	_downlink.download_complete = Event.new()
 	_notices = AtomSpy.events(_downlink.status_notice)
@@ -205,3 +207,10 @@ func test_storage_is_written_before_the_queue_drops_the_item() -> void:
 	)
 	_run(15.1)
 	assert_array(queued_at_store).is_equal([true])
+
+func test_the_manifest_is_announced_in_the_terminal_and_rung() -> void:
+	var lines := AtomSpy.events(_downlink.out)
+	var bells := AtomSpy.events(_downlink.manifest_arrived)
+	_receive_manifest()
+	assert_array(lines.calls).is_equal(["-- MANIFEST RECEIVED. 2 ITEM(S). TYPE MANIFEST --"])
+	assert_int(bells.calls.size()).is_equal(1)

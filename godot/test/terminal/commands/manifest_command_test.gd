@@ -17,11 +17,16 @@ func before_test() -> void:
 	_manifest.download_queue = ResourceListValue.new()
 	_manifest.storage = ResourceListValue.new()
 	_manifest.model = DownlinkModel.new()
+	_manifest.manifest_seen = BoolValue.new()
 	_out = AtomSpy.events(_manifest.out)
 
 func test_no_manifest_before_the_push() -> void:
 	_manifest.run(PackedStringArray())
 	assert_array(_out.calls).is_equal(["NO MANIFEST"])
+	assert_bool(_manifest.manifest_seen.value).is_false()
+	_manifest.manifest_received.value = true
+	_manifest.run(PackedStringArray())
+	assert_bool(_manifest.manifest_seen.value).is_true()
 
 func test_prints_the_list_with_each_items_state() -> void:
 	_manifest.manifest_received.value = true

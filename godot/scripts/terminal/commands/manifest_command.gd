@@ -19,12 +19,16 @@ extends Command
 ## Finds stored copies by id.
 @export var model: DownlinkModel
 
+## Written. True once the listing was shown, so the progress row stops pointing at it.
+@export var manifest_seen: BoolValue
+
 ## Prints the listing, or NO MANIFEST before the push.
 func run(_args: PackedStringArray) -> void:
 	if not manifest_received.value:
 		write("NO MANIFEST")
 		return
 
+	manifest_seen.value = true
 	write(" HERALD QUEUE - %d ITEMS" % manifest.value.size())
 	write(" ID   TYPE  SIZE  STATE    NOTE")
 

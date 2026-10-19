@@ -73,6 +73,10 @@ func test_downlink_is_wired() -> void:
 	assert_object(get_command.storage).is_same(downlink.storage)
 	var stat := two.command_set.find("STAT") as StatCommand
 	assert_object(stat.running_item).is_same(downlink.running_item)
+	var listing := two.command_set.find("MANIFEST") as ManifestCommand
+	assert_object(progress.manifest_seen).is_same(listing.manifest_seen)
+	assert_object(progress.manifest_received).is_same(downlink.manifest_received)
+	assert_object(downlink.out).is_same(scene.get_node("Terminal").get("out"))
 	var manifest := two.command_set.find("MANIFEST") as ManifestCommand
 	assert_object(manifest.storage).is_same(downlink.storage)
 	assert_object(manifest.download_queue).is_same(downlink.download_queue)
