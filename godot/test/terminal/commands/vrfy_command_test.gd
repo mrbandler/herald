@@ -40,3 +40,10 @@ func test_a_tagged_text_item() -> void:
 	_vrfy.run(PackedStringArray(["22"]))
 	var expected := [" 22 TLM  ROWS 2/2  CLEAN 2 NOISY 0 LOST 0", " TAG: FIRST TLM"]
 	assert_array(_out.calls).is_equal(expected)
+
+func test_a_decoded_image_says_so() -> void:
+	var image := DownlinkFixture.stored(DownlinkFixture.item(33, "IMG", 6, 2), [0, 0])
+	image.decoded = true
+	_vrfy.storage.add(image)
+	_vrfy.run(PackedStringArray(["33"]))
+	assert_array(_out.calls).is_equal([" 33 IMG  ROWS 2/2  CLEAN 2 NOISY 0 LOST 0", " DECODED"])

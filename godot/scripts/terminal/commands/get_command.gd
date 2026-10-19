@@ -63,7 +63,7 @@ func _queue(token: String) -> void:
 		write("%s ALREADY QUEUED" % token)
 		return
 
-	var used := model.units(storage.value) + model.units(download_queue.value)
+	var used := model.units(storage.value) + model.queued_units(download_queue.value, storage.value)
 	var needed := 0 if kept != null else item.size
 	if used + needed > model.storage_capacity:
 		write("%s NOT ENOUGH SPACE" % token)

@@ -33,6 +33,12 @@ const GREETING := "LISTENING POST 4 - HTB MODULE - TYPE HELP"
 ## Open file path, empty when no popup. Esc closes it first.
 @export var viewing: StringValue
 
+## Read. While an alert is up, its box owns the keys and the wheel.
+@export var alert: ResourceValue
+
+## Raised for every key the terminal uses, for the key click. Optional.
+@export var key_typed: Event
+
 ## Read. Its window's command set resolves what is typed.
 @export var current_pass: ResourceValue
 
@@ -79,7 +85,8 @@ func _exit_tree() -> void:
 	# Terminal listens, so the context would stay enabled. Drop it here.
 	GUIDE.disable_mapping_context(terminal_context)
 
-## Feeds key presses to `handle_key` while focused, and consumes only the keys it uses.
+## Feeds key presses to `handle_key` while focused, consumes only the keys it uses, and clicks for
+## each of them.
 func _unhandled_key_input(event: InputEvent) -> void:
 	var key := event as InputEventKey
 	if not focused.value or key == null or not key.pressed:
@@ -89,7 +96,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	# Modifier chords (Ctrl, Alt, Meta) never type: Alt+letter would otherwise insert the letter.
 	# Keys left unused stay unhandled: GUIDE reads unhandled input, so Esc still reaches `leave`.
 	var chord := key.ctrl_pressed or key.alt_pressed or key.meta_pressed
-	if not viewing.value.is_empty():
+	if not viewing.value.is_empty() or alert.value != null:
 		return
 
 	var used := handle_word_key(key.keycode) if key.ctrl_pressed else false
@@ -98,12 +105,15 @@ func _unhandled_key_input(event: InputEvent) -> void:
 
 	if used:
 		get_viewport().set_input_as_handled()
+		if key_typed != null:
+			key_typed.raise()
 
 ## Feeds wheel steps to `handle_wheel` while fully leaned in and no file popup is open.
 func _unhandled_input(event: InputEvent) -> void:
 	var button := event as InputEventMouseButton
 	var leaned_in := focused.value and lean_amount.value >= 1.0
-	if not leaned_in or button == null or not button.pressed or not viewing.value.is_empty():
+	var popup := not viewing.value.is_empty() or alert.value != null
+	if not leaned_in or button == null or not button.pressed or popup:
 		return
 
 	if handle_wheel(button.button_index):

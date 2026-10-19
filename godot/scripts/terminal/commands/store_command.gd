@@ -21,9 +21,12 @@ func run(_args: PackedStringArray) -> void:
 		var stored := resource as StoredItem
 		var item := stored.item
 		var rows := "%d/%d" % [stored.arrived(), item.rows]
-		var columns := [item.id, item.type, item.size, rows]
+		var columns := [item.id, item.type, model.size_of(stored), rows]
 		var grades := [stored.clean(), stored.noisy(), stored.lost()]
 		write(" %-4d %-5s %-5d %-6s %-5d %-5d %d" % (columns + grades))
 
 		if not stored.tag.is_empty():
 			write("      TAG: %s" % stored.tag)
+
+		if stored.decoded:
+			write("      DECODED")

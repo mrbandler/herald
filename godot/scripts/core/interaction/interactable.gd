@@ -20,3 +20,7 @@ func release() -> void:
 ## True for a spot that puts down what is in hand, so the crosshair shows the place icon.
 func is_placement() -> bool:
 	return false
+
+## True for something pressed with a click, so the crosshair shows the pointer.
+func is_button() -> bool:
+	return false

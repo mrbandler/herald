@@ -41,12 +41,14 @@ func test_terminal_scene_is_wired() -> void:
 	assert_object(status.transmitting).is_same(uplink.transmitting)
 	assert_str(status.signal_strength.resource_path.get_file()).is_equal("signal_strength.tres")
 	assert_object(status.current_pass).is_same(terminal.current_pass)
+	assert_object(status.receiver_model).is_same(uplink.receiver_model)
 	assert_object(status.band).is_same(scene.get_node("Screen/StatusBand"))
 	assert_object(status.countdown).is_same(scene.get_node("Screen/StatusCountdown"))
 	assert_object(scene.get_node("Screen/KeyHints")).is_not_null()
 	var crt := scene.get_node("Crt") as MeshInstance3D
-	var material := crt.material_override as StandardMaterial3D
-	assert_vector(material.albedo_texture.get_size()).is_equal(Vector2(640, 480))
+	var material := crt.material_override as ShaderMaterial
+	var display: Texture2D = material.get_shader_parameter("display")
+	assert_vector(display.get_size()).is_equal(Vector2(640, 480))
 
 func test_downlink_is_wired() -> void:
 	var scene: Node = auto_free((load(TERMINAL) as PackedScene).instantiate())
@@ -73,6 +75,8 @@ func test_downlink_is_wired() -> void:
 	assert_object(get_command.storage).is_same(downlink.storage)
 	var stat := two.command_set.find("STAT") as StatCommand
 	assert_object(stat.running_item).is_same(downlink.running_item)
+	assert_str(downlink.shown_item.resource_path.get_file()).is_equal("shown_item.tres")
+	assert_str(downlink.monitor_mode.resource_path.get_file()).is_equal("monitor_mode.tres")
 	var listing := two.command_set.find("MANIFEST") as ManifestCommand
 	assert_object(progress.manifest_seen).is_same(listing.manifest_seen)
 	assert_object(progress.manifest_received).is_same(downlink.manifest_received)
@@ -97,6 +101,15 @@ func test_module_unlock_is_wired() -> void:
 	assert_object(bell.event).is_same(relay.event)
 	assert_object(relay.sound.stream).is_instanceof(ClickStream)
 	assert_float((bell.sound.stream as ChimeStream).lead_seconds).is_greater(0.0)
+	var click := scene.get_node("KeyClickSound") as EventSound
+	assert_object(click.event).is_same((scene.get_node("Terminal") as Terminal).key_typed)
+	var alarm := scene.get_node("AckAlarmSound") as EventSound
+	assert_object(alarm.event).is_same((scene.get_node("Uplink") as Uplink).ack_missed)
+	assert_bool((alarm.sound.stream as ChimeStream).square).is_true()
+	var popup := scene.get_node("AlertPopup") as AlertPopup
+	assert_object(popup.alert).is_same((scene.get_node("Uplink") as Uplink).alert)
+	assert_object(popup.alert).is_same((scene.get_node("Terminal") as Terminal).alert)
+	assert_object(popup.panel).is_same(scene.get_node("Screen/AlertPanel"))
 	var two: PassWindow = load(PASS_02)
 	var unlock := two.command_set.find("UNLOCK") as UnlockCommand
 	assert_object(unlock.module_unlocked).is_same(relay.event)
@@ -152,3 +165,16 @@ func test_exit_is_a_hidden_easter_egg() -> void:
 	var exit := two.command_set.find("EXIT") as TextCommand
 	assert_bool(exit.hidden).is_true()
 	assert_str(exit.text).is_not_empty()
+
+func test_decode_and_show_drive_the_monitor() -> void:
+	var two: PassWindow = load(PASS_02)
+	var decode := two.command_set.find("DECODE") as DecodeCommand
+	var show := two.command_set.find("SHOW") as ShowCommand
+	var monitor: Node = auto_free(
+		(load("res://game/monitor/monitor.tscn") as PackedScene).instantiate()
+	)
+	var driver := monitor.get_node("Driver") as Monitor
+	assert_object(decode.shown_item).is_same(driver.shown_item)
+	assert_object(decode.knob_line).is_same(driver.knob_line)
+	assert_object(show.monitor_mode).is_same(driver.monitor_mode)
+	assert_str(decode.monitor_model.resource_path.get_file()).is_equal("monitor.tres")

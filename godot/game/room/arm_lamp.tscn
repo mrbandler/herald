@@ -1,0 +1,58 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://game/data/materials/device_dark.tres" id="1_metal"]
+[ext_resource type="Material" path="res://game/data/materials/knob.tres" id="2_head"]
+[ext_resource type="Material" path="res://game/data/materials/bulb.tres" id="3_bulb"]
+
+[sub_resource type="SphereMesh" id="Mesh_bulb"]
+radius = 0.025
+height = 0.05
+
+[node name="ArmLamp" type="Node3D"]
+
+[node name="Base" type="CSGCylinder3D" parent="."]
+position = Vector3(0, 0.01, 0)
+radius = 0.07
+height = 0.02
+sides = 24
+material = ExtResource("1_metal")
+
+[node name="LowerArm" type="CSGCylinder3D" parent="."]
+position = Vector3(0, 0.26, -0.025)
+rotation = Vector3(-0.104, 0, 0)
+radius = 0.008
+height = 0.48
+sides = 8
+material = ExtResource("1_metal")
+
+[node name="UpperArm" type="CSGCylinder3D" parent="."]
+position = Vector3(0, 0.56, 0.165)
+rotation = Vector3(1.299, 0, 0)
+radius = 0.008
+height = 0.446
+sides = 8
+material = ExtResource("1_metal")
+
+[node name="Head" type="CSGCylinder3D" parent="."]
+position = Vector3(0, 0.57, 0.421)
+rotation = Vector3(-0.688, 0, 0)
+radius = 0.07
+height = 0.13
+sides = 24
+cone = true
+material = ExtResource("2_head")
+
+[node name="Bulb" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.527, 0.456)
+cast_shadow = 0
+mesh = SubResource("Mesh_bulb")
+surface_material_override/0 = ExtResource("3_bulb")
+
+[node name="Light" type="SpotLight3D" parent="."]
+position = Vector3(0, 0.512, 0.469)
+rotation = Vector3(-2.259, 0, 0)
+light_color = Color(1, 0.7, 0.4, 1)
+light_energy = 0.75
+shadow_enabled = true
+spot_range = 2.2
+spot_angle = 38.0

@@ -32,10 +32,15 @@ func before_test() -> void:
 	_downlink.downlink_open = BoolValue.new()
 	_downlink.manifest = ResourceListValue.new()
 	_downlink.manifest_received = BoolValue.new()
+	_downlink.ack_heard = BoolValue.new()
+	_downlink.ack_heard.value = true
+	_downlink.held_keys = ResourceListValue.new()
 	_downlink.download_queue = ResourceListValue.new()
 	_downlink.storage = ResourceListValue.new()
 	_downlink.download_received = IntValue.new()
 	_downlink.running_item = ResourceValue.new()
+	_downlink.shown_item = ResourceValue.new()
+	_downlink.monitor_mode = IntValue.new()
 	_downlink.progress_line = StringValue.new()
 	_downlink.status_notice = StringEvent.new()
 	_downlink.out = StringEvent.new()
@@ -83,6 +88,27 @@ func test_push_completes_after_its_seconds() -> void:
 	assert_int(_downlink.manifest.value.size()).is_equal(2)
 	assert_array(_notices.calls).contains_exactly(["MANIFEST RECEIVED. 2 ITEMS"])
 	assert_str(_downlink.progress_line.value).is_empty()
+
+func test_a_missed_ack_holds_the_auth_keys_back() -> void:
+	var data := _item(22, 32)
+	data.type = "TLM"
+	var key := _item(21, 16)
+	_downlink.current_pass.value = _window([key, data])
+	_downlink.ack_heard.value = false
+	var out := AtomSpy.events(_downlink.out)
+	_receive_manifest()
+	assert_array(_downlink.manifest.value).contains_exactly([data])
+	assert_array(_downlink.held_keys.value).contains_exactly([key])
+	assert_str(out.calls[-1]).is_equal(_downlink.model.keys_held_line)
+
+func test_a_heard_ack_releases_the_held_keys_first() -> void:
+	var held := _item(11, 16)
+	var own := _item(21, 16)
+	_downlink.held_keys.add(held)
+	_downlink.current_pass.value = _window([own])
+	_receive_manifest()
+	assert_array(_downlink.manifest.value).contains_exactly([held, own])
+	assert_array(_downlink.held_keys.value).is_empty()
 
 func test_a_lost_lock_restarts_the_push() -> void:
 	_open_and_lock()
@@ -214,3 +240,23 @@ func test_the_manifest_is_announced_in_the_terminal_and_rung() -> void:
 	_receive_manifest()
 	assert_array(lines.calls).is_equal(["-- MANIFEST RECEIVED. 2 ITEM(S). TYPE MANIFEST --"])
 	assert_int(bells.calls.size()).is_equal(1)
+
+func test_an_image_streams_onto_the_monitor() -> void:
+	var image := _item(23, 4)
+	image.type = "IMG"
+	_downlink.current_pass.value = _window([image])
+	_receive_manifest()
+	_downlink.download_queue.add(_downlink.manifest.value[0])
+	_run(1.0)
+	assert_object(_downlink.shown_item.value).is_same(_downlink.running_item.value)
+	assert_int(_downlink.monitor_mode.value).is_equal(MonitorModel.Mode.STREAM)
+	_run(16.0)
+	assert_int(_downlink.monitor_mode.value).is_equal(MonitorModel.Mode.SNOW)
+	assert_object(_downlink.shown_item.value).is_null()
+
+func test_text_leaves_the_monitor_alone() -> void:
+	_receive_manifest()
+	_downlink.download_queue.add(_downlink.manifest.value[0])
+	_run(1.0)
+	assert_int(_downlink.monitor_mode.value).is_equal(MonitorModel.Mode.SNOW)
+	assert_object(_downlink.shown_item.value).is_null()

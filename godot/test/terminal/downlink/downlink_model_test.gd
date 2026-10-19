@@ -75,3 +75,17 @@ func test_units_and_lookups() -> void:
 	assert_object(_model.listed(listed, "ABC")).is_null()
 	assert_object(_model.stored(stored, "23").item).is_same(image)
 	assert_object(_model.stored(stored, "21")).is_null()
+
+func test_a_decoded_image_takes_one_unit() -> void:
+	var image := _item(33, "IMG", 6, 120)
+	var stored := DownlinkFixture.stored(image, [])
+	assert_int(_model.size_of(stored)).is_equal(6)
+	stored.decoded = true
+	assert_int(_model.size_of(stored)).is_equal(1)
+	assert_int(_model.units([stored, _item(21, "AUTH", 1, 16)])).is_equal(2)
+
+func test_queued_items_already_stored_take_no_extra_room() -> void:
+	var image := _item(33, "IMG", 6, 120)
+	var queue: Array[Resource] = [image, _item(22, "TLM", 1, 32)]
+	var storage: Array[Resource] = [DownlinkFixture.stored(image, [])]
+	assert_int(_model.queued_units(queue, storage)).is_equal(1)

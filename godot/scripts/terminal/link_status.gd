@@ -7,6 +7,7 @@ extends Label
 enum Mode {
 	NO_CARRIER,
 	NO_LOCK,
+	WEAK,
 	DOWNLINK,
 	UPLINK,
 	TRANSMITTING,
@@ -19,8 +20,12 @@ enum Mode {
 ## Read. Supplies the LOS time.
 @export var current_pass: ResourceValue
 
-## Read. Any signal above zero means the carrier is heard.
+## Read. Any signal above zero means the carrier is heard; below the margin while locked, data
+## is garbled.
 @export var signal_strength: FloatValue
+
+## Supplies the margin below which a held lock still loses data.
+@export var receiver_model: ReceiverModel
 
 ## Read. True while the receiver holds lock.
 @export var locked: BoolValue
@@ -35,7 +40,10 @@ enum Mode {
 @export var no_carrier_text := "NO CARRIER"
 
 ## Shown while the carrier is heard but not locked.
-@export var no_lock_text := "SIGNAL. NO LOCK"
+@export var no_lock_text := "SIGNAL ACQUIRED. NO LOCK"
+
+## Shown while locked with the signal below the margin: rows arrive noisy, commands garble.
+@export var weak_text := "SIGNAL WEAK. CHECK AZ/EL"
 
 ## Shown while locked before the uplink opens.
 @export var downlink_text := "DOWNLINK. HERALD SPEAKING"
@@ -56,7 +64,7 @@ enum Mode {
 @export var notice_seconds := 4.0
 
 ## Shows the countdown to the next mark on the right, e.g. "UPLINK T-00:42", in the text's
-## colour. Optional.
+## colour, and the station time after LOS instead of a countdown to the bell. Optional.
 @export var countdown: Label
 
 ## The band behind the text, coloured by the mode. Optional.
@@ -130,8 +138,17 @@ func refresh() -> void:
 
 	if countdown != null:
 		var window := current_pass.value as PassWindow
-		countdown.text = "" if window == null else window.next_mark(pass_time.value).countdown()
+		countdown.text = "" if window == null else _right_text(window)
 		countdown.add_theme_color_override("font_color", get_theme_color("font_color"))
+
+## The countdown to the next mark, or the station time once LOS has passed, so nothing counts
+## down to the bell.
+func _right_text(window: PassWindow) -> String:
+	var t := pass_time.value
+	if t >= window.los:
+		return PassWindow.format_time(window.station_time(t))
+
+	return window.next_mark(t).countdown()
 
 ## Lights the band while the lock holds and darkens it otherwise. A blink swaps band and text.
 func _paint(link_mode: Mode) -> void:
@@ -156,11 +173,15 @@ func _on_notice(line: String) -> void:
 	_notice_left = notice_seconds
 	refresh()
 
-## The current mode. LOS wins, then a held lock by uplink state, then whether anything is heard.
+## The current mode. LOS wins, then a held lock: weak below the margin, otherwise by uplink
+## state. Then whether anything is heard.
 func mode() -> Mode:
 	var window := current_pass.value as PassWindow
 	if window != null and pass_time.value >= window.los:
 		return Mode.LOS
+
+	if locked.value and signal_strength.value < receiver_model.margin:
+		return Mode.WEAK
 
 	if locked.value:
 		if transmitting.value:
@@ -175,6 +196,8 @@ func _text_for(link_mode: Mode) -> String:
 	match link_mode:
 		Mode.NO_LOCK:
 			return no_lock_text
+		Mode.WEAK:
+			return weak_text
 		Mode.DOWNLINK:
 			return downlink_text
 		Mode.UPLINK:

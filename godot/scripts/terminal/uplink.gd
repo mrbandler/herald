@@ -45,6 +45,16 @@ extends Node
 ## Written. True once HERALD received ACK.
 @export var acked: BoolValue
 
+## Written at LOS: whether HERALD received ACK this window. Kept across windows, so the next
+## manifest knows whether to hold its AUTH keys back.
+@export var ack_heard: BoolValue
+
+## Raised at LOS when HERALD never received ACK, for the alarm.
+@export var ack_missed: Event
+
+## Written. Takes the alert box at LOS when HERALD never received ACK.
+@export var alert: ResourceValue
+
 ## The commands of the running send, in order.
 var _sending := PackedStringArray()
 
@@ -119,10 +129,19 @@ func _on_locked(_previous: bool, current: bool) -> void:
 	if transmitting.value and not current:
 		_cut("SIGNAL LOCK LOST")
 
-## Cuts a running send at LOS.
+## Cuts a running send at LOS, and sounds the alarm for a heartbeat that never arrived while the
+## Listener is still awake.
 func _on_los(_payload: Variant) -> void:
 	if transmitting.value:
 		_cut("LOS")
+
+	ack_heard.value = acked.value
+	if acked.value:
+		return
+
+	status_notice.raise(model.ack_missed_notice)
+	alert.value = model.ack_missed_alert
+	ack_missed.raise()
 
 ## HERALD takes the command in flight, or counts it garbled after a dip, and the next one starts.
 func _complete_command() -> void:

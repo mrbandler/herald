@@ -35,11 +35,15 @@ func test_after_the_bell_stays_at_bell_zero() -> void:
 	assert_str(mark.name).is_equal("BELL")
 	assert_float(mark.remaining).is_equal(0.0)
 
-func test_station_time_runs_faster_after_los() -> void:
+func test_station_time_runs_at_real_time_all_night() -> void:
 	var window := PassFixture.window_one()
 	assert_float(window.station_time(0.0)).is_equal(9600.0)
-	assert_float(window.station_time(115.0)).is_equal(9715.0)
-	assert_float(window.station_time(175.0)).is_equal(9715.0 + 60.0 * 60.0)
+	assert_float(window.station_time(175.0)).is_equal(9775.0)
+
+func test_format_time_of_day() -> void:
+	assert_str(PassWindow.format_time(9600.0)).is_equal("02:40:00")
+	assert_str(PassWindow.format_time(9659.9)).is_equal("02:40:59")
+	assert_str(PassWindow.format_time(86400.0 + 61.0)).is_equal("00:01:01")
 
 func test_shipped_window_two_loads_with_ascending_marks() -> void:
 	var window: PassWindow = load(PASS_02)
@@ -51,9 +55,8 @@ func test_shipped_window_two_loads_with_ascending_marks() -> void:
 func test_window_papers_carry_the_letter_the_prayer_and_a_capsule() -> void:
 	var one: PassWindow = load(PASS_01)
 	var two: PassWindow = load(PASS_02)
-	assert_int(one.papers.size()).is_equal(2)
-	assert_str(one.papers[0].body()).contains("SEQ ADD ACK")
-	var prayer := one.papers[1].text_for(one)
+	assert_int(one.papers.size()).is_equal(1)
+	var prayer := one.papers[0].text_for(one)
 	assert_str(prayer).contains("AZ 214.6  EL 38.2")
 	assert_str(prayer).contains("DIAL 52")
 	assert_str(two.papers[0].text_for(two)).contains("AZ 221.3  EL 41.7")
@@ -87,6 +90,7 @@ func test_window_two_offers_the_downlink_commands() -> void:
 		"LS",
 		"CD",
 		"READ",
+		"SHOW",
 		"DECODE",
 		"VRFY",
 		"TAG",
@@ -103,3 +107,34 @@ func test_window_two_key_and_telemetry() -> void:
 	var stored := DownlinkFixture.stored(two.manifest[1], clean)
 	assert_int(ModuleModel.new().decode_lines(stored).size()).is_equal(8)
 	assert_str(two.manifest[1].content).starts_with("HERALD TELEMETRY")
+
+func test_one_cal_per_camera_covers_its_pictures() -> void:
+	for file: String in DirAccess.get_files_at("res://game/data/passes"):
+		var window: PassWindow = load("res://game/data/passes/" + file)
+		var cals := { }
+		for item: ManifestItem in window.manifest:
+			if item.type == "CAL":
+				assert_bool(cals.has(_camera(item))).override_failure_message(file).is_false()
+				cals[_camera(item)] = item.line_length
+
+		for item: ManifestItem in window.manifest:
+			if item.type == "IMG":
+				assert_bool(cals.has(_camera(item))).override_failure_message(file).is_true()
+				assert_float(cals.get(_camera(item), 0.0)).is_equal(item.line_length)
+
+func _camera(item: ManifestItem) -> String:
+	var words := item.note.split(" ")
+	return words[words.size() - 1]
+
+func test_window_three_sends_pictures() -> void:
+	var three: PassWindow = load("res://game/data/passes/pass_03.tres")
+	assert_int(three.number).is_equal(3)
+	var types := PackedStringArray()
+	for item: ManifestItem in three.manifest:
+		types.append(item.type)
+	assert_array(types).is_equal(PackedStringArray(["AUTH", "CAL", "IMG", "TLM"]))
+	assert_str(three.manifest[0].key_for).is_equal("IMG")
+	assert_object(three.manifest[2].image).is_not_null()
+	assert_str(three.papers[0].text_for(three)).contains("AZ 226.8  EL 44.1")
+	assert_int(three.papers.size()).is_equal(2)
+	assert_float(three.papers[1].arrives_at).is_greater(0.0)

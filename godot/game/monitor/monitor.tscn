@@ -1,0 +1,211 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/monitor/monitor.gd" id="1_monitor"]
+[ext_resource type="Script" path="res://scripts/monitor/monitor_commit.gd" id="2_commit"]
+[ext_resource type="Script" path="res://scripts/core/interaction/knob.gd" id="3_knob"]
+[ext_resource type="Script" path="res://scripts/core/interaction/push_button.gd" id="4_button"]
+[ext_resource type="Shader" path="res://game/monitor/monitor.gdshader" id="5_shader"]
+[ext_resource type="Resource" path="res://game/data/models/monitor.tres" id="6_m_monitor"]
+[ext_resource type="Resource" path="res://game/data/atoms/monitor/shown_item.tres" id="7_shown"]
+[ext_resource type="Resource" path="res://game/data/atoms/monitor/monitor_mode.tres" id="8_mode"]
+[ext_resource type="Resource" path="res://game/data/atoms/monitor/knob_line.tres" id="9_line"]
+[ext_resource type="Resource" path="res://game/data/atoms/monitor/knob_offset.tres" id="10_offset"]
+[ext_resource type="Resource" path="res://game/data/atoms/monitor/knob_contrast.tres" id="11_contrast"]
+[ext_resource type="Resource" path="res://game/data/models/line_knob.tres" id="12_m_line"]
+[ext_resource type="Resource" path="res://game/data/models/offset_knob.tres" id="13_m_offset"]
+[ext_resource type="Resource" path="res://game/data/models/contrast_knob.tres" id="14_m_contrast"]
+[ext_resource type="Resource" path="res://game/data/atoms/monitor/commit_pressed.tres" id="15_commit"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/storage.tres" id="16_storage"]
+[ext_resource type="Resource" path="res://game/data/models/downlink.tres" id="17_m_downlink"]
+[ext_resource type="Resource" path="res://game/data/atoms/terminal/stdout.tres" id="18_stdout"]
+[ext_resource type="AudioStream" path="res://game/data/audio/click.tres" id="19_click"]
+[ext_resource type="Material" path="res://game/data/materials/monitor_grey.tres" id="m_grey"]
+[ext_resource type="Material" path="res://game/data/materials/plastic_dark.tres" id="m_dark"]
+[ext_resource type="Material" path="res://game/data/materials/knob.tres" id="m_knob"]
+[ext_resource type="Script" path="res://scripts/monitor/monitor_glow.gd" id="20_glow"]
+
+[sub_resource type="ShaderMaterial" id="Material_screen"]
+shader = ExtResource("5_shader")
+
+[sub_resource type="QuadMesh" id="Mesh_screen"]
+size = Vector2(0.32, 0.24)
+
+[sub_resource type="CylinderShape3D" id="Shape_knob"]
+height = 0.03
+radius = 0.035
+
+[sub_resource type="CylinderMesh" id="Mesh_knob"]
+material = ExtResource("m_dark")
+top_radius = 0.035
+bottom_radius = 0.035
+height = 0.02
+
+[sub_resource type="BoxMesh" id="Mesh_spoke"]
+material = ExtResource("m_knob")
+size = Vector3(0.02, 0.022, 0.008)
+
+[sub_resource type="BoxShape3D" id="Shape_button"]
+size = Vector3(0.04, 0.04, 0.03)
+
+[node name="Monitor" type="Node3D"]
+
+[node name="Bezel" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.19, -0.05)
+size = Vector3(0.42, 0.38, 0.25)
+material = ExtResource("m_grey")
+
+[node name="Inset" type="CSGBox3D" parent="Bezel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0.125)
+operation = 2
+size = Vector3(0.34, 0.26, 0.04)
+material = ExtResource("m_grey")
+
+[node name="Screen" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0.057)
+mesh = SubResource("Mesh_screen")
+material_override = SubResource("Material_screen")
+
+[node name="LineKnob" type="Area3D" parent="." node_paths=PackedStringArray("visual", "click")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -0.12, 0.06, 0.08)
+script = ExtResource("3_knob")
+target = ExtResource("9_line")
+model = ExtResource("12_m_line")
+visual = NodePath("Visual")
+click = NodePath("Click")
+
+[node name="Shape" type="CollisionShape3D" parent="LineKnob"]
+shape = SubResource("Shape_knob")
+
+[node name="Visual" type="Node3D" parent="LineKnob"]
+
+[node name="Wheel" type="MeshInstance3D" parent="LineKnob/Visual"]
+mesh = SubResource("Mesh_knob")
+
+[node name="Spoke" type="MeshInstance3D" parent="LineKnob/Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.02, 0.012, 0)
+mesh = SubResource("Mesh_spoke")
+
+[node name="Click" type="AudioStreamPlayer3D" parent="LineKnob"]
+stream = ExtResource("19_click")
+
+[node name="LineKnobLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 0.105, 0.076)
+pixel_size = 0.0006
+modulate = Color(0.7, 0.67, 0.6, 1)
+font_size = 24
+outline_size = 0
+text = "LINE"
+
+[node name="OffsetKnob" type="Area3D" parent="." node_paths=PackedStringArray("visual", "click")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -0.02, 0.06, 0.08)
+script = ExtResource("3_knob")
+target = ExtResource("10_offset")
+model = ExtResource("13_m_offset")
+visual = NodePath("Visual")
+click = NodePath("Click")
+
+[node name="Shape" type="CollisionShape3D" parent="OffsetKnob"]
+shape = SubResource("Shape_knob")
+
+[node name="Visual" type="Node3D" parent="OffsetKnob"]
+
+[node name="Wheel" type="MeshInstance3D" parent="OffsetKnob/Visual"]
+mesh = SubResource("Mesh_knob")
+
+[node name="Spoke" type="MeshInstance3D" parent="OffsetKnob/Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.02, 0.012, 0)
+mesh = SubResource("Mesh_spoke")
+
+[node name="Click" type="AudioStreamPlayer3D" parent="OffsetKnob"]
+stream = ExtResource("19_click")
+
+[node name="OffsetKnobLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.02, 0.105, 0.076)
+pixel_size = 0.0006
+modulate = Color(0.7, 0.67, 0.6, 1)
+font_size = 24
+outline_size = 0
+text = "OFFSET"
+
+[node name="ContrastKnob" type="Area3D" parent="." node_paths=PackedStringArray("visual", "click")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.08, 0.06, 0.08)
+script = ExtResource("3_knob")
+target = ExtResource("11_contrast")
+model = ExtResource("14_m_contrast")
+visual = NodePath("Visual")
+click = NodePath("Click")
+
+[node name="Shape" type="CollisionShape3D" parent="ContrastKnob"]
+shape = SubResource("Shape_knob")
+
+[node name="Visual" type="Node3D" parent="ContrastKnob"]
+
+[node name="Wheel" type="MeshInstance3D" parent="ContrastKnob/Visual"]
+mesh = SubResource("Mesh_knob")
+
+[node name="Spoke" type="MeshInstance3D" parent="ContrastKnob/Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.02, 0.012, 0)
+mesh = SubResource("Mesh_spoke")
+
+[node name="Click" type="AudioStreamPlayer3D" parent="ContrastKnob"]
+stream = ExtResource("19_click")
+
+[node name="ContrastKnobLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08, 0.105, 0.076)
+pixel_size = 0.0006
+modulate = Color(0.7, 0.67, 0.6, 1)
+font_size = 24
+outline_size = 0
+text = "CONTRAST"
+
+[node name="CommitButton" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.16, 0.06, 0.08)
+script = ExtResource("4_button")
+pressed = ExtResource("15_commit")
+
+[node name="Shape" type="CollisionShape3D" parent="CommitButton"]
+shape = SubResource("Shape_button")
+
+[node name="Cap" type="CSGBox3D" parent="CommitButton"]
+size = Vector3(0.035, 0.035, 0.015)
+material = ExtResource("m_dark")
+
+[node name="CommitLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.16, 0.105, 0.076)
+pixel_size = 0.0006
+modulate = Color(0.7, 0.67, 0.6, 1)
+font_size = 24
+outline_size = 0
+text = "COMMIT"
+
+[node name="Driver" type="Node" parent="." node_paths=PackedStringArray("screen")]
+script = ExtResource("1_monitor")
+model = ExtResource("6_m_monitor")
+screen = NodePath("../Screen")
+shown_item = ExtResource("7_shown")
+monitor_mode = ExtResource("8_mode")
+knob_line = ExtResource("9_line")
+knob_offset = ExtResource("10_offset")
+knob_contrast = ExtResource("11_contrast")
+
+[node name="CommitHandler" type="Node" parent="."]
+script = ExtResource("2_commit")
+commit_pressed = ExtResource("15_commit")
+shown_item = ExtResource("7_shown")
+monitor_mode = ExtResource("8_mode")
+knob_line = ExtResource("9_line")
+knob_offset = ExtResource("10_offset")
+knob_contrast = ExtResource("11_contrast")
+storage = ExtResource("16_storage")
+downlink_model = ExtResource("17_m_downlink")
+out = ExtResource("18_stdout")
+
+[node name="ScreenGlow" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0.3)
+light_color = Color(0.6, 0.65, 0.8, 1)
+light_energy = 0.1
+omni_range = 1.0
+script = ExtResource("20_glow")
+energy_scale = 2.0
+shown_item = ExtResource("7_shown")
+monitor_mode = ExtResource("8_mode")

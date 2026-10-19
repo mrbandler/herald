@@ -11,6 +11,9 @@ func test_picks_the_icon_by_state() -> void:
 	assert_object(crosshair.pick_icon(false, true)).is_same(crosshair.grab_icon)
 	crosshair.place_icon = PlaceholderTexture2D.new()
 	assert_object(crosshair.pick_icon(true, false, true)).is_same(crosshair.place_icon)
+	crosshair.point_icon = PlaceholderTexture2D.new()
+	assert_object(crosshair.pick_icon(true, false, false, true)).is_same(crosshair.point_icon)
+	assert_object(crosshair.pick_icon(true, true, false, true)).is_same(crosshair.grab_icon)
 
 func test_hides_at_a_full_lean() -> void:
 	var crosshair: Crosshair = auto_free(Crosshair.new())

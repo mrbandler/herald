@@ -10,6 +10,8 @@
 [ext_resource type="Resource" path="res://game/data/atoms/pass/speak_opened.tres" id="9_speak"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/los.tres" id="10_los"]
 [ext_resource type="Resource" path="res://game/data/atoms/pass/morning_bell.tres" id="11_bell"]
+[ext_resource type="Material" path="res://game/data/materials/knob.tres" id="m_frame"]
+[ext_resource type="Material" path="res://game/data/materials/plastic_dark.tres" id="m_face"]
 
 [node name="Pass" type="Node3D"]
 
@@ -27,10 +29,31 @@ speak_event = ExtResource("9_speak")
 los_event = ExtResource("10_los")
 bell_event = ExtResource("11_bell")
 
+[node name="ClockFrame" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0.01)
+size = Vector3(0.76, 0.36, 0.04)
+material = ExtResource("m_frame")
+
+[node name="ClockFace" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0.012)
+size = Vector3(0.72, 0.32, 0.04)
+material = ExtResource("m_face")
+
+[node name="ClockCaption" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0.034)
+pixel_size = 0.002
+modulate = Color(0.7, 0.67, 0.6, 1)
+outline_size = 0
+font_size = 14
+text = "MISSION ELAPSED TIME"
+
 [node name="WallClock" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.034)
+pixel_size = 0.0035
 script = ExtResource("3_wall")
 pass_time = ExtResource("4_time")
 current_pass = ExtResource("6_current")
-modulate = Color(1, 0.35, 0.2, 1)
-font_size = 64
-text = "AOS T-00:30"
+modulate = Color(2.6, 0.42, 0.22, 1)
+outline_size = 0
+font_size = 24
+text = "T+ 214Y 117D\n02:40:00"

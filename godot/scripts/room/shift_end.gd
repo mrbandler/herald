@@ -1,9 +1,9 @@
 class_name ShiftEnd
 extends Node
 
-## At the morning bell (or a pull of the lamp chain): reports a missing ACK, ends the shift,
-## dims the lamp, lets the Listener fall asleep and reloads the room. It also advances the
-## campaign to the next window. Greybox stand-in for the tube report.
+## At the morning bell (or a pull of the lamp chain): ends the shift, dims the lamp, lets the
+## Listener fall asleep and reloads the room. It also advances the campaign to the next window.
+## Greybox stand-in for the tube report.
 
 ## Collection of global tunables.
 @export var tunables: Tunables
@@ -14,20 +14,14 @@ extends Node
 ## Raised right after the report, so the clock stops.
 @export var shift_ended: Event
 
-## Read. True once HERALD received the heartbeat ACK.
-@export var acked: BoolValue
-
-## Receives NO ACK SENT when the heartbeat was missed. Usually stdout.
-@export var out: StringEvent
-
 ## Raised by one when the shift ends, so the next room load picks the next window.
 @export var window_number: IntValue
 
 ## Optional. Falls asleep before the reload. Tests leave it unset.
 @export var sleep: Sleep
 
-## Optional. Dimmed to dark while the Listener falls asleep.
-@export var lamp: Light3D
+## Dimmed to dark while the Listener falls asleep: the desk lamps.
+@export var lamps: Array[Light3D] = []
 
 ## True once the shift has ended, so a second bell or pull does nothing.
 var _ended := false
@@ -36,7 +30,7 @@ var _ended := false
 func _ready() -> void:
 	morning_bell.raised.connect(_on_bell)
 
-## Reports a missed ACK, ends the shift, then falls asleep and reloads the room.
+## Ends the shift, then falls asleep and reloads the room.
 func _on_bell(_payload: Variant) -> void:
 	# The chain and the bell can both fire; the shift ends once.
 	if _ended:
@@ -44,10 +38,6 @@ func _on_bell(_payload: Variant) -> void:
 
 	_ended = true
 	window_number.value += 1
-
-	if not acked.value:
-		out.raise("NO ACK SENT")
-
 	shift_ended.raise()
 
 	if sleep == null:
@@ -56,7 +46,7 @@ func _on_bell(_payload: Variant) -> void:
 	var tween := create_tween()
 	tween.tween_method(sleep.fall, 0.0, 1.0, tunables.shift_fade_seconds)
 
-	if lamp != null:
+	for lamp: Light3D in lamps:
 		tween.parallel().tween_property(lamp, "light_energy", 0.0, tunables.shift_fade_seconds)
 
 	tween.tween_callback(get_tree().reload_current_scene)

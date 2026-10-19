@@ -37,11 +37,24 @@ extends Node
 ## Written. True once the manifest push completed.
 @export var manifest_received: BoolValue
 
+## Read. False when HERALD never heard last window's ACK: this window's AUTH keys are held back.
+@export var ack_heard: BoolValue
+
+## Read and written. AUTH ManifestItems held back for a missed ACK, released with the next
+## manifest after an ACK. Kept across windows.
+@export var held_keys: ResourceListValue
+
 ## Read and written. Waiting ManifestItems; the head is the running one.
 @export var download_queue: ResourceListValue
 
 ## Written. Local storage: StoredItem resources. Kept across windows.
 @export var storage: ResourceListValue
+
+## Written. The image on the monitor while one downloads.
+@export var shown_item: ResourceValue
+
+## Written. STREAM while an image downloads, SNOW after.
+@export var monitor_mode: IntValue
 
 ## Written. The running item with its rows so far, null while nothing runs. STAT reads it.
 @export var running_item: ResourceValue
@@ -114,15 +127,34 @@ func _advance_push(window: PassWindow, delta: float) -> void:
 		progress_line.value = model.manifest_line(_push_elapsed / model.manifest_seconds)
 		return
 
-	var items: Array[Resource] = []
-	items.assign(window.manifest)
+	var items := _released(window)
 
 	manifest.value = items
 	manifest_received.value = true
 	progress_line.value = ""
 	status_notice.raise("MANIFEST RECEIVED. %d ITEMS" % items.size())
 	out.raise("-- MANIFEST RECEIVED. %d ITEM(S). TYPE MANIFEST --" % items.size())
+	if not ack_heard.value:
+		out.raise(model.keys_held_line)
+
 	manifest_arrived.raise()
+
+## The items HERALD lists this window. After a heard ACK: the held keys first, then the window's
+## manifest. After a missed one: the manifest without its AUTH keys, which join the held ones.
+func _released(window: PassWindow) -> Array[Resource]:
+	var items: Array[Resource] = []
+	if ack_heard.value:
+		items.assign(held_keys.value + window.manifest)
+		held_keys.clear()
+		return items
+
+	for item: ManifestItem in window.manifest:
+		if item.type != "AUTH":
+			items.append(item)
+		elif not held_keys.value.has(item):
+			held_keys.add(item)
+
+	return items
 
 ## Grades every row that came due, and stores the item once its last row arrived.
 func _advance_item(delta: float) -> void:
@@ -155,6 +187,10 @@ func _start(item: ManifestItem) -> void:
 	_item_elapsed = 0.0
 	running_item.value = _running
 
+	if item.type == "IMG" or item.type == "CAL":
+		shown_item.value = _running
+		monitor_mode.value = MonitorModel.Mode.STREAM
+
 ## Moves the running item into storage, merged into an earlier copy if there is one, then off
 ## the queue, and clears the progress. Returns the copy now in storage.
 func _store_running() -> StoredItem:
@@ -174,6 +210,10 @@ func _store_running() -> StoredItem:
 
 ## Forgets the running item and clears its progress.
 func _clear_running() -> void:
+	if monitor_mode.value == MonitorModel.Mode.STREAM:
+		monitor_mode.value = MonitorModel.Mode.SNOW
+		shown_item.value = null
+
 	_running = null
 	running_item.value = null
 	_item_elapsed = 0.0

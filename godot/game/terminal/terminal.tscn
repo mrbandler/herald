@@ -56,6 +56,21 @@
 [ext_resource type="Resource" path="res://game/data/atoms/downlink/running_item.tres" id="84_running"]
 [ext_resource type="Resource" path="res://game/data/atoms/downlink/manifest_arrived.tres" id="85_manifest_arrived"]
 [ext_resource type="Resource" path="res://game/data/atoms/downlink/manifest_seen.tres" id="86_manifest_seen"]
+[ext_resource type="Resource" path="res://game/data/atoms/monitor/shown_item.tres" id="87_shown"]
+[ext_resource type="Resource" path="res://game/data/atoms/monitor/monitor_mode.tres" id="88_mode"]
+[ext_resource type="Resource" path="res://game/data/atoms/uplink/ack_missed.tres" id="89_ack_missed"]
+[ext_resource type="AudioStream" path="res://game/data/audio/ack_alarm.tres" id="90_ack_alarm"]
+[ext_resource type="Resource" path="res://game/data/atoms/terminal/alert.tres" id="91_alert"]
+[ext_resource type="Script" path="res://scripts/terminal/alert_popup.gd" id="92_alert_popup"]
+[ext_resource type="Resource" path="res://game/data/atoms/uplink/ack_heard.tres" id="93_ack_heard"]
+[ext_resource type="Resource" path="res://game/data/atoms/downlink/held_keys.tres" id="94_held_keys"]
+[ext_resource type="Material" path="res://game/data/materials/plastic_grey.tres" id="m_grey"]
+[ext_resource type="Shader" path="res://game/terminal/crt.gdshader" id="m_crt"]
+[ext_resource type="Script" path="res://scripts/terminal/screen_glow.gd" id="95_screen_glow"]
+[ext_resource type="Script" path="res://scripts/terminal/keycaps.gd" id="96_keycaps"]
+[ext_resource type="Material" path="res://game/data/materials/monitor_grey.tres" id="97_caps"]
+[ext_resource type="Resource" path="res://game/data/atoms/terminal/key_typed.tres" id="98_key_typed"]
+[ext_resource type="AudioStream" path="res://game/data/audio/key_click.tres" id="99_key_click"]
 
 [sub_resource type="SystemFont" id="Font_mono"]
 font_names = PackedStringArray("monospace")
@@ -63,10 +78,10 @@ font_names = PackedStringArray("monospace")
 [sub_resource type="ViewportTexture" id="Texture_screen"]
 viewport_path = NodePath("Screen")
 
-[sub_resource type="StandardMaterial3D" id="Material_crt"]
+[sub_resource type="ShaderMaterial" id="Material_crt"]
 resource_local_to_scene = true
-shading_mode = 0
-albedo_texture = SubResource("Texture_screen")
+shader = ExtResource("m_crt")
+shader_parameter/display = SubResource("Texture_screen")
 
 [sub_resource type="QuadMesh" id="Mesh_crt"]
 size = Vector2(0.48, 0.36)
@@ -112,6 +127,7 @@ vertical_alignment = 1
 script = ExtResource("4_link_status")
 pass_time = ExtResource("42_time")
 current_pass = ExtResource("23_current")
+receiver_model = ExtResource("62_m_receiver")
 signal_strength = ExtResource("41_strength")
 locked = ExtResource("35_locked")
 uplink_open = ExtResource("39_speak_open")
@@ -318,13 +334,71 @@ theme_override_font_sizes/font_size = 15
 text = "ESC CLOSE   UP/DOWN/PGUP/PGDN/WHEEL SCROLL"
 vertical_alignment = 1
 
+[node name="AlertPanel" type="ColorRect" parent="Screen"]
+visible = false
+offset_left = 110.0
+offset_top = 40.0
+offset_right = 530.0
+offset_bottom = 440.0
+mouse_filter = 2
+color = Color(1, 0.72, 0.25, 1)
+
+[node name="Dim" type="ColorRect" parent="Screen/AlertPanel"]
+show_behind_parent = true
+offset_left = -110.0
+offset_top = -40.0
+offset_right = 530.0
+offset_bottom = 440.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0.7)
+
+[node name="Body" type="Label" parent="Screen/AlertPanel"]
+offset_left = 6.0
+offset_top = 6.0
+offset_right = 414.0
+offset_bottom = 366.0
+theme_override_colors/font_color = Color(0.1, 0.07, 0.02, 1)
+theme_override_constants/line_spacing = 0
+theme_override_fonts/font = SubResource("Font_mono")
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="KeyBand" type="ColorRect" parent="Screen/AlertPanel"]
+offset_left = 2.0
+offset_top = 372.0
+offset_right = 418.0
+offset_bottom = 396.0
+mouse_filter = 2
+color = Color(0.02, 0.015, 0.01, 1)
+
+[node name="Keys" type="Label" parent="Screen/AlertPanel"]
+offset_left = 2.0
+offset_top = 372.0
+offset_right = 418.0
+offset_bottom = 396.0
+theme_override_colors/font_color = Color(1, 0.72, 0.25, 1)
+theme_override_fonts/font = SubResource("Font_mono")
+theme_override_font_sizes/font_size = 15
+text = "ENTER ACKNOWLEDGE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="Bezel" type="CSGBox3D" parent="."]
 position = Vector3(0, 0, -0.06)
 size = Vector3(0.6, 0.48, 0.1)
+material = ExtResource("m_grey")
+
+[node name="Inset" type="CSGBox3D" parent="Bezel"]
+position = Vector3(0, 0, 0.05)
+operation = 2
+size = Vector3(0.5, 0.38, 0.05)
+material = ExtResource("m_grey")
 
 [node name="DriveUnit" type="CSGBox3D" parent="."]
 position = Vector3(0, -0.29, -0.06)
 size = Vector3(0.6, 0.08, 0.24)
+material = ExtResource("m_grey")
 
 [node name="StorageLamps" type="Node3D" parent="DriveUnit"]
 position = Vector3(0, -0.008, 0.121)
@@ -401,9 +475,20 @@ text = "STORAGE"
 [node name="Keyboard" type="CSGBox3D" parent="."]
 position = Vector3(0, -0.315, 0.25)
 size = Vector3(0.44, 0.03, 0.15)
+material = ExtResource("97_caps")
+
+[node name="Keycaps" type="MultiMeshInstance3D" parent="."]
+position = Vector3(0, -0.295, 0.24)
+material_override = ExtResource("m_grey")
+script = ExtResource("96_keycaps")
+
+[node name="Spacebar" type="CSGBox3D" parent="."]
+position = Vector3(0, -0.296, 0.308)
+size = Vector3(0.17, 0.01, 0.022)
+material = ExtResource("m_grey")
 
 [node name="Crt" type="MeshInstance3D" parent="."]
-position = Vector3(0, 0, 0.001)
+position = Vector3(0, 0, -0.033)
 mesh = SubResource("Mesh_crt")
 material_override = SubResource("Material_crt")
 
@@ -412,6 +497,9 @@ stream = ExtResource("72_relay")
 
 [node name="UnlockBellPlayer" type="AudioStreamPlayer3D" parent="Crt"]
 stream = ExtResource("73_unlock_bell")
+
+[node name="AckAlarmPlayer" type="AudioStreamPlayer3D" parent="Crt"]
+stream = ExtResource("90_ack_alarm")
 
 [node name="FocusTarget" type="Area3D" parent="." node_paths=PackedStringArray("anchor")]
 script = ExtResource("3_focus")
@@ -434,6 +522,7 @@ out = ExtResource("20_stdout")
 history = ExtResource("21_history")
 focused = ExtResource("24_focused")
 viewing = ExtResource("22_viewing")
+alert = ExtResource("91_alert")
 current_pass = ExtResource("23_current")
 leave = ExtResource("12_leave")
 terminal_context = ExtResource("13_context")
@@ -442,6 +531,7 @@ lean_amount = ExtResource("75_lean")
 directory = ExtResource("82_directory")
 volume_model = ExtResource("80_m_volumes")
 unlocked_modules = ExtResource("81_unlocked")
+key_typed = ExtResource("98_key_typed")
 
 [node name="FileViewer" type="Node" parent="." node_paths=PackedStringArray("panel", "title", "counter", "body", "track", "thumb")]
 script = ExtResource("79_file_viewer")
@@ -473,6 +563,9 @@ receiver_model = ExtResource("62_m_receiver")
 signal_strength = ExtResource("41_strength")
 status_notice = ExtResource("56_notice")
 acked = ExtResource("34_acked")
+ack_heard = ExtResource("93_ack_heard")
+ack_missed = ExtResource("89_ack_missed")
+alert = ExtResource("91_alert")
 
 [node name="Downlink" type="Node" parent="."]
 script = ExtResource("60_downlink")
@@ -487,6 +580,8 @@ speak_opened = ExtResource("63_speak_opened")
 downlink_open = ExtResource("59_dl_open")
 manifest = ExtResource("50_manifest")
 manifest_received = ExtResource("51_manifest_received")
+ack_heard = ExtResource("93_ack_heard")
+held_keys = ExtResource("94_held_keys")
 download_queue = ExtResource("52_queue")
 storage = ExtResource("53_storage")
 download_received = ExtResource("54_dl_received")
@@ -497,6 +592,8 @@ row_received = ExtResource("57_row")
 download_complete = ExtResource("58_complete")
 out = ExtResource("20_stdout")
 manifest_arrived = ExtResource("85_manifest_arrived")
+shown_item = ExtResource("87_shown")
+monitor_mode = ExtResource("88_mode")
 
 [node name="RelaySound" type="Node" parent="." node_paths=PackedStringArray("sound")]
 script = ExtResource("70_event_sound")
@@ -507,3 +604,33 @@ sound = NodePath("../Crt/RelayPlayer")
 script = ExtResource("70_event_sound")
 event = ExtResource("71_unlocked")
 sound = NodePath("../Crt/UnlockBellPlayer")
+
+[node name="AlertPopup" type="Node" parent="." node_paths=PackedStringArray("panel", "body")]
+script = ExtResource("92_alert_popup")
+alert = ExtResource("91_alert")
+focused = ExtResource("24_focused")
+panel = NodePath("../Screen/AlertPanel")
+body = NodePath("../Screen/AlertPanel/Body")
+
+[node name="AckAlarmSound" type="Node" parent="." node_paths=PackedStringArray("sound")]
+script = ExtResource("70_event_sound")
+event = ExtResource("89_ack_missed")
+sound = NodePath("../Crt/AckAlarmPlayer")
+
+[node name="ScreenGlow" type="OmniLight3D" parent="." node_paths=PackedStringArray("viewport")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0.3)
+light_color = Color(1, 0.72, 0.25, 1)
+light_energy = 0.2
+omni_range = 1.4
+script = ExtResource("95_screen_glow")
+viewport = NodePath("../Screen")
+
+[node name="KeyClickPlayer" type="AudioStreamPlayer3D" parent="."]
+position = Vector3(0, -0.3, 0.25)
+stream = ExtResource("99_key_click")
+max_polyphony = 4
+
+[node name="KeyClickSound" type="Node" parent="." node_paths=PackedStringArray("sound")]
+script = ExtResource("70_event_sound")
+event = ExtResource("98_key_typed")
+sound = NodePath("../KeyClickPlayer")

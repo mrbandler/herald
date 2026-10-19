@@ -1,0 +1,7 @@
+Probe images: NASA/JPL/Space Science Institute (Cassini imaging team), public domain.
+Converted to 320x240 grayscale for the monitor. Sources (NASA Image and Video Library):
+prima.png   PIA06193  The Greatest Saturn Portrait ...Yet
+candra.png  PIA06228  Cassini Views of Titan: Monochrome View
+reffa.png   PIA17155  Rhea Day in the Sun
+tarba.png   PIA08954  Icy Emanations
+cal_bars.png is generated (test pattern of upright bars).

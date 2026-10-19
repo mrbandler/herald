@@ -34,5 +34,8 @@ func run(args: PackedStringArray) -> void:
 		var verdict := "VALID" if module_model.is_valid_key(stored) else invalid
 		write(" KEY FOR %s. %s" % [item.key_for, verdict])
 
+	if stored.decoded:
+		write(" DECODED")
+
 	if not stored.tag.is_empty():
 		write(" TAG: %s" % stored.tag)

@@ -27,6 +27,9 @@ extends Node
 ## Written. True while aiming at a spot that puts down what is in hand. Optional.
 @export var placing: BoolValue
 
+## Written. True while aiming at a button with nothing held. Optional.
+@export var pointing: BoolValue
+
 ## Written. Where the crosshair ray last hit something it can use, in world space. Optional.
 @export var aim_point: Vector3Value
 
@@ -48,6 +51,8 @@ func _physics_process(_delta: float) -> void:
 	hovering.value = held == null and _aimed != null
 	if placing != null:
 		placing.value = hovering.value and _aimed.is_placement()
+	if pointing != null:
+		pointing.value = hovering.value and _aimed.is_button()
 
 ## Passes this frame's drag to what is held.
 func _process(_delta: float) -> void:

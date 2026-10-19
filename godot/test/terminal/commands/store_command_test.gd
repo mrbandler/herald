@@ -38,3 +38,17 @@ func test_shows_a_tag_under_its_item() -> void:
 	_store.storage.add(tlm)
 	_store.run(PackedStringArray())
 	assert_str(_out.calls[-1]).is_equal("      TAG: FIRST TLM")
+
+func test_a_decoded_image_shows_one_unit_and_is_marked() -> void:
+	var image := DownlinkFixture.stored(DownlinkFixture.item(33, "IMG", 6, 2), [0, 0])
+	image.decoded = true
+	_store.storage.add(image)
+	_store.run(PackedStringArray())
+	assert_array(_out.calls).is_equal(
+		[
+			"STORAGE 1/8",
+			" ID   TYPE  SIZE  ROWS   CLEAN NOISY LOST",
+			" 33   IMG   1     2/2    2     0     0",
+			"      DECODED",
+		]
+	)

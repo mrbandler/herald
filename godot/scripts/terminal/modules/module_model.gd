@@ -10,6 +10,9 @@ extends Resource
 ## What each module does, shown by HELP MOD. A module without an entry shows its name alone.
 @export var descriptions: Dictionary[String, String] = { }
 
+## Types decoded by another module, e.g. `{"CAL": "IMG"}`. Other types use their own module.
+@export var decoders: Dictionary[String, String] = { }
+
 ## Lines printed under the unlock line, per module. A module without an entry prints none.
 @export var banners: Dictionary[String, PackedStringArray] = { }
 
@@ -23,9 +26,11 @@ extends Resource
 func is_valid_key(stored: StoredItem) -> bool:
 	return stored.item.type == "AUTH" and stored.missing() == 0
 
-## The module that decodes `type`, or empty when there is none.
+## The module that decodes `type`, or empty when there is none. `decoders` can route a type to
+## another module.
 func decoder_for(type: String) -> String:
-	return type if modules.has(type) else ""
+	var module: String = decoders.get(type, type)
+	return module if modules.has(module) else ""
 
 ## The banner lines for `module`, or none.
 func banner(module: String) -> PackedStringArray:

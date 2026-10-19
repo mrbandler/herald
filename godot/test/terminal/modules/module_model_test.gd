@@ -74,3 +74,11 @@ func test_the_game_describes_every_module() -> void:
 	var model: ModuleModel = load(SHIPPED)
 	for module: String in model.modules:
 		assert_bool(model.descriptions.has(module)).override_failure_message(module).is_true()
+
+func test_a_cal_frame_decodes_through_img() -> void:
+	_model.decoders = { "CAL": "IMG" }
+	assert_str(_model.decoder_for("CAL")).is_equal("IMG")
+	assert_str(_model.decoder_for("TLM")).is_equal("TLM")
+	assert_str(_model.decoder_for("AUTH")).is_empty()
+	var shipped: ModuleModel = load(SHIPPED)
+	assert_str(shipped.decoder_for("CAL")).is_equal("IMG")

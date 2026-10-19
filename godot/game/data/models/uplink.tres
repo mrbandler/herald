@@ -1,7 +1,9 @@
 [gd_resource type="Resource" script_class="UplinkModel" format=3]
 
 [ext_resource type="Script" path="res://scripts/terminal/uplink_model.gd" id="1"]
+[ext_resource type="Resource" path="res://game/data/alerts/no_ack.tres" id="2_no_ack"]
 
 [resource]
 script = ExtResource("1")
 bar_width = 29
+ack_missed_alert = ExtResource("2_no_ack")
