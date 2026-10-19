@@ -19,11 +19,7 @@ func before_test() -> void:
 	_terminal.lean_amount = FloatValue.new()
 	_terminal.scroll_rule = auto_free(Label.new())
 	_out = AtomSpy.events(_terminal.out)
-	_seq = SeqCommand.new()
-	_seq.name = "SEQ"
-	_seq.out = _terminal.out
-	_seq.sequence = StringListValue.new()
-	_seq.transmitting = BoolValue.new()
+	_seq = TerminalFixture.seq(_terminal.out)
 	_terminal.current_pass = TerminalFixture.pass_with([_seq])
 	add_child(_terminal)
 	_terminal.clear.raise()

@@ -80,4 +80,12 @@ func test_module_unlock_is_wired() -> void:
 	assert_object(unlock.module_unlocked).is_same(relay.event)
 	var decode := two.command_set.find("DECODE") as DecodeCommand
 	assert_object(decode.unlocked_modules).is_same(unlock.unlocked_modules)
+	var seq := two.command_set.find("SEQ") as SeqCommand
+	assert_object(seq.unlocked_modules).is_same(unlock.unlocked_modules)
+	var herald_names := PackedStringArray()
+	for listed: HeraldCommand in seq.herald_commands:
+		herald_names.append(listed.name)
+	var expected := ["ACK", "RETX", "IMG", "SPC", "INSERT", "PWR", "RESET", "ERASE"]
+	expected.append_array(["DESCEND", "TRANSFER"])
+	assert_array(herald_names).is_equal(expected)
 	assert_object(decode.storage).is_same(unlock.storage)
