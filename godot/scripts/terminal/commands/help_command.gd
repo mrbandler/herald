@@ -15,14 +15,15 @@ func run(args: PackedStringArray) -> void:
 
 	if args.is_empty():
 		for listed: Command in commands.commands:
-			write(listed.help.get_slice("\n", 0))
+			if not listed.hidden:
+				write(listed.help.get_slice("\n", 0))
 
 		write("HELP <COMMAND> FOR DETAILS")
 
 		return
 
 	var command := commands.find(args[0])
-	if command == null:
+	if command == null or command.hidden:
 		write("UNKNOWN COMMAND")
 
 		return

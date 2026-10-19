@@ -37,3 +37,12 @@ func test_prints_what_a_command_adds_to_its_help() -> void:
 func test_unknown_command() -> void:
 	_help.run(PackedStringArray(["FOO"]))
 	assert_array(_spy.calls).is_equal(["UNKNOWN COMMAND"])
+
+func test_hidden_commands_stay_hidden() -> void:
+	var exit := TerminalFixture.command("EXIT", "EXIT  SECRET")
+	exit.hidden = true
+	_help.current_pass = TerminalFixture.pass_with([_help, exit])
+	_help.run(PackedStringArray())
+	_help.run(PackedStringArray(["EXIT"]))
+	var expected := ["HELP     LIST THE COMMANDS", "HELP <COMMAND> FOR DETAILS", "UNKNOWN COMMAND"]
+	assert_array(_spy.calls).is_equal(expected)

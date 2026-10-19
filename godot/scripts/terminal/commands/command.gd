@@ -10,6 +10,9 @@ extends Resource
 ## Shown by HELP <NAME>, one output line per line break.
 @export_multiline var help := ""
 
+## Left out of HELP, and HELP <NAME> treats it as unknown. For commands players find.
+@export var hidden := false
+
 ## Written. Usually stdout.
 @export var out: StringEvent
 

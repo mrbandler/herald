@@ -138,3 +138,9 @@ func test_volumes_are_wired() -> void:
 	assert_bool(dim.show_behind_parent).is_true()
 	assert_object(scene.get_node("Screen/FilePanel/Keys")).is_not_null()
 	assert_bool(viewer.panel.visible).is_false()
+
+func test_exit_is_a_hidden_easter_egg() -> void:
+	var two: PassWindow = load(PASS_02)
+	var exit := two.command_set.find("EXIT") as TextCommand
+	assert_bool(exit.hidden).is_true()
+	assert_str(exit.text).is_not_empty()
