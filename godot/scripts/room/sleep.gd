@@ -57,15 +57,16 @@ func tick(delta: float) -> void:
 
 	var drowsy := model.drowsiness(pass_time.value, window.bell)
 	drowsiness.value = drowsy
-	_set_haze(model.haze(drowsy))
 	if drowsy <= 0.0:
 		_cycle = 0.0
 		_pose(0.0, 0.0, Vector3.ZERO)
+		_set_haze(0.0)
 
 		return
 
 	_cycle += delta / model.blink_period(drowsy)
 	var closure := model.lid_closure(fposmod(_cycle, 1.0), drowsy)
+	_set_haze(model.haze(drowsy, closure))
 
 	_pose(closure, model.sag_degrees * closure * drowsy, Vector3.ZERO)
 

@@ -39,6 +39,9 @@ extends Resource
 ## How strongly the view darkens and blurs at full drowsiness, 0..1. The fall takes it to 1.
 @export var haze_at_bell := 0.7
 
+## How much further each blink pushes the haze in while the lids are shut, at full drowsiness.
+@export var blink_haze := 0.2
+
 ## 0 until the warning starts, rising to 1 at the `bell`, `t` seconds into the pass.
 func drowsiness(t: float, bell: float) -> float:
 	return clampf((t - (bell - warning_seconds)) / warning_seconds, 0.0, 1.0)
@@ -67,6 +70,7 @@ func asleep_drop(amount: float) -> float:
 func muffled_cutoff(amount: float) -> float:
 	return exp(lerpf(log(open_hz), log(muffled_hz), amount))
 
-## The haze 0..1 over the view at a `drowsiness`, while blinking before the bell.
-func haze(drowsy: float) -> float:
-	return haze_at_bell * drowsy
+## The haze 0..1 over the view at a `drowsiness` and a lid `closure`: it grows with drowsiness, and
+## each blink pushes it in further while the lids are shut.
+func haze(drowsy: float, closure := 0.0) -> float:
+	return clampf(haze_at_bell * drowsy + blink_haze * closure * drowsy, 0.0, 1.0)

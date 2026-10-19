@@ -31,3 +31,9 @@ func test_sound_muffles_from_open_to_muffled() -> void:
 	assert_float(model.muffled_cutoff(1.0)).is_equal_approx(model.muffled_hz, 0.5)
 	assert_float(model.muffled_cutoff(0.5)).is_less(model.open_hz / 2.0)
 	assert_float(model.haze(1.0)).is_equal(model.haze_at_bell)
+
+func test_each_blink_pushes_the_haze_further_in() -> void:
+	var model := SleepModel.new()
+	assert_float(model.haze(0.5, 1.0)).is_greater(model.haze(0.5, 0.0))
+	assert_float(model.haze(0.0, 1.0)).is_equal(0.0)
+	assert_float(model.haze(1.0, 1.0)).is_less_equal(1.0)

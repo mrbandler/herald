@@ -70,7 +70,8 @@ func test_the_view_hazes_while_drowsy_and_fully_in_the_fall() -> void:
 	_sleep.tick(0.1)
 	assert_bool(haze.visible).is_true()
 	var amount: float = (haze.material as ShaderMaterial).get_shader_parameter("amount")
-	assert_float(amount).is_equal_approx(_sleep.model.haze_at_bell, 0.001)
+	var model := _sleep.model
+	assert_float(amount).is_between(model.haze_at_bell, model.haze_at_bell + model.blink_haze)
 	_sleep.fall(1.0)
 	amount = (haze.material as ShaderMaterial).get_shader_parameter("amount")
 	assert_float(amount).is_equal_approx(1.0, 0.001)
