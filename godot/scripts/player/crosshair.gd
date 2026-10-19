@@ -18,21 +18,33 @@ extends TextureRect
 ## Shown while holding something.
 @export var grab_icon: Texture2D
 
+## Shown over a spot where the paper in hand would go down.
+@export var place_icon: Texture2D
+
+## Read. Shows the place icon.
+@export var placing: BoolValue
+
 ## Read. At 1, fully leaned in, the crosshair hides so it does not cover the screen's text.
 @export var lean_amount: FloatValue
 
-## Picks the icon every frame, and hides it while fully leaned in.
+## Read. True while a paper is raised in front of the eye; the crosshair hides over it.
+@export var paper_raised: BoolValue
+
+## Picks the icon every frame, and hides it while fully leaned in or reading a raised paper.
 func _process(_delta: float) -> void:
-	texture = pick_icon(hovering.value, grabbing.value)
-	visible = shown(lean_amount.value)
+	texture = pick_icon(hovering.value, grabbing.value, placing.value)
+	visible = shown(lean_amount.value, paper_raised.value)
 
-## False at a full lean, so the crosshair stays off the terminal's text.
-func shown(lean: float) -> bool:
-	return lean < 1.0
+## False at a full lean or over a raised paper, so the crosshair stays off text.
+func shown(lean: float, reading_paper: bool) -> bool:
+	return lean < 1.0 and not reading_paper
 
-## Grabbing wins over hovering, hovering over idle.
-func pick_icon(is_hovering: bool, is_grabbing: bool) -> Texture2D:
+## Grabbing wins over placing, placing over hovering, hovering over idle.
+func pick_icon(is_hovering: bool, is_grabbing: bool, is_placing := false) -> Texture2D:
 	if is_grabbing:
 		return grab_icon
+
+	if is_placing:
+		return place_icon
 
 	return hover_icon if is_hovering else idle_icon

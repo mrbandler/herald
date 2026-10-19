@@ -9,7 +9,6 @@
 [ext_resource type="Script" uid="uid://ctcdhqtsbys52" path="res://scripts/core/atoms/nodes/event_latch.gd" id="7_latch"]
 [ext_resource type="Script" uid="uid://0fxs33kybbm" path="res://scripts/room/lamp_chain.gd" id="8_chain"]
 [ext_resource type="Script" uid="uid://de2pjly3flbx8" path="res://scripts/room/sleep.gd" id="9_sleep"]
-[ext_resource type="Script" path="res://scripts/room/pass_label.gd" id="12_pass_label"]
 [ext_resource type="PackedScene" path="res://game/pass/pass.tscn" id="10_pass"]
 [ext_resource type="PackedScene" path="res://game/player/player.tscn" id="11_player"]
 [ext_resource type="PackedScene" path="res://game/antenna/antenna.tscn" id="12_antenna"]
@@ -51,6 +50,19 @@
 [ext_resource type="Resource" path="res://game/data/atoms/player/lean_amount.tres" id="86_lean"]
 [ext_resource type="Resource" path="res://game/data/atoms/player/drowsiness.tres" id="87_drowsy"]
 [ext_resource type="Resource" path="res://game/data/atoms/terminal/directory.tres" id="88_directory"]
+[ext_resource type="Script" path="res://scripts/room/papers/paper_desk.gd" id="90_paper_desk"]
+[ext_resource type="Script" path="res://scripts/room/papers/desk_surface.gd" id="91_desk_surface"]
+[ext_resource type="Script" path="res://scripts/core/audio/event_sound.gd" id="92_event_sound"]
+[ext_resource type="Resource" path="res://game/data/atoms/room/reading.tres" id="93_reading"]
+[ext_resource type="Resource" path="res://game/data/atoms/room/put_down.tres" id="94_put_down"]
+[ext_resource type="Resource" path="res://game/data/atoms/room/capsule_arrived.tres" id="95_capsule"]
+[ext_resource type="Resource" path="res://game/data/atoms/player/aim_point.tres" id="96_aim"]
+[ext_resource type="Resource" path="res://game/data/atoms/player/paper_raised.tres" id="98_raised"]
+[ext_resource type="Resource" path="res://game/data/atoms/player/placing.tres" id="99_placing"]
+[ext_resource type="AudioStream" path="res://game/data/audio/capsule.tres" id="97_capsule_audio"]
+
+[sub_resource type="BoxShape3D" id="Shape_desk_top"]
+size = Vector3(1.65, 0.004, 0.31)
 
 [sub_resource type="Environment" id="Environment_room"]
 background_mode = 1
@@ -75,7 +87,7 @@ height = 0.04
 
 [node name="Resetter" type="Node" parent="." unique_id=221681823]
 script = ExtResource("1_resetter")
-atoms = Array[ExtResource("2_value")]([ExtResource("30_time"), ExtResource("40_az"), ExtResource("41_el"), ExtResource("42_tune"), ExtResource("43_strength"), ExtResource("44_quality"), ExtResource("45_carrier"), ExtResource("46_locked"), ExtResource("48_force"), ExtResource("50_hovering"), ExtResource("51_grabbing"), ExtResource("52_focused"), ExtResource("60_viewing"), ExtResource("62_sequence"), ExtResource("63_speak_open"), ExtResource("64_acked"), ExtResource("65_transmitting"), ExtResource("70_chain_unlocked"), ExtResource("80_manifest"), ExtResource("81_manifest_received"), ExtResource("82_queue"), ExtResource("83_dl_received"), ExtResource("84_progress"), ExtResource("85_dl_open"), ExtResource("86_lean"), ExtResource("87_drowsy"), ExtResource("88_directory")])
+atoms = Array[ExtResource("2_value")]([ExtResource("30_time"), ExtResource("40_az"), ExtResource("41_el"), ExtResource("42_tune"), ExtResource("43_strength"), ExtResource("44_quality"), ExtResource("45_carrier"), ExtResource("46_locked"), ExtResource("48_force"), ExtResource("50_hovering"), ExtResource("51_grabbing"), ExtResource("52_focused"), ExtResource("60_viewing"), ExtResource("62_sequence"), ExtResource("63_speak_open"), ExtResource("64_acked"), ExtResource("65_transmitting"), ExtResource("70_chain_unlocked"), ExtResource("80_manifest"), ExtResource("81_manifest_received"), ExtResource("82_queue"), ExtResource("83_dl_received"), ExtResource("84_progress"), ExtResource("85_dl_open"), ExtResource("86_lean"), ExtResource("87_drowsy"), ExtResource("88_directory"), ExtResource("93_reading"), ExtResource("96_aim"), ExtResource("98_raised"), ExtResource("99_placing")])
 
 [node name="PassLoader" type="Node" parent="." unique_id=824546816]
 script = ExtResource("3_loader")
@@ -125,27 +137,61 @@ transform = Transform3D(0.90630776, 0, 0.42261827, 0, 1, 0, -0.42261827, 0, 0.90
 [node name="Terminal" parent="." unique_id=1433016471 instance=ExtResource("13_terminal")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.08, -1)
 
-[node name="StarCard" type="Label3D" parent="." unique_id=661038256]
-transform = Transform3D(0.9986056, 0.052790955, 2.307566e-09, 0, -4.371139e-08, 1, 0.052790955, -0.9986056, -4.3650438e-08, 0.1370247, 0.752, -0.45742118)
-pixel_size = 0.0012
-script = ExtResource("12_pass_label")
-current_pass = ExtResource("23_current")
-fields = PackedStringArray("card_azimuth", "card_elevation", "card_tuning")
-format = "STAR CARD - TONIGHT
-THE VOICE   AZ %05.1f   EL %04.1f
-DIAL %.0f"
-font_size = 24
+[node name="PaperSlots" type="Node3D" parent="."]
 
-[node name="Letter" type="Label3D" parent="." unique_id=1073506083]
-transform = Transform3D(0.9425383, -0.33409813, -1.4603892e-08, 0, -4.371139e-08, 1, -0.33409813, -0.9425383, -4.119966e-08, -0.25424606, 0.752, -0.5841208)
-pixel_size = 0.001
-script = ExtResource("12_pass_label")
+[node name="Letter" type="Marker3D" parent="PaperSlots"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.32, 0.753, -0.584)
+
+[node name="Card" type="Marker3D" parent="PaperSlots"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.137, 0.753, -0.457)
+
+[node name="Note" type="Marker3D" parent="PaperSlots"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.33, 0.753, -0.5)
+
+[node name="Tube" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55, 0, -1)
+
+[node name="Column" type="CSGBox3D" parent="Tube"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.075, -0.05)
+size = Vector3(0.14, 0.65, 0.14)
+
+[node name="TrayBox" type="CSGBox3D" parent="Tube"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.765, 0.1)
+size = Vector3(0.2, 0.03, 0.26)
+
+[node name="Tray" type="Marker3D" parent="Tube"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.782, 0.1)
+
+[node name="Thunk" type="AudioStreamPlayer3D" parent="Tube"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+stream = ExtResource("97_capsule_audio")
+
+[node name="CapsuleSound" type="Node" parent="." node_paths=PackedStringArray("sound")]
+script = ExtResource("92_event_sound")
+event = ExtResource("95_capsule")
+sound = NodePath("../Tube/Thunk")
+
+[node name="Papers" type="Node" parent="." node_paths=PackedStringArray("desk_slots", "tray")]
+script = ExtResource("90_paper_desk")
 current_pass = ExtResource("23_current")
-fields = PackedStringArray("letter")
-format = "%s"
-font_size = 20
-autowrap_mode = 3
-width = 520.0
+pass_time = ExtResource("30_time")
+reading = ExtResource("93_reading")
+put_down = ExtResource("94_put_down")
+capsule_arrived = ExtResource("95_capsule")
+desk_slots = [NodePath("../PaperSlots/Letter"), NodePath("../PaperSlots/Card"), NodePath("../PaperSlots/Note")]
+tray = NodePath("../Tube/Tray")
+
+[node name="DeskSurface" type="Area3D" parent="." node_paths=PackedStringArray("shape")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.275, 0.75, -0.505)
+script = ExtResource("91_desk_surface")
+reading = ExtResource("93_reading")
+aim_point = ExtResource("96_aim")
+put_down = ExtResource("94_put_down")
+shape = NodePath("Shape")
+
+[node name="Shape" type="CollisionShape3D" parent="DeskSurface"]
+shape = SubResource("Shape_desk_top")
+disabled = true
 
 [node name="LampChain" type="Area3D" parent="." unique_id=1402926389]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.45, 1.25, -0.6)

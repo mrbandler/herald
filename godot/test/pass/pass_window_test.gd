@@ -48,11 +48,16 @@ func test_shipped_window_two_loads_with_ascending_marks() -> void:
 	for i: int in range(1, times.size()):
 		assert_float(times[i]).is_greater(times[i - 1])
 
-func test_window_one_has_a_letter_and_window_two_none() -> void:
+func test_window_papers_carry_the_letter_the_prayer_and_a_capsule() -> void:
 	var one: PassWindow = load(PASS_01)
 	var two: PassWindow = load(PASS_02)
-	assert_str(one.letter).starts_with("Seek:")
-	assert_str(two.letter).is_empty()
+	assert_int(one.papers.size()).is_equal(2)
+	assert_str(one.papers[0].text).starts_with("Seek:")
+	var prayer := one.papers[1].text_for(one)
+	assert_str(prayer).contains("AZ 214.6  EL 38.2")
+	assert_str(prayer).contains("DIAL 52")
+	assert_float(two.papers[0].arrives_at).is_equal(0.0)
+	assert_float(two.papers[1].arrives_at).is_greater(two.aos)
 
 func test_window_two_lists_its_manifest() -> void:
 	var two: PassWindow = load(PASS_02)

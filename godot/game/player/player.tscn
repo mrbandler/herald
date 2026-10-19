@@ -16,6 +16,13 @@
 [ext_resource type="Resource" path="res://game/data/atoms/player/terminal_focus_point.tres" id="23_point"]
 [ext_resource type="Resource" path="res://game/data/atoms/player/lean_amount.tres" id="24_lean"]
 [ext_resource type="Resource" path="res://game/data/atoms/player/drowsiness.tres" id="25_drowsy"]
+[ext_resource type="Script" path="res://scripts/player/held_paper.gd" id="5_held_paper"]
+[ext_resource type="Resource" path="res://game/data/atoms/room/reading.tres" id="26_reading"]
+[ext_resource type="Resource" path="res://game/data/atoms/pass/current_pass.tres" id="27_current"]
+[ext_resource type="Resource" path="res://game/data/atoms/player/aim_point.tres" id="28_aim"]
+[ext_resource type="Resource" path="res://game/data/atoms/player/paper_raised.tres" id="29_raised"]
+[ext_resource type="Resource" path="res://game/data/atoms/player/placing.tres" id="35_placing"]
+[ext_resource type="Texture2D" path="res://assets/kenney/cursors/target_a.png" id="33_place"]
 [ext_resource type="Texture2D" path="res://assets/kenney/cursors/cross_small.png" id="30_idle"]
 [ext_resource type="Texture2D" path="res://assets/kenney/cursors/hand_open.png" id="31_hover"]
 [ext_resource type="Texture2D" path="res://assets/kenney/cursors/hand_closed.png" id="32_grab"]
@@ -29,6 +36,14 @@ position = Vector3(0, 1.15, 0)
 current = true
 fov = 70.0
 near = 0.02
+
+[node name="HeldPaper" type="Node3D" parent="Pivot/Camera3D"]
+script = ExtResource("5_held_paper")
+model = ExtResource("10_model")
+reading = ExtResource("26_reading")
+current_pass = ExtResource("27_current")
+lean_amount = ExtResource("24_lean")
+raised = ExtResource("29_raised")
 
 [node name="MouseLook" type="Node" parent="." node_paths=PackedStringArray("pivot")]
 script = ExtResource("1_look")
@@ -49,6 +64,8 @@ look = ExtResource("11_look")
 fine = ExtResource("13_fine")
 hovering = ExtResource("20_hovering")
 grabbing = ExtResource("21_grabbing")
+aim_point = ExtResource("28_aim")
+placing = ExtResource("35_placing")
 
 [node name="Lean" type="Node" parent="." node_paths=PackedStringArray("pivot")]
 script = ExtResource("3_lean")
@@ -83,3 +100,6 @@ idle_icon = ExtResource("30_idle")
 hover_icon = ExtResource("31_hover")
 grab_icon = ExtResource("32_grab")
 lean_amount = ExtResource("24_lean")
+paper_raised = ExtResource("29_raised")
+placing = ExtResource("35_placing")
+place_icon = ExtResource("33_place")

@@ -24,6 +24,12 @@ extends Node
 ## Written. True while holding something.
 @export var grabbing: BoolValue
 
+## Written. True while aiming at a spot that puts down what is in hand. Optional.
+@export var placing: BoolValue
+
+## Written. Where the crosshair ray last hit something it can use, in world space. Optional.
+@export var aim_point: Vector3Value
+
 ## What is being dragged, or null. shortcut: not guarded against the held node being freed
 ## mid-drag; the room is static, so add is_instance_valid checks once Interactables can despawn.
 var held: Interactable
@@ -38,8 +44,10 @@ func _ready() -> void:
 
 ## Casts the ray and updates `hovering`.
 func _physics_process(_delta: float) -> void:
-	_aimed = _cast()
+	_aimed = cast()
 	hovering.value = held == null and _aimed != null
+	if placing != null:
+		placing.value = hovering.value and _aimed.is_placement()
 
 ## Passes this frame's drag to what is held.
 func _process(_delta: float) -> void:
@@ -67,7 +75,7 @@ func _on_grab() -> void:
 		hold(_aimed)
 
 ## The Interactable the crosshair ray hits within reach, or null.
-func _cast() -> Interactable:
+func cast() -> Interactable:
 	var from := camera.global_position
 	var query := PhysicsRayQueryParameters3D.create(
 		from,
@@ -78,5 +86,8 @@ func _cast() -> Interactable:
 
 	var hit := camera.get_world_3d().direct_space_state.intersect_ray(query)
 	var collider: Object = hit.get("collider")
+	if collider != null and aim_point != null:
+		var point: Vector3 = hit.get("position")
+		aim_point.value = point
 
 	return collider as Interactable

@@ -44,16 +44,24 @@ func test_the_listener_falls_asleep_at_shift_end() -> void:
 	assert_object(sleep.bottom_lid).is_not_null()
 	assert_object(sleep.model).is_not_null()
 
-func test_desk_texts_come_from_the_window() -> void:
+func test_papers_desk_and_tube_are_wired() -> void:
 	var room: Node = auto_free((load(ROOM) as PackedScene).instantiate())
 	var loader := room.get_node("PassLoader") as PassLoader
-	var card := room.get_node("StarCard") as PassLabel
-	var letter := room.get_node("Letter") as PassLabel
-	assert_object(card.current_pass).is_same(loader.current_pass)
-	assert_object(letter.current_pass).is_same(loader.current_pass)
-	var card_fields := PackedStringArray(["card_azimuth", "card_elevation", "card_tuning"])
-	assert_array(card.fields).is_equal(card_fields)
-	assert_array(letter.fields).is_equal(PackedStringArray(["letter"]))
+	var papers := room.get_node("Papers") as PaperDesk
+	var surface := room.get_node("DeskSurface") as DeskSurface
+	var sound := room.get_node("CapsuleSound") as EventSound
+	var held := room.get_node("Player/Pivot/Camera3D/HeldPaper") as HeldPaper
+	var picker := room.get_node("Player/Picker") as Picker
+	assert_object(papers.current_pass).is_same(loader.current_pass)
+	assert_int(papers.desk_slots.size()).is_equal(3)
+	assert_object(papers.tray).is_same(room.get_node("Tube/Tray"))
+	assert_object(sound.event).is_same(papers.capsule_arrived)
+	assert_object(surface.reading).is_same(papers.reading)
+	assert_object(surface.put_down).is_same(papers.put_down)
+	assert_object(surface.aim_point).is_same(picker.aim_point)
+	assert_object(held.reading).is_same(papers.reading)
+	assert_object(held.current_pass).is_same(loader.current_pass)
+	assert_bool(papers.get_index() > loader.get_index()).is_true()
 
 func test_shift_end_advances_the_campaign() -> void:
 	var room: Node = auto_free((load(ROOM) as PackedScene).instantiate())

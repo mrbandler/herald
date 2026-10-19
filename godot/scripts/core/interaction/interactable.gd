@@ -16,3 +16,7 @@ func drag(_dx: float, _fine: bool) -> void:
 ## Called when the player lets go.
 func release() -> void:
 	pass
+
+## True for a spot that puts down what is in hand, so the crosshair shows the place icon.
+func is_placement() -> bool:
+	return false
