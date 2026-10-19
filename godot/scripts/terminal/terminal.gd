@@ -18,6 +18,9 @@ const GREETING := "LISTENING POST 4 - HTB MODULE - TYPE HELP"
 ## Optional.
 @export var scroll_rule: Label
 
+## Shows the model's rule over the text area, marking lines above the screen. Optional.
+@export var top_rule: Label
+
 ## stdout. Every line raised here is drawn. Also gets the echo and errors.
 @export var out: StringEvent
 
@@ -194,4 +197,7 @@ func _refresh() -> void:
 
 	screen.text = model.compose(lines, editor.text, editor.scroll)
 	if scroll_rule != null:
-		scroll_rule.text = model.rule(editor.scroll)
+		scroll_rule.text = model.rule_below(editor.scroll)
+
+	if top_rule != null:
+		top_rule.text = model.rule_above(model.lines_above(lines.size(), editor.scroll))

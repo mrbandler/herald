@@ -20,6 +20,7 @@ func test_terminal_scene_is_wired() -> void:
 	var uplink := scene.get_node("Uplink") as Uplink
 	assert_object(terminal.screen).is_same(scene.get_node("Screen/Text"))
 	assert_object(terminal.scroll_rule).is_same(scene.get_node("Screen/ScrollRule"))
+	assert_object(terminal.top_rule).is_same(scene.get_node("Screen/TopRule"))
 	assert_object(uplink.out).is_same(terminal.out)
 	var locked: BoolValue = load("res://game/data/atoms/antenna/locked.tres")
 	assert_object(uplink.locked).is_same(locked)

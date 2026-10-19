@@ -34,12 +34,21 @@ func max_scroll(line_count: int) -> int:
 
 ## The rule under the text area: a plain line, or ` +12 BELOW ` in its middle while scrolled
 ## `scroll` lines back.
-func rule(scroll: int) -> String:
-	var line := "─".repeat(columns)
-	if scroll == 0:
-		return line
+func rule_below(scroll: int) -> String:
+	return _rule(" +%d BELOW " % scroll if scroll > 0 else "")
 
-	var marker := " +%d BELOW " % scroll
+## The rule over the text area: a plain line, or ` +40 ABOVE ` in its middle while `above`
+## lines sit above the screen.
+func rule_above(above: int) -> String:
+	return _rule(" +%d ABOVE " % above if above > 0 else "")
+
+## Lines above the screen when `line_count` lines are scrolled `scroll` back.
+func lines_above(line_count: int, scroll: int) -> int:
+	return maxi(line_count - scroll - (rows - 1), 0)
+
+## A line `columns` wide with `marker` set into its middle.
+func _rule(marker: String) -> String:
+	var line := "─".repeat(columns)
 	var start := floori((columns - marker.length()) / 2.0)
 	return line.left(start) + marker + line.substr(start + marker.length())
 

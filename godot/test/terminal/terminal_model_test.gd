@@ -33,11 +33,16 @@ func test_compose_colours_commands_and_escapes_brackets() -> void:
 func _command(model: TerminalModel, line: String) -> String:
 	return "[color=#%s]%s[/color]" % [model.command_color.to_html(false), line]
 
-func test_the_rule_marks_lines_below_while_scrolled_back() -> void:
+func test_the_rules_mark_lines_below_and_above() -> void:
 	var model := TerminalModel.new()
 	model.columns = 20
-	assert_str(model.rule(0)).is_equal("─".repeat(20))
-	assert_str(model.rule(12)).is_equal("──── +12 BELOW ─────")
+	model.rows = 4
+	assert_str(model.rule_below(0)).is_equal("─".repeat(20))
+	assert_str(model.rule_below(12)).is_equal("──── +12 BELOW ─────")
+	assert_str(model.rule_above(0)).is_equal("─".repeat(20))
+	assert_str(model.rule_above(40)).is_equal("──── +40 ABOVE ─────")
+	assert_int(model.lines_above(10, 2)).is_equal(5)
+	assert_int(model.lines_above(2, 0)).is_equal(0)
 
 func test_max_input_leaves_room_for_prompt_and_cursor() -> void:
 	var model := TerminalModel.new()
